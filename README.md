@@ -1,5 +1,16 @@
 # Uno WP Form
 
+<p align="center">
+  <!-- Stars -->
+  <a href="https://github.com/annrie/uno-wp-form/stargazers">
+    <img src="https://img.shields.io/github/stars/annrie/uno-wp-form.svg" alt="Stars">
+  </a>
+  <!-- Last commit -->
+  <a href="https://github.com/annrie/uno-wp-form/commits">
+    <img src="https://img.shields.io/github/last-commit/annrie/uno-wp-form.svg" alt="Last commit">
+  </a>
+</p>
+
 Uno WP Form is a WordPress 7 compatible fork of MW WP Form.
 
 Uno WP Form は、MW WP Form の開発停止を受けてフォークした、WordPress 7.0 検証済みのフォームプラグインです。
