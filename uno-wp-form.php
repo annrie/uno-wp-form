@@ -3,7 +3,7 @@
  * Plugin Name: Uno WP Form
  * Plugin URI: https://github.com/annrie/uno-wp-form
  * Description: Shortcode-based contact form with a confirmation screen. A maintained fork of MW WP Form, tracking its security fixes and verified on WordPress 7.
- * Version: 5.1.6-uno.1
+ * Version: 5.1.6.1
  * Requires at least: 6.0
  * Requires PHP: 8.0
  * Tested up to: 7.1

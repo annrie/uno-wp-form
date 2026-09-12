@@ -4,7 +4,7 @@ Tags: contact form, form, confirm, mail, shortcode
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 5.1.6-uno.1
+Stable tag: 5.1.6.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -106,17 +106,20 @@ Please use GitHub Issues: https://github.com/annrie/uno-wp-form/issues
 
 == Changelog ==
 
-= 5.1.6-uno.1 =
+Version numbers are `<upstream version>.<fork release>`. For example 5.1.6.1 is the first fork release that has caught up with upstream 5.1.6; a fix of our own on top of it would be 5.1.6.2, and catching up with upstream 5.1.7 would be 5.1.7.1. Releases before this plugin was submitted to the directory were published on GitHub only, and used a `-uno.N` suffix (5.1.6-uno.1). The suffix was dropped because stable tags here may contain only numbers and periods.
+
+= 5.1.6.1 =
+* Changed the version numbering scheme, dropping the `-uno.N` suffix. Same code as 5.1.6-uno.1 on GitHub.
 * Security: Neutralize shortcode syntax in values rendered on the completion screen. A shortcode typed into a form field was executed when the completion screen substituted the value. Ported from upstream 5.1.5.
 * Security: Tighten output escaping on the inquiry data list screen. Meta keys derive from mail-content tags and were printed verbatim into HTML id / class attributes and the Screen Options panel. Column identifiers are now mapped to safe slugs. Ported from upstream 5.1.5 and 5.1.6.
 * Security: Add output escaping to the dynamic column labels, `response_status` and `admin_mail_to`. Ported from upstream 5.1.5.
 * Tested on WordPress 7.1.
 
-= 5.1.4-uno.1 =
+= 5.1.4.1 =
 * Initial release of the fork, based on MW WP Form 5.1.4.
 * Migrated identifiers, post types, shortcode prefixes, hooks, assets and admin labels to the `uno-wp-form` / `unoform_*` namespace.
 
 == Upgrade Notice ==
 
-= 5.1.6-uno.1 =
+= 5.1.6.1 =
 Security release. Fixes shortcode execution on the completion screen, which is reachable by unauthenticated visitors, and tightens output escaping on the inquiry data list screen. Updating is recommended.
