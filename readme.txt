@@ -48,6 +48,10 @@ This fork migrates plugin identifiers, post types, shortcode prefixes, hooks, as
 
 主な機能: ショートコードによるフォーム作成／確認画面／同一URLまたは個別URLでの画面遷移／バリデーションルール／管理者宛メールと自動返信メール／問い合わせデータ保存／保存データのグラフ表示／日本語翻訳ファイル
 
+= Documentation =
+
+Japanese documentation, including how this fork differs from MW WP Form and the things people commonly trip over: https://cielos.phantomoon.com/uno-wp-form/
+
 = Credits =
 
 Original plugin: MW WP Form by inc2734, currently maintained by Web の相談所.
@@ -86,11 +90,13 @@ Yes. Identifiers, post types and database keys are all distinct, so the two plug
 
 はい。識別子・投稿タイプ・DBキーがすべて別なので衝突しません。ただしフォームは共有されないため、作り直しが必要です。
 
-= The submit button does not appear. =
+= What are the submit button attributes? =
 
-Use `[unoform_submitButton preview_value="..." submit_value="..."]`. The older `bconfirm` / `bsubmit` / `bback` attributes are deprecated and render nothing.
+`[unoform_submitButton confirm_value="..." submit_value="..."]`. One tag covers both screens: on the input screen it renders the "go to confirmation" button labelled with `confirm_value`, and on the confirmation screen it renders the send button labelled with `submit_value`.
 
-送信ボタンは `[unoform_submitButton preview_value="..." submit_value="..."]` を使います。`bconfirm` / `bsubmit` / `bback` は旧書式で表示されません。
+Note that unrecognised attributes are silently ignored, and the Japanese defaults happen to read "確認画面へ" and "送信する" — so a misspelled attribute can still look correct. To place the buttons separately, use `[unoform_confirmButton]` and `[unoform_submitButton]`.
+
+送信ボタンは `[unoform_submitButton confirm_value="..." submit_value="..."]` です。1つのタグが入力画面と確認画面の両方を兼ねます。**指定されていない属性は黙って無視される**ため、属性名を間違えても既定のラベルで正しく動いているように見えることがあります。
 
 = Where should I report issues? =
 
