@@ -3,7 +3,7 @@
  * Plugin Name: Uno WP Form
  * Plugin URI: https://github.com/annrie/uno-wp-form
  * Description: A WordPress 7 compatible fork of MW WP Form using uno-wp-form identifiers.
- * Version: 5.1.4-uno.1
+ * Version: 5.1.6-uno.1
  * Requires at least: 6.0
  * Requires PHP: 8.0
  * Tested up to: 7.0
