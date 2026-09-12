@@ -2,11 +2,11 @@
 /**
  * Plugin Name: Uno WP Form
  * Plugin URI: https://github.com/annrie/uno-wp-form
- * Description: A WordPress 7 compatible fork of MW WP Form using uno-wp-form identifiers.
+ * Description: Shortcode-based contact form with a confirmation screen. A maintained fork of MW WP Form, tracking its security fixes and verified on WordPress 7.
  * Version: 5.1.6-uno.1
  * Requires at least: 6.0
  * Requires PHP: 8.0
- * Tested up to: 7.0
+ * Tested up to: 7.1
  * Author: annrie
  * Author URI: https://phantomoon.com
  * Original Author: inc2734
@@ -14,7 +14,7 @@
  * Text Domain: uno-wp-form
  * Domain Path: /languages
  * License: GPLv2 or later
- * License URI: http://www.gnu.org/licenses/gpl-2.0.html
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  *
  * @package uno-wp-form
  * @author annrie
