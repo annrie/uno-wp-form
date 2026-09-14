@@ -54,11 +54,12 @@ $run(
 	"UPDATE {$wpdb->posts} SET post_type = 'unomoon-form' WHERE post_type = %s",
 	'uno-wp-form'
 );
+// Only numeric inquiry post types (uwf_<form ID>) belong to the plugin; other CPTs starting with uwf_ are left alone.
 $run(
 	"posts.post_type 'uwf_N' -> 'unomoon_N'",
-	"SELECT COUNT(*) FROM {$wpdb->posts} WHERE post_type LIKE %s",
-	"UPDATE {$wpdb->posts} SET post_type = CONCAT( 'unomoon_', SUBSTRING( post_type, 5 ) ) WHERE post_type LIKE %s",
-	$like( 'uwf_' ) . '%'
+	"SELECT COUNT(*) FROM {$wpdb->posts} WHERE post_type REGEXP %s",
+	"UPDATE {$wpdb->posts} SET post_type = CONCAT( 'unomoon_', SUBSTRING( post_type, 5 ) ) WHERE post_type REGEXP %s",
+	'^uwf_[0-9]+$'
 );
 
 // 2. Post meta keys.
@@ -92,9 +93,9 @@ $run(
 );
 $run(
 	"options 'uno-wp-form-chart-uwf_N' -> 'unomoon-form-chart-unomoon_N'",
-	"SELECT COUNT(*) FROM {$wpdb->options} WHERE option_name LIKE %s",
-	"UPDATE {$wpdb->options} SET option_name = CONCAT( 'unomoon-form-chart-unomoon_', SUBSTRING( option_name, 23 ) ) WHERE option_name LIKE %s",
-	$like( 'uno-wp-form-chart-uwf_' ) . '%'
+	"SELECT COUNT(*) FROM {$wpdb->options} WHERE option_name REGEXP %s",
+	"UPDATE {$wpdb->options} SET option_name = CONCAT( 'unomoon-form-chart-unomoon_', SUBSTRING( option_name, 23 ) ) WHERE option_name REGEXP %s",
+	'^uno-wp-form-chart-uwf_[0-9]+$'
 );
 $run(
 	"options 'uno-wp-form-recaptcha-*' -> 'unomoon-form-recaptcha-*'",
@@ -207,13 +208,16 @@ if ( is_dir( $old_tmp ) ) {
 	if ( $dry_run ) {
 		$log( sprintf( '[dry-run] would delete temporary directory %s', $old_tmp ) );
 	} else {
-		global $wp_filesystem;
-		if ( ! $wp_filesystem ) {
-			require_once ABSPATH . 'wp-admin/includes/file.php';
-			WP_Filesystem();
+		// Local uploads path: use the direct transport regardless of the site's FS_METHOD, and verify the result.
+		require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
+		require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+		$direct = new WP_Filesystem_Direct( null );
+		$direct->delete( $old_tmp, true );
+		if ( is_dir( $old_tmp ) ) {
+			WP_CLI::warning( sprintf( 'could not delete temporary directory %s (remove it manually)', $old_tmp ) );
+		} else {
+			$log( sprintf( 'deleted temporary directory %s', $old_tmp ) );
 		}
-		$wp_filesystem->delete( $old_tmp, true );
-		$log( sprintf( 'deleted temporary directory %s', $old_tmp ) );
 	}
 }
 
