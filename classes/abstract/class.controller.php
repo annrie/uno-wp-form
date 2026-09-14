@@ -40,6 +40,7 @@ class Unomoon_Form_Controller {
 		if ( $form_key ) {
 			$html = apply_filters( 'unomoonform_template_render_' . $form_key, $html, $template, $args );
 		}
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Buffered output of a template file; every value is escaped inside the template.
 		echo $html;
 	}
 }

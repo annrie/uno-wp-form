@@ -13,10 +13,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 <p>
 	<?php esc_html_e( '{name of form tag} is converted to posted data.', 'unomoon-form' ); ?>
 	<?php
-	echo sprintf(
+	printf(
 		// translators: %s: Tracing Number
 		esc_html__( 'It is automatically converted to Tracking number when you input {%s}.', 'unomoon-form' ),
-		Unomoon_Form_Config::TRACKINGNUMBER
+		esc_html( Unomoon_Form_Config::TRACKINGNUMBER )
 	);
 	?>
 </p>

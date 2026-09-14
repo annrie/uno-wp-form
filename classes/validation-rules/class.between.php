@@ -83,9 +83,9 @@ class Unomoon_Form_Validation_Rule_Between extends Unomoon_Form_Abstract_Validat
 			<tr>
 				<td><?php esc_html_e( 'The range of the number of characters', 'unomoon-form' ); ?></td>
 				<td>
-					<input type="text" value="<?php echo esc_attr( $min ); ?>" size="3" name="<?php echo Unomoon_Form_Config::NAME; ?>[validation][<?php echo $key; ?>][<?php echo esc_attr( $this->get_name() ); ?>][min]" />
+					<input type="text" value="<?php echo esc_attr( $min ); ?>" size="3" name="<?php echo esc_attr( Unomoon_Form_Config::NAME ); ?>[validation][<?php echo esc_attr( $key ); ?>][<?php echo esc_attr( $this->get_name() ); ?>][min]" />
 					〜
-					<input type="text" value="<?php echo esc_attr( $max ); ?>" size="3" name="<?php echo Unomoon_Form_Config::NAME; ?>[validation][<?php echo $key; ?>][<?php echo esc_attr( $this->get_name() ); ?>][max]" />
+					<input type="text" value="<?php echo esc_attr( $max ); ?>" size="3" name="<?php echo esc_attr( Unomoon_Form_Config::NAME ); ?>[validation][<?php echo esc_attr( $key ); ?>][<?php echo esc_attr( $this->get_name() ); ?>][max]" />
 				</td>
 			</tr>
 		</table>

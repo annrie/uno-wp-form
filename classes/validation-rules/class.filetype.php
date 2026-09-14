@@ -68,7 +68,7 @@ class Unomoon_Form_Validation_Rule_FileType extends Unomoon_Form_Abstract_Valida
 		<table>
 			<tr>
 				<td><?php esc_html_e( 'Permitted Extension', 'unomoon-form' ); ?></td>
-				<td><input type="text" value="<?php echo esc_attr( $types ); ?>" name="<?php echo Unomoon_Form_Config::NAME; ?>[validation][<?php echo $key; ?>][<?php echo esc_attr( $this->get_name() ); ?>][types]" /> <span class="unomoonform_note"><?php esc_html_e( 'Example:jpg or jpg,txt,…', 'unomoon-form' ); ?></span></td>
+				<td><input type="text" value="<?php echo esc_attr( $types ); ?>" name="<?php echo esc_attr( Unomoon_Form_Config::NAME ); ?>[validation][<?php echo esc_attr( $key ); ?>][<?php echo esc_attr( $this->get_name() ); ?>][types]" /> <span class="unomoonform_note"><?php esc_html_e( 'Example:jpg or jpg,txt,…', 'unomoon-form' ); ?></span></td>
 			</tr>
 		</table>
 		<?php

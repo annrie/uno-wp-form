@@ -157,13 +157,13 @@ class Unomoon_Form_Parser {
 	 * @return string|null
 	 */
 	protected function _get_post_property_from_querystring( $matches ) {
-		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Read-only lookup of a published post.
-		if ( ! isset( $_GET['post_id'] ) || ! Unomoon_Form_Functions::is_numeric( wp_unslash( $_GET['post_id'] ) ) ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only lookup of a published post.
+		$post_id = isset( $_GET['post_id'] ) ? absint( wp_unslash( $_GET['post_id'] ) ) : 0;
+		if ( ! $post_id ) {
 			return;
 		}
 
-		$post = get_post( absint( wp_unslash( $_GET['post_id'] ) ) );
-		// phpcs:enable
+		$post = get_post( $post_id );
 		if ( empty( $post->ID ) ) {
 			return;
 		}

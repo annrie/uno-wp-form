@@ -11,5 +11,5 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 
 <p>
-	<a href="<?php echo $link; ?>"><?php esc_html_e( '&laquo; Back to the list', 'unomoon-form' ); ?></a>
+	<a href="<?php echo esc_url( $link ); ?>"><?php esc_html_e( '&laquo; Back to the list', 'unomoon-form' ); ?></a>
 </p>

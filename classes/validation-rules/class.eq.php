@@ -63,7 +63,7 @@ class Unomoon_Form_Validation_Rule_Eq extends Unomoon_Form_Abstract_Validation_R
 		<table>
 			<tr>
 				<td><?php esc_html_e( 'The key at same value', 'unomoon-form' ); ?></td>
-				<td><input type="text" value="<?php echo esc_attr( $target ); ?>" name="<?php echo Unomoon_Form_Config::NAME; ?>[validation][<?php echo $key; ?>][<?php echo esc_attr( $this->get_name() ); ?>][target]" /></td>
+				<td><input type="text" value="<?php echo esc_attr( $target ); ?>" name="<?php echo esc_attr( Unomoon_Form_Config::NAME ); ?>[validation][<?php echo esc_attr( $key ); ?>][<?php echo esc_attr( $this->get_name() ); ?>][target]" /></td>
 			</tr>
 		</table>
 		<?php

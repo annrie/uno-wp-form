@@ -314,17 +314,50 @@ class Unomoon_Form_Directory {
 	public static function remove( $file ) {
 		$fileinfo = new SplFileInfo( $file );
 
-		if ( $fileinfo->isFile() && is_writable( $file ) ) {
-			if ( ! unlink( $file ) ) {
-				throw new \RuntimeException( sprintf( '[Unomoon Form] Can\'t remove file: %1$s.', $file ) );
+		if ( $fileinfo->isFile() && wp_is_writable( $file ) ) {
+			wp_delete_file( $file );
+			if ( file_exists( $file ) ) {
+				throw new \RuntimeException( sprintf( '[Unomoon Form] Can\'t remove file: %1$s.', esc_html( $file ) ) );
 			}
-		} elseif ( $fileinfo->isDir() && is_writable( $file ) ) {
-			if ( ! rmdir( $file ) ) {
-				throw new \RuntimeException( sprintf( '[Unomoon Form] Can\'t remove directory: %1$s.', $file ) );
+		} elseif ( $fileinfo->isDir() && wp_is_writable( $file ) ) {
+			if ( ! static::_filesystem()->rmdir( $file ) ) {
+				throw new \RuntimeException( sprintf( '[Unomoon Form] Can\'t remove directory: %1$s.', esc_html( $file ) ) );
 			}
 		}
 
 		return true;
+	}
+
+	/**
+	 * Return the WP_Filesystem instance (direct access to the uploads directory).
+	 *
+	 * @return WP_Filesystem_Base
+	 * @throws \RuntimeException If the filesystem can not be initialised.
+	 */
+	public static function _filesystem() {
+		global $wp_filesystem;
+		static $direct = null;
+
+		if ( ! $wp_filesystem ) {
+			if ( ! function_exists( 'WP_Filesystem' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/file.php';
+			}
+			WP_Filesystem();
+		}
+
+		if ( $wp_filesystem ) {
+			return $wp_filesystem;
+		}
+
+		// The uploads directory is written by PHP directly (see wp_handle_upload()), so the direct
+		// transport is always usable for it even when the site's filesystem method needs credentials.
+		if ( null === $direct ) {
+			require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
+			require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+			$direct = new WP_Filesystem_Direct( null );
+		}
+
+		return $direct;
 	}
 
 	/**
@@ -362,17 +395,8 @@ class Unomoon_Form_Directory {
 			return true;
 		}
 
-		$handle = fopen( $htaccess, 'w' );
-		if ( ! $handle ) {
+		if ( ! static::_filesystem()->put_contents( $htaccess, "Deny from all\n", FS_CHMOD_FILE ) ) {
 			throw new \RuntimeException( '[Unomoon Form] .htaccess can\'t create.' );
-		}
-
-		if ( false === fwrite( $handle, "Deny from all\n" ) ) {
-			throw new \RuntimeException( '[Unomoon Form] .htaccess can\'t write.' );
-		}
-
-		if ( ! fclose( $handle ) ) {
-			throw new \RuntimeException( '[Unomoon Form] .htaccess can\'t close.' );
 		}
 
 		return true;

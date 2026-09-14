@@ -63,7 +63,7 @@ class Unomoon_Form_Validation_Rule_MinLength extends Unomoon_Form_Abstract_Valid
 		<table>
 			<tr>
 				<td><?php esc_html_e( 'The number of the minimum characters', 'unomoon-form' ); ?></td>
-				<td><input type="text" value="<?php echo esc_attr( $min ); ?>" size="3" name="<?php echo Unomoon_Form_Config::NAME; ?>[validation][<?php echo $key; ?>][<?php echo esc_attr( $this->get_name() ); ?>][min]" /></td>
+				<td><input type="text" value="<?php echo esc_attr( $min ); ?>" size="3" name="<?php echo esc_attr( Unomoon_Form_Config::NAME ); ?>[validation][<?php echo esc_attr( $key ); ?>][<?php echo esc_attr( $this->get_name() ); ?>][min]" /></td>
 			</tr>
 		</table>
 		<?php

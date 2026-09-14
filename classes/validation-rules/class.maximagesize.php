@@ -103,9 +103,9 @@ class Unomoon_Form_Validation_Rule_MaxImageSize extends Unomoon_Form_Abstract_Va
 			<tr>
 				<td><?php esc_html_e( 'Maximum image size', 'unomoon-form' ); ?></td>
 				<td>
-					<input type="text" value="<?php echo esc_attr( $width ); ?>" size="4" name="<?php echo Unomoon_Form_Config::NAME; ?>[validation][<?php echo $key; ?>][<?php echo esc_attr( $this->get_name() ); ?>][width]" />
+					<input type="text" value="<?php echo esc_attr( $width ); ?>" size="4" name="<?php echo esc_attr( Unomoon_Form_Config::NAME ); ?>[validation][<?php echo esc_attr( $key ); ?>][<?php echo esc_attr( $this->get_name() ); ?>][width]" />
 					&times;
-					<input type="text" value="<?php echo esc_attr( $height ); ?>" size="4" name="<?php echo Unomoon_Form_Config::NAME; ?>[validation][<?php echo $key; ?>][<?php echo esc_attr( $this->get_name() ); ?>][height]" />
+					<input type="text" value="<?php echo esc_attr( $height ); ?>" size="4" name="<?php echo esc_attr( Unomoon_Form_Config::NAME ); ?>[validation][<?php echo esc_attr( $key ); ?>][<?php echo esc_attr( $this->get_name() ); ?>][height]" />
 				</td>
 			</tr>
 		</table>

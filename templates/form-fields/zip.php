@@ -14,19 +14,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 	〒
 	<input type="text"
 		name="<?php echo esc_attr( $fields[0]['name'] ); ?>"
-		<?php echo Unomoon_Form_Functions::generate_input_attribute( 'class', $fields[0]['class'] ); ?>
-		<?php echo Unomoon_Form_Functions::generate_input_attribute( 'size', $fields[0]['size'] ); ?>
-		<?php echo Unomoon_Form_Functions::generate_input_attribute( 'maxlength', $fields[0]['maxlength'] ); ?>
-		<?php echo Unomoon_Form_Functions::generate_input_attribute( 'value', $fields[0]['value'] ); ?>
-		<?php echo Unomoon_Form_Functions::generate_input_attribute( 'data-conv-half-alphanumeric', $fields[0]['conv-half-alphanumeric'] ); ?>
+		<?php Unomoon_Form_Functions::input_attribute( 'class', $fields[0]['class'] ); ?>
+		<?php Unomoon_Form_Functions::input_attribute( 'size', $fields[0]['size'] ); ?>
+		<?php Unomoon_Form_Functions::input_attribute( 'maxlength', $fields[0]['maxlength'] ); ?>
+		<?php Unomoon_Form_Functions::input_attribute( 'value', $fields[0]['value'] ); ?>
+		<?php Unomoon_Form_Functions::input_attribute( 'data-conv-half-alphanumeric', $fields[0]['conv-half-alphanumeric'] ); ?>
 	/>
 	<?php echo esc_html( $separator ); ?>
 	<input type="text"
 		name="<?php echo esc_attr( $fields[1]['name'] ); ?>"
-		<?php echo Unomoon_Form_Functions::generate_input_attribute( 'class', $fields[1]['class'] ); ?>
-		<?php echo Unomoon_Form_Functions::generate_input_attribute( 'size', $fields[1]['size'] ); ?>
-		<?php echo Unomoon_Form_Functions::generate_input_attribute( 'maxlength', $fields[1]['maxlength'] ); ?>
-		<?php echo Unomoon_Form_Functions::generate_input_attribute( 'value', $fields[1]['value'] ); ?>
-		<?php echo Unomoon_Form_Functions::generate_input_attribute( 'data-conv-half-alphanumeric', $fields[1]['conv-half-alphanumeric'] ); ?>
+		<?php Unomoon_Form_Functions::input_attribute( 'class', $fields[1]['class'] ); ?>
+		<?php Unomoon_Form_Functions::input_attribute( 'size', $fields[1]['size'] ); ?>
+		<?php Unomoon_Form_Functions::input_attribute( 'maxlength', $fields[1]['maxlength'] ); ?>
+		<?php Unomoon_Form_Functions::input_attribute( 'value', $fields[1]['value'] ); ?>
+		<?php Unomoon_Form_Functions::input_attribute( 'data-conv-half-alphanumeric', $fields[1]['conv-half-alphanumeric'] ); ?>
 	/>
 </span>

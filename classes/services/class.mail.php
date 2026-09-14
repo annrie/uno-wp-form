@@ -261,7 +261,7 @@ class Unomoon_Form_Mail_Service {
 		foreach ( $this->attachments as $file ) {
 			$file = realpath( $file );
 			if ( false !== $file && is_file( $file ) && 0 === strpos( $file, Unomoon_Form_Directory::get() ) ) {
-				unlink( $file );
+				wp_delete_file( $file );
 			}
 		}
 	}

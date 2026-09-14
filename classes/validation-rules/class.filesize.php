@@ -54,8 +54,8 @@ class Unomoon_Form_Validation_Rule_FileSize extends Unomoon_Form_Abstract_Valida
 					// バリデーションは送信ボタン押下時に発火するため
 					// 普通に削除すると画面表示時のチェックが発火せずエラーメッセージが表示されない
 					// そのため、非 POST 時（= リダイレクト = 画面表示時）にのみ削除する
-					if ( empty( $_POST ) ) {
-						unlink( $filepath );
+					if ( empty( $_POST ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Only checks whether this is a POST request.
+						wp_delete_file( $filepath );
 					}
 					return $error_message;
 				}
@@ -97,7 +97,7 @@ class Unomoon_Form_Validation_Rule_FileSize extends Unomoon_Form_Abstract_Valida
 		<table>
 			<tr>
 				<td><?php esc_html_e( 'Permitted file size', 'unomoon-form' ); ?></td>
-				<td><input type="text" value="<?php echo esc_attr( $bytes ); ?>" name="<?php echo Unomoon_Form_Config::NAME; ?>[validation][<?php echo $key; ?>][<?php echo esc_attr( $this->get_name() ); ?>][bytes]" /> <span class="unomoonform_note"><?php esc_html_e( 'bytes', 'unomoon-form' ); ?></span></td>
+				<td><input type="text" value="<?php echo esc_attr( $bytes ); ?>" name="<?php echo esc_attr( Unomoon_Form_Config::NAME ); ?>[validation][<?php echo esc_attr( $key ); ?>][<?php echo esc_attr( $this->get_name() ); ?>][bytes]" /> <span class="unomoonform_note"><?php esc_html_e( 'bytes', 'unomoon-form' ); ?></span></td>
 			</tr>
 		</table>
 		<?php

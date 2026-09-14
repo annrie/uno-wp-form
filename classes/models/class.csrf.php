@@ -103,6 +103,6 @@ class Unomoon_Form_Csrf {
 			return bin2hex( openssl_random_pseudo_bytes( 32 ) );
 		}
 
-		return bin2hex( uniqid( mt_rand(), true ) );
+		return bin2hex( uniqid( wp_rand(), true ) );
 	}
 }

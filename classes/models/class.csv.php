@@ -43,6 +43,7 @@ class Unomoon_Form_CSV {
 		$file_name = 'unomoon_form_' . date_i18n( 'YmdHis' ) . '.csv';
 		header( 'Content-Type: application/octet-stream' );
 		header( 'Content-Disposition: attachment; filename=' . $file_name );
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- CSV body served with a text/csv content type, not HTML.
 		echo $csv;
 		exit;
 	}
@@ -121,13 +122,11 @@ class Unomoon_Form_CSV {
 	 */
 	public function _get_paged() {
 		$posts_per_page = $this->_get_posts_per_page();
-		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Verified by check_admin_referer() in download().
-		if ( isset( $_GET['paged'] ) ) {
-			if ( Unomoon_Form_Functions::is_numeric( wp_unslash( $_GET['paged'] ) ) && $posts_per_page > 0 ) {
-				return absint( wp_unslash( $_GET['paged'] ) );
-			}
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Verified by check_admin_referer() in download().
+		$paged = isset( $_GET['paged'] ) ? absint( wp_unslash( $_GET['paged'] ) ) : 0;
+		if ( $paged > 0 && $posts_per_page > 0 ) {
+			return $paged;
 		}
-		// phpcs:enable
 		return 1;
 	}
 

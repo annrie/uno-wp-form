@@ -55,7 +55,7 @@ class Unomoon_Form_Validation_Rule_Url extends Unomoon_Form_Abstract_Validation_
 	 */
 	public function admin( $key, $value ) {
 		?>
-		<label><input type="checkbox" <?php checked( $value[ $this->get_name() ], 1 ); ?> name="<?php echo Unomoon_Form_Config::NAME; ?>[validation][<?php echo $key; ?>][<?php echo esc_attr( $this->get_name() ); ?>]" value="1" /><?php echo esc_html_x( 'URL', 'validatioin', 'unomoon-form' ); ?></label>
+		<label><input type="checkbox" <?php checked( $value[ $this->get_name() ], 1 ); ?> name="<?php echo esc_attr( Unomoon_Form_Config::NAME ); ?>[validation][<?php echo esc_attr( $key ); ?>][<?php echo esc_attr( $this->get_name() ); ?>]" value="1" /><?php echo esc_html_x( 'URL', 'validatioin', 'unomoon-form' ); ?></label>
 		<?php
 	}
 }

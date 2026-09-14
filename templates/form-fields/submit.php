@@ -13,5 +13,5 @@ if ( ! defined( 'ABSPATH' ) ) {
 <input type="submit"
 	name="<?php echo esc_attr( $name ); ?>"
 	value="<?php echo esc_attr( $value ); ?>"
-	<?php echo Unomoon_Form_Functions::generate_input_attribute( 'class', $class ); ?>
+	<?php Unomoon_Form_Functions::input_attribute( 'class', $class ); ?>
 />

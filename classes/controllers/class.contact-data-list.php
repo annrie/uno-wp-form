@@ -43,7 +43,7 @@ class Unomoon_Form_Contact_Data_List_Controller extends Unomoon_Form_Controller 
 			exit;
 		}
 
-		if ( ! empty( $_POST ) ) {
+		if ( ! empty( $_POST ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce is verified in Unomoon_Form_CSV::download().
 			$CSV = new Unomoon_Form_CSV( $this->post_type );
 			$CSV->download();
 		}

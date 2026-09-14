@@ -14,6 +14,10 @@
  * @package unomoon-form
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ! defined( 'WP_CLI' ) || ! WP_CLI ) {
 	echo "This script must be run through WP-CLI (wp eval-file).\n";
 	exit( 1 );

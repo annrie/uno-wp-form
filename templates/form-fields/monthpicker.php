@@ -12,9 +12,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <input type="text"
 	name="<?php echo esc_attr( $name ); ?>"
-	<?php echo Unomoon_Form_Functions::generate_input_attribute( 'id', $id ); ?>
-	<?php echo Unomoon_Form_Functions::generate_input_attribute( 'class', $class ); ?>
-	<?php echo Unomoon_Form_Functions::generate_input_attribute( 'size', $size ); ?>
-	<?php echo Unomoon_Form_Functions::generate_input_attribute( 'value', $value ); ?>
-	<?php echo Unomoon_Form_Functions::generate_input_attribute( 'placeholder', $placeholder ); ?>
+	<?php Unomoon_Form_Functions::input_attribute( 'id', $id ); ?>
+	<?php Unomoon_Form_Functions::input_attribute( 'class', $class ); ?>
+	<?php Unomoon_Form_Functions::input_attribute( 'size', $size ); ?>
+	<?php Unomoon_Form_Functions::input_attribute( 'value', $value ); ?>
+	<?php Unomoon_Form_Functions::input_attribute( 'placeholder', $placeholder ); ?>
 />

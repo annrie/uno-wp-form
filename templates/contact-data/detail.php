@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 
-<input type="hidden" name="<?php echo esc_attr( Unomoon_Form_Config::NAME ); ?>_nonce" value="<?php echo wp_create_nonce( Unomoon_Form_Config::NAME ); ?>" />
+<input type="hidden" name="<?php echo esc_attr( Unomoon_Form_Config::NAME ); ?>_nonce" value="<?php echo esc_attr( wp_create_nonce( Unomoon_Form_Config::NAME ) ); ?>" />
 <table border="0" cellpadding="0" cellspacing="0">
 	<?php
 	$columns  = array();
@@ -36,7 +36,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<th>
 			<?php
 			if ( Unomoon_Form_Config::TRACKINGNUMBER === $key ) {
-				echo Unomoon_Form_Functions::get_tracking_number_title( $post_type );
+				echo esc_html( Unomoon_Form_Functions::get_tracking_number_title( $post_type ) );
 			} else {
 				echo esc_html( $label );
 			}
@@ -49,7 +49,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				if ( '' === $values[ $key ] ) {
 					$values[ $key ] = Unomoon_Form_Functions::get_multimedia_id__fallback( $post, $key );
 				}
-				echo Unomoon_Form_Functions::get_multimedia_data( $values[ $key ] );
+				echo wp_kses_post( Unomoon_Form_Functions::get_multimedia_data( $values[ $key ] ) );
 			} else {
 				echo nl2br( esc_html( $values[ $key ] ) );
 			}

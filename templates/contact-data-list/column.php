@@ -9,4 +9,4 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-echo $column;
+echo wp_kses_post( $column );

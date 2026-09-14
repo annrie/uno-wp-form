@@ -22,13 +22,18 @@
 		var red = parseInt( BASE_COLOR.substr( 0, 2 ), 16 );
 		var green = parseInt( BASE_COLOR.substr( 2, 2 ), 16 );
 		var blue = parseInt( BASE_COLOR.substr( 4, 2 ), 16 );
+		// Spread the steps so that a handful of items still get distinguishable shades.
+		var steps = Math.max( count, 1 );
+		var redStep = Math.max( 15, Math.round( ( 209 - red ) / steps ) );
+		var greenStep = Math.max( 10, Math.round( ( 223 - green ) / steps ) );
+		var blueStep = Math.max( 5, Math.round( ( 229 - blue ) / steps ) );
 		var colors = [];
 
 		for ( var i = 0; i < count; i++ ) {
-			red = Math.min( red + 15, 209 );
-			green = Math.min( green + 10, 223 );
-			blue = Math.min( blue + 5, 229 );
 			colors.push( '#' + toHex( red ) + toHex( green ) + toHex( blue ) );
+			red = Math.min( red + redStep, 209 );
+			green = Math.min( green + greenStep, 223 );
+			blue = Math.min( blue + blueStep, 229 );
 		}
 		return colors;
 	}

@@ -98,7 +98,7 @@ class Unomoon_Form_Functions {
 				self::_display_deprecated_message();
 			} else {
 				add_filter( 'the_content', 'Unomoon_Form_Functions::_return_deprecated_message' );
-				error_log( strip_tags( self::_return_deprecated_message() ) );
+				error_log( wp_strip_all_tags( self::_return_deprecated_message() ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Only runs when WP_DEBUG is on.
 			}
 		}
 	}
@@ -166,9 +166,7 @@ class Unomoon_Form_Functions {
 		}
 
 		// If it can move, even if it can not move, return only the path after rename
-		if ( rename( $filepath, $new_filepath ) ) {
-			return $new_filepath;
-		}
+		Unomoon_Form_Directory::_filesystem()->move( $filepath, $new_filepath, true );
 		return $new_filepath;
 	}
 
@@ -522,7 +520,7 @@ class Unomoon_Form_Functions {
 		$styles = apply_filters( 'unomoonform_styles', array() );
 		if ( is_array( $styles ) && isset( $styles[ $style ] ) ) {
 			$css = $styles[ $style ];
-			wp_enqueue_style( Unomoon_Form_Config::NAME . '_style_' . $form_key, $css );
+			wp_enqueue_style( Unomoon_Form_Config::NAME . '_style_' . $form_key, $css, array(), UNOMOON_FORM_VERSION );
 		}
 
 		wp_enqueue_script( Unomoon_Form_Config::NAME, $url . '/js/form.js', array( 'jquery' ), UNOMOON_FORM_VERSION, true );
@@ -542,6 +540,27 @@ class Unomoon_Form_Functions {
 		}
 
 		return sprintf(
+			'%1$s="%2$s"',
+			esc_html( $attribute_name ),
+			esc_attr( $attribute_value )
+		);
+	}
+
+	/**
+	 * Output an input field's attribute and attribute value pair, escaped.
+	 *
+	 * Echoing variant of generate_input_attribute() for use in templates.
+	 *
+	 * @param string $attribute_name  Attribute name.
+	 * @param string $attribute_value Attribute value.
+	 * @return void
+	 */
+	public static function input_attribute( $attribute_name, $attribute_value ) {
+		if ( is_null( $attribute_value ) ) {
+			return;
+		}
+
+		printf(
 			'%1$s="%2$s"',
 			esc_html( $attribute_name ),
 			esc_attr( $attribute_value )

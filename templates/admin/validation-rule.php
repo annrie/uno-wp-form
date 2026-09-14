@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="remove-btn"><b>×</b></div>
 		<div class="open-btn"><span><?php echo esc_attr( $value['target'] ); ?></span><b>▼</b></div>
 		<div class="repeatable-box-content">
-			<?php esc_html_e( 'The key which applies validation', 'unomoon-form' ); ?>：<input type="text" class="targetKey" value="<?php echo esc_attr( $value['target'] ); ?>" name="<?php echo Unomoon_Form_Config::NAME; ?>[validation][<?php echo esc_attr( $key ); ?>][target]" />
+			<?php esc_html_e( 'The key which applies validation', 'unomoon-form' ); ?>：<input type="text" class="targetKey" value="<?php echo esc_attr( $value['target'] ); ?>" name="<?php echo esc_attr( Unomoon_Form_Config::NAME ); ?>[validation][<?php echo esc_attr( $key ); ?>][target]" />
 			<table border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td colspan="2">

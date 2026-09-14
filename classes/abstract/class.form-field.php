@@ -111,7 +111,7 @@ abstract class Unomoon_Form_Abstract_Form_Field {
 			case 'complete':
 				break;
 			default:
-				exit( '$view_flg is not right value. $view_flg is ' . $view_flg . ' now.' );
+				wp_die( esc_html( '$view_flg is not right value. $view_flg is ' . $view_flg . ' now.' ) );
 		}
 
 		return true;
@@ -133,7 +133,7 @@ abstract class Unomoon_Form_Abstract_Form_Field {
 		$args = $this->set_names();
 
 		if ( empty( $args['shortcode_name'] ) || empty( $args['display_name'] ) ) {
-			exit( get_class( $this ) . '::set_names() returns not right values. Returned values is ' . serialize( $args ) . ' now.' );
+			wp_die( esc_html( get_class( $this ) . '::set_names() returns not right values. Returned values is ' . wp_json_encode( $args ) . ' now.' ) );
 		}
 
 		$this->shortcode_name = $args['shortcode_name'];

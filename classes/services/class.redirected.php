@@ -130,7 +130,7 @@ class Unomoon_Form_Redirected {
 			return $request_uri;
 		}
 
-		$parse_url = parse_url( home_url() );
+		$parse_url = wp_parse_url( home_url() );
 
 		// For WP installed in subdirectory
 		if ( ! empty( $parse_url['path'] ) ) {
@@ -224,7 +224,7 @@ class Unomoon_Form_Redirected {
 		$redirect    = ( $this->get_url() ) ? $this->get_url() : $this->get_request_uri();
 		$request_uri = $this->get_request_uri();
 
-		if ( empty( $_POST ) && $redirect === $request_uri ) {
+		if ( empty( $_POST ) && $redirect === $request_uri ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Only checks whether this is a POST request.
 			return;
 		}
 

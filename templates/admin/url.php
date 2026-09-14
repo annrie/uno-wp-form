@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 
-<input type="hidden" name="<?php echo esc_attr( Unomoon_Form_Config::NAME ); ?>_nonce" value="<?php echo wp_create_nonce( Unomoon_Form_Config::NAME ); ?>" />
+<input type="hidden" name="<?php echo esc_attr( Unomoon_Form_Config::NAME ); ?>_nonce" value="<?php echo esc_attr( wp_create_nonce( Unomoon_Form_Config::NAME ) ); ?>" />
 <table border="0" cellpadding="0" cellspacing="4">
 	<tr>
 		<th><?php esc_html_e( 'Input Page URL', 'unomoon-form' ); ?></th>
@@ -43,7 +43,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	printf(
 		// translators: $s: home_url()
 		esc_html__( 'When a URL doesn\'t begin http or https, %s is complemented.', 'unomoon-form' ),
-		'<b>' . home_url() . '</b>'
+		'<b>' . esc_url( home_url() ) . '</b>'
 	);
 	?>
 </p>
