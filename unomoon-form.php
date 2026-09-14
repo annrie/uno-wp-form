@@ -3,16 +3,14 @@
  * Plugin Name: Unomoon Form
  * Plugin URI: https://cielos.phantomoon.com/unomoon-form/
  * Description: Shortcode-based contact form with a confirmation screen. A maintained fork of MW WP Form, tracking its security fixes and verified on WordPress 7.
- * Version: 5.1.6.1
+ * Version: 5.1.6.2
  * Requires at least: 6.0
  * Requires PHP: 8.0
- * Tested up to: 7.1
  * Author: annrie
  * Author URI: https://phantomoon.com
  * Original Author: inc2734
  * Original Author URI: https://2inc.org
  * Text Domain: unomoon-form
- * Domain Path: /languages
  * License: GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  *
@@ -69,15 +67,9 @@ class Unomoon_Form {
 	}
 
 	/**
-	 * Load text domain, The starting point of the process.
+	 * The starting point of the process.
 	 */
 	public function _initialize() {
-		load_plugin_textdomain(
-			'unomoon-form',
-			false,
-			dirname( plugin_basename( __FILE__ ) ) . '/languages'
-		);
-
 		Unomoon_Form_Csrf::save_token();
 
 		add_action( 'after_setup_theme', array( $this, '_after_setup_theme' ), 11 );

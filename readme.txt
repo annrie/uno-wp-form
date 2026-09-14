@@ -4,7 +4,7 @@ Tags: contact form, form, confirm, mail, shortcode
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 5.1.6.1
+Stable tag: 5.1.6.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -44,9 +44,9 @@ This fork migrates plugin identifiers, post types, shortcode prefixes, hooks, as
 * Admin notification email and automatic reply email
 * Inquiry data storage
 * Chart display for saved inquiry data
-* Japanese translation files included
+* Japanese translation available
 
-主な機能: ショートコードによるフォーム作成／確認画面／同一URLまたは個別URLでの画面遷移／バリデーションルール／管理者宛メールと自動返信メール／問い合わせデータ保存／保存データのグラフ表示／日本語翻訳ファイル
+主な機能: ショートコードによるフォーム作成／確認画面／同一URLまたは個別URLでの画面遷移／バリデーションルール／管理者宛メールと自動返信メール／問い合わせデータ保存／保存データのグラフ表示／日本語対応
 
 = Documentation =
 
@@ -60,9 +60,11 @@ Upstream site: https://mw-wp-form.web-soudan.co.jp
 
 = Third-party resources =
 
-Google Charts is used to render the inquiry data charts.
-Source: https://developers.google.com/chart/
-License: https://developers.google.com/terms
+The following libraries are bundled with the plugin. No external scripts, styles or fonts are loaded at runtime.
+
+* Chart.js (MIT) — renders the inquiry data charts. https://www.chartjs.org/ / https://github.com/chartjs/Chart.js
+* jQuery UI "smoothness" theme CSS (MIT) — styles the date picker and admin widgets. https://jqueryui.com/ / https://github.com/jquery/jquery-ui
+* jQuery UI MonthPicker (MIT) — month picker widget. https://github.com/KidSysco/jquery-ui-month-picker
 
 == Installation ==
 
@@ -114,6 +116,17 @@ Please use GitHub Issues: https://github.com/annrie/unomoon-form/issues
 
 Version numbers are `<upstream version>.<fork release>`. For example 5.1.6.1 is the first fork release that has caught up with upstream 5.1.6; a fix of our own on top of it would be 5.1.6.2, and catching up with upstream 5.1.7 would be 5.1.7.1. Releases before this plugin was submitted to the directory were published on GitHub only, and used a `-uno.N` suffix (5.1.6-uno.1). The suffix was dropped because stable tags here may contain only numbers and periods.
 
+= 5.1.6.2 =
+* Renamed the plugin from "Uno WP Form" to "Unomoon Form" to comply with the WordPress.org naming rules. All identifiers moved to the `unomoon-form` / `unomoonform_*` namespace: shortcodes are now `[unomoonform_*]`, hooks `unomoonform_*`, the form post type `unomoon-form`. Sites migrating from Uno WP Form must run the migration script shipped in the GitHub repository (`tools/migrate-from-uno-wp-form.php`).
+* Replaced Google Charts with a bundled copy of Chart.js, and bundled the jQuery UI theme CSS. The plugin no longer loads anything from external servers.
+* Security: Bound session data to a plugin-prefixed transient key and validate the session cookie format.
+* Security: Sanitize all request input (nonce values, settings, inquiry data, chart settings, query strings, server variables) and escape placeholder values substituted into form content.
+* Security: Use `wp_handle_upload()` for temporary file uploads and generate attachment metadata for saved files.
+* Removed the mail debug log written to the uploads directory.
+* Moved inline scripts and styles to `wp_add_inline_script()` / `wp_add_inline_style()`.
+* Added direct-access guards to every PHP file.
+* Translations are now delivered through translate.wordpress.org instead of bundled files.
+
 = 5.1.6.1 =
 * Changed the version numbering scheme, dropping the `-uno.N` suffix. Same code as 5.1.6-uno.1 on GitHub.
 * Security: Neutralize shortcode syntax in values rendered on the completion screen. A shortcode typed into a form field was executed when the completion screen substituted the value. Ported from upstream 5.1.5.
@@ -123,9 +136,12 @@ Version numbers are `<upstream version>.<fork release>`. For example 5.1.6.1 is 
 
 = 5.1.4.1 =
 * Initial release of the fork, based on MW WP Form 5.1.4.
-* Migrated identifiers, post types, shortcode prefixes, hooks, assets and admin labels to the `unomoon-form` / `unomoonform_*` namespace.
+* Migrated identifiers, post types, shortcode prefixes, hooks, assets and admin labels to the `uno-wp-form` / `unoform_*` namespace (renamed again to `unomoon-form` / `unomoonform_*` in 5.1.6.2).
 
 == Upgrade Notice ==
+
+= 5.1.6.2 =
+The plugin was renamed to Unomoon Form and every identifier changed. If you are upgrading from Uno WP Form, back up your database and run the migration script from the GitHub repository before activating this version. Also a security hardening release.
 
 = 5.1.6.1 =
 Security release. Fixes shortcode execution on the completion screen, which is reachable by unauthenticated visitors, and tightens output escaping on the inquiry data list screen. Updating is recommended.
