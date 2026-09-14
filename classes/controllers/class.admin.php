@@ -146,36 +146,38 @@ class Unomoon_Form_Admin_Controller extends Unomoon_Form_Controller {
 
 		wp_enqueue_style(
 			Unomoon_Form_Config::NAME . '-admin',
-			$url . '/css/admin.css'
+			$url . '/css/admin.css',
+			array(),
+			UNOMOON_FORM_VERSION
 		);
 
 		wp_enqueue_style(
 			Unomoon_Form_Config::NAME . '-admin-repeatable',
-			$url . '/css/admin-repeatable.css'
+			$url . '/css/admin-repeatable.css',
+			array(),
+			UNOMOON_FORM_VERSION
 		);
 
 		wp_enqueue_script(
 			Unomoon_Form_Config::NAME . '-repeatable',
-			$url . '/js/unomoon-form-repeatable.js'
+			$url . '/js/unomoon-form-repeatable.js',
+			array( 'jquery' ),
+			UNOMOON_FORM_VERSION,
+			true
 		);
 
 		wp_enqueue_script(
 			Unomoon_Form_Config::NAME . '-admin',
 			$url . '/js/admin.js',
-			array( 'jquery-ui-dialog', 'jquery-ui-sortable' )
+			array( 'jquery', 'jquery-ui-dialog', 'jquery-ui-sortable', Unomoon_Form_Config::NAME . '-repeatable' ),
+			UNOMOON_FORM_VERSION,
+			true
 		);
 
 		wp_enqueue_script( 'jquery-ui-dialog' );
 		wp_enqueue_script( 'jquery-ui-sortable' );
 
-		global $wp_scripts;
-		$ui = $wp_scripts->query( 'jquery-ui-core' );
-		wp_enqueue_style(
-			'jquery.ui',
-			'//ajax.googleapis.com/ajax/libs/jqueryui/' . $ui->ver . '/themes/smoothness/jquery-ui.min.css',
-			array(),
-			$ui->ver
-		);
+		Unomoon_Form_Functions::enqueue_jquery_ui_style();
 	}
 
 	/**

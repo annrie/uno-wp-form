@@ -73,85 +73,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<!-- end #unomoon-form_chart --></div>
 	</form>
 
-	<?php
-	foreach ( $postdata as $postdata_key => $chart ) {
-		if ( ! isset( $custom_keys[ $chart['target'] ] ) ) {
-			// phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.UndefinedUnsetVariable
-			unset( $postdata[ $postdata_key ] );
-			// phpcs:enable
-			continue;
-		}
-		printf(
-			'<h3>%s <span style="font-weight:normal;font-size:14px">( %s: %d )</span></h3>
-			<div class="%s" style="width: 100%%; max-width: 800px"></div>',
-			esc_html( $chart['target'] ),
-			esc_html__( 'The number of inquiries', 'unomoon-form' ),
-			count( $form_posts ),
-			esc_attr( Unomoon_Form_Config::NAME . '-chart-div-' . $postdata_key )
-		);
-	}
-
-	$chart_data = array();
-	foreach ( $postdata as $postdata_key => $chart ) {
-		$data     = array();
-		$raw_data = array();
-		foreach ( $custom_keys[ $chart['target'] ] as $item => $values ) {
-			if ( $chart['separator'] && strstr( $item, $chart['separator'] ) ) {
-				$item = explode( $chart['separator'], $item );
-			}
-			if ( is_array( $item ) ) {
-				foreach ( $item as $_item ) {
-					if ( '' === $_item ) {
-						$_item = '(Empty)';
-					}
-					if ( empty( $raw_data[ $_item ] ) ) {
-						$raw_data[ $_item ] = count( $values );
-					} else {
-						$raw_data[ $_item ] += count( $values );
-					}
-				}
-			} else {
-				if ( '' === $item ) {
-					$item = '(Empty)';
-				}
-				if ( empty( $raw_data[ $item ] ) ) {
-					$raw_data[ $item ] = count( $values );
-				} else {
-					$raw_data[ $item ] += count( $values );
-				}
-			}
-		}
-		$data[] = array( '', '' );
-		foreach ( $raw_data as $raw_data_key => $raw_data_value ) {
-			if ( 'bar' === $chart['chart'] ) {
-				$value = $raw_data_value / count( $form_posts );
-			} else {
-				$value = $raw_data_value;
-			}
-			$data[] = array(
-				(string) $raw_data_key,
-				$value,
-			);
-		}
-		$chart_data[ $postdata_key ] = array(
-			'chart' => $chart['chart'],
-			'data'  => $data,
-		);
-	}
-	?>
-	<script>
-	google.load( 'visualization', 1, { packages:['corechart'] } );
-	google.setOnLoadCallback( unomoonformDrawCharts );
-	function unomoonformDrawCharts() {
-		jQuery( function( $ ) {
-			<?php foreach ( $chart_data as $postdata_key => $chart ) : ?>
-			$( '.<?php echo esc_js( Unomoon_Form_Config::NAME . '-chart-div-' . $postdata_key ); ?>' )
-				.unomoon_form_google_chart( {
-					chart: <?php echo json_encode( $chart['chart'] ); ?>,
-					data : <?php echo json_encode( $chart['data'] ); ?>
-				} );
-			<?php endforeach; ?>
-		} );
-	}
-	</script>
+	<?php foreach ( $chart_data as $chart_key => $chart ) : ?>
+	<h3>
+		<?php echo esc_html( $chart['target'] ); ?>
+		<span style="font-weight:normal;font-size:14px">( <?php esc_html_e( 'The number of inquiries', 'unomoon-form' ); ?>: <?php echo (int) $chart['total']; ?> )</span>
+	</h3>
+	<div class="<?php echo esc_attr( Unomoon_Form_Config::NAME . '-chart-div-' . $chart_key ); ?>" data-chart-key="<?php echo esc_attr( $chart_key ); ?>" style="width: 100%; max-width: 800px"></div>
+	<?php endforeach; ?>
 <!-- end .wrap --></div>

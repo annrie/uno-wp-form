@@ -59,9 +59,7 @@ class Unomoon_Form_Field_Datepicker extends Unomoon_Form_Abstract_Form_Field {
 	 * @return string
 	 */
 	protected function input_page() {
-		global $wp_scripts;
-		$ui = $wp_scripts->query( 'jquery-ui-core' );
-		wp_enqueue_style( 'jquery.ui', '//ajax.googleapis.com/ajax/libs/jqueryui/' . $ui->ver . '/themes/smoothness/jquery-ui.min.css', array(), $ui->ver );
+		Unomoon_Form_Functions::enqueue_jquery_ui_style();
 		wp_enqueue_script( 'jquery-ui-datepicker' );
 
 		$Json_Parser      = new Unomoon_Form_Json_Parser( $this->atts['js'] );

@@ -466,6 +466,22 @@ class Unomoon_Form_Functions {
 	}
 
 	/**
+	 * Enqueue the bundled jQuery UI theme stylesheet (smoothness).
+	 *
+	 * Bundled so that no asset is loaded from a third-party CDN.
+	 *
+	 * @return void
+	 */
+	public static function enqueue_jquery_ui_style() {
+		wp_enqueue_style(
+			Unomoon_Form_Config::NAME . '-jquery-ui',
+			UNOMOON_FORM_PLUGIN_URL . '/css/vendor/jquery-ui/jquery-ui.min.css',
+			array(),
+			'1.14.1'
+		);
+	}
+
+	/**
 	 * Enqueue Unomoon Form assets.
 	 *
 	 * @param int $form_id Form ID.
@@ -475,7 +491,7 @@ class Unomoon_Form_Functions {
 		$Setting  = new Unomoon_Form_Setting( $form_id );
 		$form_key = Unomoon_Form_Functions::get_form_key_from_form_id( $form_id );
 		$url      = UNOMOON_FORM_PLUGIN_URL;
-		wp_enqueue_style( Unomoon_Form_Config::NAME, $url . '/css/style.css' );
+		wp_enqueue_style( Unomoon_Form_Config::NAME, $url . '/css/style.css', array(), UNOMOON_FORM_VERSION );
 
 		$style  = $Setting->get( 'style' );
 		$styles = apply_filters( 'unomoonform_styles', array() );
@@ -484,7 +500,7 @@ class Unomoon_Form_Functions {
 			wp_enqueue_style( Unomoon_Form_Config::NAME . '_style_' . $form_key, $css );
 		}
 
-		wp_enqueue_script( Unomoon_Form_Config::NAME, $url . '/js/form.js', array( 'jquery' ), false, true );
+		wp_enqueue_script( Unomoon_Form_Config::NAME, $url . '/js/form.js', array( 'jquery' ), UNOMOON_FORM_VERSION, true );
 		do_action( 'unomoonform_enqueue_scripts_' . $form_key );
 	}
 

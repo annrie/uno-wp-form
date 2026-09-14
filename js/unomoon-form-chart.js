@@ -1,124 +1,134 @@
 /**
- * unomoon_form_google_chart
- * Created: August 31, 2014
+ * Unomoon Form inquiry data chart renderer.
+ *
+ * Renders the series prepared by Unomoon_Form_Chart_Controller (exposed as
+ * window.unomoonformChartData) with the bundled Chart.js. Replaces the
+ * former Google Charts implementation so that no external script is loaded.
  */
-jQuery( function( $ ) {
-	$.fn.unomoon_form_google_chart = function( config ) {
-		var defaults = {
-			chart: 'pie',
-			data : []
-		};
-		var config = $.extend( defaults, config );
+( function( $ ) {
+	'use strict';
 
-		return this.each( function( i, e ) {
-			var data = google.visualization.arrayToDataTable( config.data );
-			var target = $( e ).get( 0 );
-			if ( config.chart === 'pie' ) {
-				var options = {
-					colors: getColors(),
-					backgroundColor: 'transparent',
-					chartArea: {
-						top   : 10,
-						left  : 0,
-						height: '90%'
-					},
-					legend: {
-						alignment: 'center'
-					},
-					height: 260
-				};
-				var chart = new google.visualization.PieChart( target );
-			} else if ( config.chart === 'bar' ) {
-				data = new google.visualization.DataView( data );
-				data.setColumns( [0, 1, {
-					calc: function ( dt, row ) {
-						var val = dt.getValue( row, 1 );
-						return {
-							v: ( val * 100 ).toFixed( 1 ) + ' %',
-							f: ( val * 100 ).toFixed( 1 ) + ' %'
-						};
-					},
-					type: 'string',
-					sourceColumn: 1,
-					role: 'annotation'
-				}] );
-				var height = ( config.data.length - 1 ) * 40;
-				var options = {
-					colors: getColors(),
-					backgroundColor: 'transparent',
-					chartArea: {
-						top   : 0,
-						left  : 160,
-						height: height,
-						width : '95%'
-					},
-					annotations: {
-						format: '#,#%',
-						textStyle: {
-							fontSize: 12,
-						}
-					},
-					hAxis: {
-						format: '#,#%',
-						textStyle: {
-							color: '#999',
-							fontSize: 13
-						}
-					},
-					vAxis: {
-						textStyle: {
-							color: '#444',
-							fontSize: 13
-						}
-					},
-					tooltip: {
-						trigger: 'none'
-					},
-					legend: {
-						position: 'none'
-					},
-					height: height + 30
-				};
-				var chart = new google.visualization.BarChart( target );
+	var BASE_COLOR = '1e8cbe';
+	var PIE_HEIGHT = 260;
+	var BAR_ROW_HEIGHT = 40;
+
+	/**
+	 * Build a gradient palette starting from the admin blue, one colour per item.
+	 *
+	 * @param {number} count Number of colours.
+	 * @return {string[]} Hex colours.
+	 */
+	function getColors( count ) {
+		var red = parseInt( BASE_COLOR.substr( 0, 2 ), 16 );
+		var green = parseInt( BASE_COLOR.substr( 2, 2 ), 16 );
+		var blue = parseInt( BASE_COLOR.substr( 4, 2 ), 16 );
+		var colors = [];
+
+		for ( var i = 0; i < count; i++ ) {
+			red = Math.min( red + 15, 209 );
+			green = Math.min( green + 10, 223 );
+			blue = Math.min( blue + 5, 229 );
+			colors.push( '#' + toHex( red ) + toHex( green ) + toHex( blue ) );
+		}
+		return colors;
+	}
+
+	function toHex( value ) {
+		var hex = value.toString( 16 );
+		return hex.length < 2 ? '0' + hex : hex;
+	}
+
+	function pieConfig( series ) {
+		return {
+			type: 'pie',
+			data: {
+				labels: series.labels,
+				datasets: [ {
+					data: series.counts,
+					backgroundColor: getColors( series.counts.length ),
+					borderWidth: 1
+				} ]
+			},
+			options: {
+				responsive: true,
+				maintainAspectRatio: false,
+				plugins: {
+					legend: { position: 'right' }
+				}
 			}
-			chart.draw( data, options );
+		};
+	}
+
+	function barConfig( series ) {
+		var total = series.total || 0;
+		var ratios = series.counts.map( function( count ) {
+			return total ? Math.round( count / total * 1000 ) / 10 : 0;
 		} );
 
-		function getColors() {
-			var base_color = '1e8cbe';
-			var red   = parseInt( base_color.substr( 0, 2 ), 16 );
-			var green = parseInt( base_color.substr( 2, 2 ), 16 );
-			var blue  = parseInt( base_color.substr( 4, 2 ), 16 );
-			var count = config.data.length - 1;
-			var colors = [];
-			for ( i = 0; i <= count; i ++ ) {
-				red += 15;
-				if ( red > 209 ) {
-					red = 209;
+		return {
+			type: 'bar',
+			data: {
+				labels: series.labels,
+				datasets: [ {
+					data: ratios,
+					backgroundColor: getColors( series.counts.length ),
+					borderWidth: 0
+				} ]
+			},
+			options: {
+				indexAxis: 'y',
+				responsive: true,
+				maintainAspectRatio: false,
+				plugins: {
+					legend: { display: false },
+					tooltip: {
+						callbacks: {
+							label: function( context ) {
+								return context.parsed.x + ' %';
+							}
+						}
+					}
+				},
+				scales: {
+					x: {
+						min: 0,
+						max: 100,
+						ticks: {
+							color: '#999',
+							callback: function( value ) {
+								return value + ' %';
+							}
+						}
+					},
+					y: {
+						ticks: { color: '#444' }
+					}
 				}
-				green += 10;
-				if ( green > 223 ) {
-					green = 223;
-				}
-				blue += 5;
-				if ( blue > 229 ) {
-					blue = 229;
-				}
-				var hred = red.toString( 16 );
-				if ( hred.length < 2 ) {
-					hred += hred;
-				}
-				var hgreen = green.toString( 16 );
-				if ( hgreen.length < 2 ) {
-					hgreen += hgreen;
-				}
-				var hblue = blue.toString( 16 );
-				if ( hblue.length < 2 ) {
-					hblue += hblue;
-				}
-				colors.push( '#' + hred + hgreen + hblue );
 			}
-			return colors;
-		}
+		};
 	}
-} );
+
+	function render( $container, series ) {
+		var isBar = 'bar' === series.chart;
+		var height = isBar ? series.labels.length * BAR_ROW_HEIGHT + 30 : PIE_HEIGHT;
+		var canvas = document.createElement( 'canvas' );
+
+		$container.css( 'height', height + 'px' ).empty().append( canvas );
+
+		return new window.Chart( canvas, isBar ? barConfig( series ) : pieConfig( series ) );
+	}
+
+	$( function() {
+		var charts = window.unomoonformChartData;
+		if ( ! charts || 'undefined' === typeof window.Chart ) {
+			return;
+		}
+
+		$.each( charts, function( key, series ) {
+			var $container = $( '[data-chart-key="' + key + '"]' );
+			if ( $container.length && series.labels && series.labels.length ) {
+				render( $container, series );
+			}
+		} );
+	} );
+} )( jQuery );

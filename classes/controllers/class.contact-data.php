@@ -79,7 +79,7 @@ class Unomoon_Form_Contact_Data_Controller extends Unomoon_Form_Controller {
 	 */
 	public function _admin_enqueue_scripts() {
 		$url = UNOMOON_FORM_PLUGIN_URL;
-		wp_enqueue_style( Unomoon_Form_Config::NAME . '-admin-data', $url . '/css/admin-data.css' );
+		wp_enqueue_style( Unomoon_Form_Config::NAME . '-admin-data', $url . '/css/admin-data.css', array(), UNOMOON_FORM_VERSION );
 	}
 
 	/**

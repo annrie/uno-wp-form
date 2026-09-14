@@ -452,7 +452,7 @@ class Unomoon_Form_Exec_Shortcode {
 			Unomoon_Form_Config::NAME . '-scroll',
 			UNOMOON_FORM_PLUGIN_URL . '/js/scroll.js',
 			array( 'jquery' ),
-			false,
+			UNOMOON_FORM_VERSION,
 			true
 		);
 		wp_localize_script(

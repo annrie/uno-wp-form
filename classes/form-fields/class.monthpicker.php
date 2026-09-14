@@ -59,28 +59,21 @@ class Unomoon_Form_Field_Monthpicker extends Unomoon_Form_Abstract_Form_Field {
 	 * @return string
 	 */
 	protected function input_page() {
-		global $wp_scripts;
-		$ui = $wp_scripts->query( 'jquery-ui-core' );
+		Unomoon_Form_Functions::enqueue_jquery_ui_style();
+
 		wp_enqueue_style(
-			'jquery.ui',
-			'//ajax.googleapis.com/ajax/libs/jqueryui/' . $ui->ver . '/themes/smoothness/jquery-ui.min.css',
+			'jquery-ui-monthpicker',
+			UNOMOON_FORM_PLUGIN_URL . '/js/jquery-ui-month-picker/MonthPicker.min.css',
 			array(),
-			$ui->ver
+			UNOMOON_FORM_VERSION
 		);
 
-			wp_enqueue_style(
-				'jquery-ui-monthpicker',
-				UNOMOON_FORM_PLUGIN_URL . '/js/jquery-ui-month-picker/MonthPicker.min.css',
-				array(),
-				$ui->ver
-			);
-
-			wp_enqueue_script(
-				'jquery-ui-monthpicker',
-				UNOMOON_FORM_PLUGIN_URL . '/js/jquery-ui-month-picker/MonthPicker.min.js',
-				array( 'jquery', 'jquery-ui-button', 'jquery-ui-datepicker' ),
-				$ui->ver,
-				true
+		wp_enqueue_script(
+			'jquery-ui-monthpicker',
+			UNOMOON_FORM_PLUGIN_URL . '/js/jquery-ui-month-picker/MonthPicker.min.js',
+			array( 'jquery', 'jquery-ui-button', 'jquery-ui-datepicker' ),
+			UNOMOON_FORM_VERSION,
+			true
 		);
 
 		$Json_Parser      = new Unomoon_Form_Json_Parser( $this->atts['js'] );

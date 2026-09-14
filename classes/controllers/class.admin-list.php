@@ -36,7 +36,7 @@ class Unomoon_Form_Admin_List_Controller extends Unomoon_Form_Controller {
 	 */
 	public function _admin_enqueue_scripts() {
 		$url = UNOMOON_FORM_PLUGIN_URL;
-		wp_enqueue_style( Unomoon_Form_Config::NAME . '-admin-list', $url . '/css/admin-list.css' );
+		wp_enqueue_style( Unomoon_Form_Config::NAME . '-admin-list', $url . '/css/admin-list.css', array(), UNOMOON_FORM_VERSION );
 	}
 
 	/**
