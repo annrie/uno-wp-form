@@ -327,7 +327,7 @@ class Unomoon_Form_Admin_Controller extends Unomoon_Form_Controller {
 				$sanitized[ $key ] = sanitize_textarea_field( (string) $value );
 			} elseif ( in_array( $key, array( 'input_url', 'confirmation_url', 'complete_url', 'validation_error_url' ), true ) ) {
 				// URL-aware: keeps percent-encoded octets and query strings that sanitize_text_field() would mangle.
-				$sanitized[ $key ] = sanitize_url( trim( (string) $value ) );
+				$sanitized[ $key ] = esc_url_raw( trim( (string) $value ) );
 			} elseif ( is_array( $value ) ) {
 				$sanitized[ $key ] = map_deep( $value, 'sanitize_text_field' );
 			} else {

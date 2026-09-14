@@ -74,17 +74,13 @@ $run(
 	"UPDATE {$wpdb->postmeta} SET meta_key = 'unomoon-form' WHERE meta_key = %s",
 	'uno-wp-form'
 );
+// Only the plugin's own hidden key is renamed. Other uwf_* meta keys may belong to user-defined
+// form fields ({uwf_email} etc.) or to other plugins and must stay as they are.
 $run(
-	"postmeta '_uwf_*' -> '_unomoonform_*'",
-	"SELECT COUNT(*) FROM {$wpdb->postmeta} WHERE meta_key LIKE %s",
-	"UPDATE {$wpdb->postmeta} SET meta_key = CONCAT( '_unomoonform_', SUBSTRING( meta_key, 6 ) ) WHERE meta_key LIKE %s",
-	$like( '_uwf_' ) . '%'
-);
-$run(
-	"postmeta 'uwf_*' -> 'unomoonform_*'",
-	"SELECT COUNT(*) FROM {$wpdb->postmeta} WHERE meta_key LIKE %s",
-	"UPDATE {$wpdb->postmeta} SET meta_key = CONCAT( 'unomoonform_', SUBSTRING( meta_key, 5 ) ) WHERE meta_key LIKE %s",
-	$like( 'uwf_' ) . '%'
+	"postmeta '_uwf_upload_files' -> '_unomoonform_upload_files'",
+	"SELECT COUNT(*) FROM {$wpdb->postmeta} WHERE meta_key = %s",
+	"UPDATE {$wpdb->postmeta} SET meta_key = '_unomoonform_upload_files' WHERE meta_key = %s",
+	'_uwf_upload_files'
 );
 
 // 3. Options (plugin, chart settings, reCAPTCHA add-on).
@@ -178,13 +174,22 @@ foreach ( $meta_rows as $row ) {
 }
 $log( sprintf( '%s%-60s %d rows', $dry_run ? '[dry-run] ' : '', 'other post meta containing [unoform shortcodes', $touched ) );
 
-// 6. Per-user screen options that embed the inquiry post type (edit_uwf_N_per_page, manageedit-uwf_Ncolumnshidden, ...).
-$run(
-	"usermeta keys containing 'uwf_' -> 'unomoon_'",
-	"SELECT COUNT(*) FROM {$wpdb->usermeta} WHERE meta_key LIKE %s",
-	"UPDATE {$wpdb->usermeta} SET meta_key = REPLACE( meta_key, 'uwf_', 'unomoon_' ) WHERE meta_key LIKE %s",
-	'%' . $like( 'uwf_' ) . '%'
-);
+// 6. Per-user screen options that embed an inquiry post type (edit_uwf_N_per_page, manageedit-uwf_Ncolumnshidden,
+//    closedpostboxes_uwf_N, ...). Only keys where uwf_ is followed by a form ID are touched.
+$user_meta_keys = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT meta_key FROM {$wpdb->usermeta} WHERE meta_key LIKE %s", '%' . $like( 'uwf_' ) . '%' ) );
+$touched        = 0;
+foreach ( $user_meta_keys as $meta_key ) {
+	if ( ! preg_match( '/(^|[_-])uwf_\d+/', $meta_key ) ) {
+		continue;
+	}
+	$new_key = preg_replace( '/(^|[_-])uwf_(\d+)/', '$1unomoon_$2', $meta_key );
+	if ( $dry_run ) {
+		$touched += (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->usermeta} WHERE meta_key = %s", $meta_key ) );
+		continue;
+	}
+	$touched += (int) $wpdb->update( $wpdb->usermeta, array( 'meta_key' => $new_key ), array( 'meta_key' => $meta_key ) );
+}
+$log( sprintf( '%s%-60s %d rows', $dry_run ? '[dry-run] ' : '', 'usermeta screen options for uwf_N post types', $touched ) );
 
 // 7. Stale transients and the old temporary upload directory.
 // (Old form-session transients were keyed by the raw sha1 session ID and simply expire; only the deprecation-notice transient is named.)
