@@ -141,6 +141,43 @@ foreach ( $form_ids as $form_id ) {
 }
 $log( sprintf( '%s%-60s %d rows', $dry_run ? '[dry-run] ' : '', 'form settings containing [unoform shortcodes', $touched ) );
 
+// 5b. Shortcodes stored outside post_content: widgets (serialized options) and arbitrary post meta
+//     (page builders, custom fields). Done through the API so serialized data stays valid.
+$replace_shortcodes = function ( $value ) {
+	return is_string( $value ) ? str_replace( array( '[unoform', '[/unoform' ), array( '[unomoonform', '[/unomoonform' ), $value ) : $value;
+};
+
+$widget_options = $wpdb->get_col( "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE 'widget\\_%' AND option_value LIKE '%[unoform%'" );
+$touched        = 0;
+foreach ( $widget_options as $option_name ) {
+	$option = get_option( $option_name );
+	$new    = map_deep( $option, $replace_shortcodes );
+	if ( $new !== $option ) {
+		$touched++;
+		if ( ! $dry_run ) {
+			update_option( $option_name, $new );
+		}
+	}
+}
+$log( sprintf( '%s%-60s %d rows', $dry_run ? '[dry-run] ' : '', 'widget options containing [unoform shortcodes', $touched ) );
+
+$meta_rows = $wpdb->get_results( "SELECT meta_id FROM {$wpdb->postmeta} WHERE meta_key NOT IN ( 'unomoon-form', 'uno-wp-form' ) AND meta_value LIKE '%[unoform%'" );
+$touched   = 0;
+foreach ( $meta_rows as $row ) {
+	$meta = get_metadata_by_mid( 'post', $row->meta_id );
+	if ( ! $meta ) {
+		continue;
+	}
+	$new = map_deep( $meta->meta_value, $replace_shortcodes );
+	if ( $new !== $meta->meta_value ) {
+		$touched++;
+		if ( ! $dry_run ) {
+			update_metadata_by_mid( 'post', $row->meta_id, $new );
+		}
+	}
+}
+$log( sprintf( '%s%-60s %d rows', $dry_run ? '[dry-run] ' : '', 'other post meta containing [unoform shortcodes', $touched ) );
+
 // 6. Per-user screen options that embed the inquiry post type (edit_uwf_N_per_page, manageedit-uwf_Ncolumnshidden, ...).
 $run(
 	"usermeta keys containing 'uwf_' -> 'unomoon_'",

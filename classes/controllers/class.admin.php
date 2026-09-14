@@ -305,9 +305,9 @@ class Unomoon_Form_Admin_Controller extends Unomoon_Form_Controller {
 	/**
 	 * Sanitize the posted form settings.
 	 *
-	 * Every value is a plain string except the HTML complete message and the two
-	 * multi-line mail bodies. Nested arrays (validation rules, add-on fields) are
-	 * sanitized recursively as plain text.
+	 * Every value is a plain string except the HTML complete message, the two
+	 * multi-line mail bodies and the four redirect URLs. Nested arrays (validation
+	 * rules, add-on fields) are sanitized recursively as plain text.
 	 *
 	 * @param array $data Unslashed settings posted from the edit screen.
 	 * @return array
@@ -325,6 +325,9 @@ class Unomoon_Form_Admin_Controller extends Unomoon_Form_Controller {
 				$sanitized[ $key ] = wp_kses_post( (string) $value );
 			} elseif ( in_array( $key, array( 'mail_content', 'admin_mail_content' ), true ) ) {
 				$sanitized[ $key ] = sanitize_textarea_field( (string) $value );
+			} elseif ( in_array( $key, array( 'input_url', 'confirmation_url', 'complete_url', 'validation_error_url' ), true ) ) {
+				// URL-aware: keeps percent-encoded octets and query strings that sanitize_text_field() would mangle.
+				$sanitized[ $key ] = sanitize_url( trim( (string) $value ) );
 			} elseif ( is_array( $value ) ) {
 				$sanitized[ $key ] = map_deep( $value, 'sanitize_text_field' );
 			} else {

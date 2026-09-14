@@ -102,7 +102,7 @@ class Unomoon_Form_Stores_Inquiry_Data_Form_List_Controller extends Unomoon_Form
 	 * @return string
 	 */
 	protected function _get_created_datetime( $post_type ) {
-		$post_id   = preg_replace( '/^unomoonform_(.+?)$/', '$1', $post_type );
+		$post_id   = (int) preg_replace( '/^' . preg_quote( Unomoon_Form_Config::DBDATA, '/' ) . '(\d+)$/', '$1', $post_type );
 		$post_date = get_the_date( get_option( 'date_format' ), $post_id );
 		return $post_date;
 	}
