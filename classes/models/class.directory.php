@@ -329,28 +329,17 @@ class Unomoon_Form_Directory {
 	}
 
 	/**
-	 * Return the WP_Filesystem instance (direct access to the uploads directory).
+	 * Return a direct-access WP_Filesystem for the uploads directory.
 	 *
-	 * @return WP_Filesystem_Base
-	 * @throws \RuntimeException If the filesystem can not be initialised.
+	 * The temporary files live under wp_upload_dir(), which PHP writes to directly
+	 * (see wp_handle_upload()), so the direct transport is always the right one here
+	 * regardless of the site's global FS_METHOD (FTP/SSH transports would receive local paths).
+	 *
+	 * @return WP_Filesystem_Direct
 	 */
 	public static function _filesystem() {
-		global $wp_filesystem;
 		static $direct = null;
 
-		if ( ! $wp_filesystem ) {
-			if ( ! function_exists( 'WP_Filesystem' ) ) {
-				require_once ABSPATH . 'wp-admin/includes/file.php';
-			}
-			WP_Filesystem();
-		}
-
-		if ( $wp_filesystem ) {
-			return $wp_filesystem;
-		}
-
-		// The uploads directory is written by PHP directly (see wp_handle_upload()), so the direct
-		// transport is always usable for it even when the site's filesystem method needs credentials.
 		if ( null === $direct ) {
 			require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
 			require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
@@ -395,7 +384,9 @@ class Unomoon_Form_Directory {
 			return true;
 		}
 
-		if ( ! static::_filesystem()->put_contents( $htaccess, "Deny from all\n", FS_CHMOD_FILE ) ) {
+		// FS_CHMOD_FILE is only defined once WP_Filesystem() has connected; fall back to the same default.
+		$mode = defined( 'FS_CHMOD_FILE' ) ? FS_CHMOD_FILE : ( fileperms( ABSPATH . 'index.php' ) & 0777 | 0644 );
+		if ( ! static::_filesystem()->put_contents( $htaccess, "Deny from all\n", $mode ) ) {
 			throw new \RuntimeException( '[Unomoon Form] .htaccess can\'t create.' );
 		}
 
