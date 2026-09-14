@@ -180,7 +180,7 @@ class Unomoon_Form_Json_Parser {
 			}
 			$js[ trim( $key ) ] = $value;
 		}
-		return json_encode( $js );
+		return wp_json_encode( $js );
 	}
 
 	/**

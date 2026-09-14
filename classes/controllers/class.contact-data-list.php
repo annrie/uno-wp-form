@@ -48,7 +48,6 @@ class Unomoon_Form_Contact_Data_List_Controller extends Unomoon_Form_Controller 
 
 		add_action( 'pre_get_posts', array( $this, '_pre_get_posts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, '_admin_enqueue_scripts' ) );
-		add_action( 'admin_print_styles', array( $this, '_admin_print_styles' ) );
 		add_action( 'in_admin_footer', array( $this, '_add_csv_download_button' ) );
 		add_filter( 'wp_count_posts', array( $this, '_wp_count_posts' ), 10, 2 );
 
@@ -102,13 +101,8 @@ class Unomoon_Form_Contact_Data_List_Controller extends Unomoon_Form_Controller 
 		$url = UNOMOON_FORM_PLUGIN_URL;
 		wp_enqueue_style( Unomoon_Form_Config::NAME . '-admin-data-list', $url . '/css/admin-data-list.css', array(), UNOMOON_FORM_VERSION );
 		wp_enqueue_script( Unomoon_Form_Config::NAME . '-admin-data-list', $url . '/js/admin-data-list.js', array( 'jquery' ), UNOMOON_FORM_VERSION, true );
-	}
-
-	/**
-	 * Delete add new link.
-	 */
-	public function _admin_print_styles() {
-		$this->_render( 'contact-data-list/admin-print-styles' );
+		// Hide the meta box area on the list screen.
+		wp_add_inline_style( Unomoon_Form_Config::NAME . '-admin-data-list', '#normal-sortables { display: none; }' );
 	}
 
 	/**

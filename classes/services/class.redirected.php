@@ -208,11 +208,8 @@ class Unomoon_Form_Redirected {
 		}
 
 		do_action( 'unomoonform_before_redirect_' . $this->form_key );
-		?>
-		<script type="text/javascript">
-		window.location = "<?php echo esc_js( $redirect ); ?>";
-		</script>
-		<?php
+		// Headers are already sent at this point, so fall back to a script tag printed through the core helper.
+		wp_print_inline_script_tag( 'window.location = ' . wp_json_encode( esc_url_raw( $redirect ) ) . ';' );
 	}
 
 	/**

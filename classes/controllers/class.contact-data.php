@@ -56,7 +56,6 @@ class Unomoon_Form_Contact_Data_Controller extends Unomoon_Form_Controller {
 
 		add_action( 'add_meta_boxes', array( $this, '_add_meta_boxes' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, '_admin_enqueue_scripts' ) );
-		add_action( 'admin_print_styles', array( $this, '_admin_print_styles' ) );
 		add_action( 'edit_form_top', array( $this, '_edit_form_top' ) );
 		add_action( 'save_post', array( $this, '_save_post' ) );
 	}
@@ -80,13 +79,8 @@ class Unomoon_Form_Contact_Data_Controller extends Unomoon_Form_Controller {
 	public function _admin_enqueue_scripts() {
 		$url = UNOMOON_FORM_PLUGIN_URL;
 		wp_enqueue_style( Unomoon_Form_Config::NAME . '-admin-data', $url . '/css/admin-data.css', array(), UNOMOON_FORM_VERSION );
-	}
-
-	/**
-	 * Delete add new link.
-	 */
-	public function _admin_print_styles() {
-		$this->_render( 'contact-data/admin-print-styles' );
+		// Hide the "Add New" link: inquiry data is created only by form submissions.
+		wp_add_inline_style( Unomoon_Form_Config::NAME . '-admin-data', 'h2 a.add-new-h2 { display: none; }' );
 	}
 
 	/**

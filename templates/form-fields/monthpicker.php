@@ -18,10 +18,3 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<?php echo Unomoon_Form_Functions::generate_input_attribute( 'value', $value ); ?>
 	<?php echo Unomoon_Form_Functions::generate_input_attribute( 'placeholder', $placeholder ); ?>
 />
-<script type="text/javascript">
-jQuery(function($) {
-	$("input[name='<?php echo esc_js( $name ); ?>']").MonthPicker({
-		<?php echo trim( $js, '{}' ); ?>
-	});
-});
-</script>

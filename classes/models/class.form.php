@@ -191,7 +191,7 @@ class Unomoon_Form_Form {
 	 */
 	public function children( $name, array $children ) {
 		$name = sprintf( '__children[%s][]', $name );
-		return $this->hidden( $name, json_encode( $children ) );
+		return $this->hidden( $name, wp_json_encode( $children ) );
 	}
 
 	/**

@@ -91,7 +91,17 @@ class Unomoon_Form_Field_Datepicker extends Unomoon_Form_Abstract_Form_Field {
 			);
 		}
 
-		$this->atts['js'] = json_encode( $js );
+		$this->atts['js'] = wp_json_encode( $js );
+
+		// Initialise the widget through the script API instead of an inline <script> tag in the template.
+		wp_add_inline_script(
+			'jquery-ui-datepicker',
+			sprintf(
+				'jQuery( function( $ ) { $( %s ).datepicker( %s ); } );',
+				wp_json_encode( 'input[name="' . $this->atts['name'] . '"]' ),
+				wp_json_encode( $js )
+			)
+		);
 
 		$value = $this->Data->get_raw( $this->atts['name'] );
 		if ( is_null( $value ) ) {
