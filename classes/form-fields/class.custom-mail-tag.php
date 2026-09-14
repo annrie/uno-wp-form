@@ -1,14 +1,18 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
- * Uno_WP_Form_Field_Custom_Mail_Tag
+ * Unomoon_Form_Field_Custom_Mail_Tag
  */
-class Uno_WP_Form_Field_Custom_Mail_Tag extends Uno_WP_Form_Abstract_Form_Field {
+class Unomoon_Form_Field_Custom_Mail_Tag extends Unomoon_Form_Abstract_Form_Field {
 
 	/**
 	 * Types of form type.
@@ -26,8 +30,8 @@ class Uno_WP_Form_Field_Custom_Mail_Tag extends Uno_WP_Form_Abstract_Form_Field 
 	 */
 	protected function set_names() {
 		return array(
-			'shortcode_name' => 'unoform_custom_mail_tag',
-			'display_name'   => __( 'Custom Mail Tag', 'uno-wp-form' ),
+			'shortcode_name' => 'unomoonform_custom_mail_tag',
+			'display_name'   => __( 'Custom Mail Tag', 'unomoon-form' ),
 		);
 	}
 
@@ -61,7 +65,7 @@ class Uno_WP_Form_Field_Custom_Mail_Tag extends Uno_WP_Form_Abstract_Form_Field 
 				)
 			);
 		}
-		$_ret .= $this->Form->hidden( UWF_Config::CUSTOM_MAIL_TAG_KEYS . '[]', $this->atts['name'] );
+		$_ret .= $this->Form->hidden( Unomoon_Form_Config::CUSTOM_MAIL_TAG_KEYS . '[]', $this->atts['name'] );
 		if ( 'false' !== $this->atts['show_error'] ) {
 			$_ret .= $this->get_error( $this->atts['name'] );
 		}
@@ -84,7 +88,7 @@ class Uno_WP_Form_Field_Custom_Mail_Tag extends Uno_WP_Form_Abstract_Form_Field 
 				)
 			);
 		}
-		$_ret .= $this->Form->hidden( UWF_Config::CUSTOM_MAIL_TAG_KEYS . '[]', $this->atts['name'] );
+		$_ret .= $this->Form->hidden( Unomoon_Form_Config::CUSTOM_MAIL_TAG_KEYS . '[]', $this->atts['name'] );
 		return $_ret;
 	}
 
@@ -94,10 +98,10 @@ class Uno_WP_Form_Field_Custom_Mail_Tag extends Uno_WP_Form_Abstract_Form_Field 
 	 *
 	 * @param array $options Options.
 	 */
-	public function unoform_tag_generator_dialog( array $options = array() ) {
+	public function unomoonform_tag_generator_dialog( array $options = array() ) {
 		?>
 		<p>
-			<strong>name<span class="uwf_require">*</span></strong>
+			<strong>name<span class="unomoonform_require">*</span></strong>
 			<?php $name = $this->get_value_for_generator( 'name', $options ); ?>
 			<input type="text" name="name" value="<?php echo esc_attr( $name ); ?>" />
 		</p>
@@ -112,9 +116,9 @@ class Uno_WP_Form_Field_Custom_Mail_Tag extends Uno_WP_Form_Abstract_Form_Field 
 			<input type="text" name="class" value="<?php echo esc_attr( $class ); ?>" />
 		</p>
 		<p>
-			<strong><?php esc_html_e( 'Display', 'uno-wp-form' ); ?></strong>
+			<strong><?php esc_html_e( 'Display', 'unomoon-form' ); ?></strong>
 			<?php $echo = $this->get_value_for_generator( 'echo', $options ); ?>
-			<input type="checkbox" name="echo" value="false" <?php checked( 'false', $echo ); ?> /> <?php esc_html_e( 'Don\'t display.', 'uno-wp-form' ); ?>
+			<input type="checkbox" name="echo" value="false" <?php checked( 'false', $echo ); ?> /> <?php esc_html_e( 'Don\'t display.', 'unomoon-form' ); ?>
 		</p>
 		<?php
 	}
@@ -134,14 +138,14 @@ class Uno_WP_Form_Field_Custom_Mail_Tag extends Uno_WP_Form_Abstract_Form_Field 
 		$options  = array_merge( $defaults, $options );
 		$class    = $options['class'];
 		unset( $options['class'] );
-		$Form       = new Uno_WP_Form_Form();
+		$Form       = new Unomoon_Form_Form();
 		$attributes = $Form->generate_attributes( $options );
 
 		return sprintf(
-			'<span class="unoform-custom-mail-tag-field %s" %s>%s</span>',
+			'<span class="unomoonform-custom-mail-tag-field %s" %s>%s</span>',
 			esc_attr( $class ),
 			$attributes,
-			esc_html( Uno_WP_Form_Parser::apply_filters_unoform_custom_mail_tag( $this->form_key, '', $name ) )
+			esc_html( Unomoon_Form_Parser::apply_filters_unomoonform_custom_mail_tag( $this->form_key, '', $name ) )
 		);
 	}
 }

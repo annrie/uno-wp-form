@@ -1,16 +1,20 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
-/**
- * Uno_WP_Form_Csrf
- */
-class Uno_WP_Form_Csrf {
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
-	const KEY = 'uno-wp-form-token';
+/**
+ * Unomoon_Form_Csrf
+ */
+class Unomoon_Form_Csrf {
+
+	const KEY = 'unomoon-form-token';
 
 	/**
 	 * @var string
@@ -39,7 +43,7 @@ class Uno_WP_Form_Csrf {
 		$saved_token   = static::saved_token();
 		static::$token = ! $saved_token ? static::generate_token() : $saved_token;
 		if ( ! $saved_token && ! headers_sent() ) {
-			$secure = apply_filters( 'unoform_secure_cookie', is_ssl() );
+			$secure = apply_filters( 'unomoonform_secure_cookie', is_ssl() );
 			setcookie(
 				static::KEY,
 				static::$token,
@@ -70,7 +74,16 @@ class Uno_WP_Form_Csrf {
 	 * @return string
 	 */
 	public static function saved_token() {
-		return filter_input( INPUT_COOKIE, static::KEY );
+		if ( ! isset( $_COOKIE[ static::KEY ] ) ) {
+			return null;
+		}
+
+		$token = sanitize_text_field( wp_unslash( $_COOKIE[ static::KEY ] ) );
+		if ( ! preg_match( '|\A[a-z0-9]+\z|', $token ) ) {
+			return null;
+		}
+
+		return $token;
 	}
 
 	/**
@@ -90,6 +103,6 @@ class Uno_WP_Form_Csrf {
 			return bin2hex( openssl_random_pseudo_bytes( 32 ) );
 		}
 
-		return bin2hex( uniqid( mt_rand(), true ) );
+		return bin2hex( uniqid( wp_rand(), true ) );
 	}
 }

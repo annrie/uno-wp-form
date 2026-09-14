@@ -1,14 +1,18 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
- * Uno_WP_Form_Field_Datepicker
+ * Unomoon_Form_Field_Datepicker
  */
-class Uno_WP_Form_Field_Datepicker extends Uno_WP_Form_Abstract_Form_Field {
+class Unomoon_Form_Field_Datepicker extends Unomoon_Form_Abstract_Form_Field {
 
 	/**
 	 * Types of form type.
@@ -26,8 +30,8 @@ class Uno_WP_Form_Field_Datepicker extends Uno_WP_Form_Abstract_Form_Field {
 	 */
 	protected function set_names() {
 		return array(
-			'shortcode_name' => 'unoform_datepicker',
-			'display_name'   => __( 'Datepicker', 'uno-wp-form' ),
+			'shortcode_name' => 'unomoonform_datepicker',
+			'display_name'   => __( 'Datepicker', 'unomoon-form' ),
 		);
 	}
 
@@ -55,12 +59,10 @@ class Uno_WP_Form_Field_Datepicker extends Uno_WP_Form_Abstract_Form_Field {
 	 * @return string
 	 */
 	protected function input_page() {
-		global $wp_scripts;
-		$ui = $wp_scripts->query( 'jquery-ui-core' );
-		wp_enqueue_style( 'jquery.ui', '//ajax.googleapis.com/ajax/libs/jqueryui/' . $ui->ver . '/themes/smoothness/jquery-ui.min.css', array(), $ui->ver );
+		Unomoon_Form_Functions::enqueue_jquery_ui_style();
 		wp_enqueue_script( 'jquery-ui-datepicker' );
 
-		$Json_Parser      = new Uno_WP_Form_Json_Parser( $this->atts['js'] );
+		$Json_Parser      = new Unomoon_Form_Json_Parser( $this->atts['js'] );
 		$this->atts['js'] = $Json_Parser->create_json();
 		$js               = json_decode( $this->atts['js'], true );
 
@@ -73,7 +75,7 @@ class Uno_WP_Form_Field_Datepicker extends Uno_WP_Form_Abstract_Form_Field {
 			);
 		}
 
-		$translate_datepicker = apply_filters( 'unoform_translate_datepicker_' . $this->form_key, true );
+		$translate_datepicker = apply_filters( 'unomoonform_translate_datepicker_' . $this->form_key, true );
 		if ( $translate_datepicker && 'ja' === get_locale() ) {
 			$js = array_merge(
 				array(
@@ -89,7 +91,17 @@ class Uno_WP_Form_Field_Datepicker extends Uno_WP_Form_Abstract_Form_Field {
 			);
 		}
 
-		$this->atts['js'] = json_encode( $js );
+		$this->atts['js'] = wp_json_encode( $js );
+
+		// Initialise the widget through the script API instead of an inline <script> tag in the template.
+		wp_add_inline_script(
+			'jquery-ui-datepicker',
+			sprintf(
+				'jQuery( function( $ ) { $( %s ).datepicker( %s ); } );',
+				wp_json_encode( 'input[name="' . $this->atts['name'] . '"]' ),
+				wp_json_encode( $js )
+			)
+		);
 
 		$value = $this->Data->get_raw( $this->atts['name'] );
 		if ( is_null( $value ) ) {
@@ -132,10 +144,10 @@ class Uno_WP_Form_Field_Datepicker extends Uno_WP_Form_Abstract_Form_Field {
 	 *
 	 * @param array $options Options.
 	 */
-	public function unoform_tag_generator_dialog( array $options = array() ) {
+	public function unomoonform_tag_generator_dialog( array $options = array() ) {
 		?>
 		<p>
-			<strong>name<span class="uwf_require">*</span></strong>
+			<strong>name<span class="unomoonform_require">*</span></strong>
 			<?php $name = $this->get_value_for_generator( 'name', $options ); ?>
 			<input type="text" name="name" value="<?php echo esc_attr( $name ); ?>" />
 		</p>
@@ -160,7 +172,7 @@ class Uno_WP_Form_Field_Datepicker extends Uno_WP_Form_Abstract_Form_Field {
 			<input type="text" name="js" value="<?php echo esc_attr( $js ); ?>" />
 		</p>
 		<p>
-			<strong><?php esc_html_e( 'Default value', 'uno-wp-form' ); ?></strong>
+			<strong><?php esc_html_e( 'Default value', 'unomoon-form' ); ?></strong>
 			<?php $value = $this->get_value_for_generator( 'value', $options ); ?>
 			<input type="text" name="value" value="<?php echo esc_attr( $value ); ?>" />
 		</p>
@@ -170,9 +182,9 @@ class Uno_WP_Form_Field_Datepicker extends Uno_WP_Form_Abstract_Form_Field {
 			<input type="text" name="placeholder" value="<?php echo esc_attr( $placeholder ); ?>" />
 		</p>
 		<p>
-			<strong><?php esc_html_e( 'Display error', 'uno-wp-form' ); ?></strong>
+			<strong><?php esc_html_e( 'Display error', 'unomoon-form' ); ?></strong>
 			<?php $show_error = $this->get_value_for_generator( 'show_error', $options ); ?>
-			<label><input type="checkbox" name="show_error" value="false" <?php checked( 'false', $show_error ); ?> /> <?php esc_html_e( 'Don\'t display error.', 'uno-wp-form' ); ?></label>
+			<label><input type="checkbox" name="show_error" value="false" <?php checked( 'false', $show_error ); ?> /> <?php esc_html_e( 'Don\'t display error.', 'unomoon-form' ); ?></label>
 		</p>
 		<?php
 	}

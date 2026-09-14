@@ -1,14 +1,18 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
- * Uno_WP_Form_Admin_Controller
+ * Unomoon_Form_Admin_Controller
  */
-class Uno_WP_Form_Admin_Controller extends Uno_WP_Form_Controller {
+class Unomoon_Form_Admin_Controller extends Unomoon_Form_Controller {
 
 	/**
 	 * @var array
@@ -32,76 +36,76 @@ class Uno_WP_Form_Admin_Controller extends Uno_WP_Form_Controller {
 	public function _add_meta_boxes() {
 		global $post;
 
-		$this->styles = apply_filters( 'unoform_styles', $this->styles );
-		$form_key     = UWF_Functions::get_form_key_from_form_id( $post->ID );
-		$Form_Fields  = Uno_WP_Form_Form_Fields::instantiation( $form_key );
+		$this->styles = apply_filters( 'unomoonform_styles', $this->styles );
+		$form_key     = Unomoon_Form_Functions::get_form_key_from_form_id( $post->ID );
+		$Form_Fields  = Unomoon_Form_Form_Fields::instantiation( $form_key );
 		$form_fields  = $Form_Fields->get_form_fields();
 		foreach ( $form_fields as $form_field ) {
 			$form_field->add_tag_generator();
 		}
 
 		add_meta_box(
-			UWF_Config::NAME . '_complete_message_metabox',
-			__( 'Complete Message', 'uno-wp-form' ),
+			Unomoon_Form_Config::NAME . '_complete_message_metabox',
+			__( 'Complete Message', 'unomoon-form' ),
 			array( $this, '_complete_message' ),
-			UWF_Config::NAME,
+			Unomoon_Form_Config::NAME,
 			'normal'
 		);
 
 		add_meta_box(
-			UWF_Config::NAME . '_url',
-			__( 'URL Options', 'uno-wp-form' ),
+			Unomoon_Form_Config::NAME . '_url',
+			__( 'URL Options', 'unomoon-form' ),
 			array( $this, '_url' ),
-			UWF_Config::NAME,
+			Unomoon_Form_Config::NAME,
 			'normal'
 		);
 
 		add_meta_box(
-			UWF_Config::NAME . '_validation',
-			__( 'Validation Rule', 'uno-wp-form' ),
+			Unomoon_Form_Config::NAME . '_validation',
+			__( 'Validation Rule', 'unomoon-form' ),
 			array( $this, '_validation_rule' ),
-			UWF_Config::NAME,
+			Unomoon_Form_Config::NAME,
 			'normal'
 		);
 
 		add_meta_box(
-			UWF_Config::NAME . '_formkey',
-			__( 'Form Key', 'uno-wp-form' ),
+			Unomoon_Form_Config::NAME . '_formkey',
+			__( 'Form Key', 'unomoon-form' ),
 			array( $this, '_form_key' ),
-			UWF_Config::NAME,
+			Unomoon_Form_Config::NAME,
 			'side'
 		);
 
 		add_meta_box(
-			UWF_Config::NAME . '_mail',
-			__( 'Automatic Reply Email Options', 'uno-wp-form' ),
+			Unomoon_Form_Config::NAME . '_mail',
+			__( 'Automatic Reply Email Options', 'unomoon-form' ),
 			array( $this, '_mail_options' ),
-			UWF_Config::NAME,
+			Unomoon_Form_Config::NAME,
 			'side'
 		);
 
 		add_meta_box(
-			UWF_Config::NAME . '_admin_mail',
-			__( 'Admin Email Options', 'uno-wp-form' ),
+			Unomoon_Form_Config::NAME . '_admin_mail',
+			__( 'Admin Email Options', 'unomoon-form' ),
 			array( $this, '_admin_mail_options' ),
-			UWF_Config::NAME,
+			Unomoon_Form_Config::NAME,
 			'side'
 		);
 
 		add_meta_box(
-			UWF_Config::NAME . '_settings',
-			__( 'settings', 'uno-wp-form' ),
+			Unomoon_Form_Config::NAME . '_settings',
+			__( 'settings', 'unomoon-form' ),
 			array( $this, '_settings' ),
-			UWF_Config::NAME,
+			Unomoon_Form_Config::NAME,
 			'side'
 		);
 
 		if ( $this->styles ) {
 			add_meta_box(
-				UWF_Config::NAME . '_styles',
-				__( 'Style setting', 'uno-wp-form' ),
+				Unomoon_Form_Config::NAME . '_styles',
+				__( 'Style setting', 'unomoon-form' ),
 				array( $this, '_style' ),
-				UWF_Config::NAME,
+				Unomoon_Form_Config::NAME,
 				'side'
 			);
 		}
@@ -113,7 +117,7 @@ class Uno_WP_Form_Admin_Controller extends Uno_WP_Form_Controller {
 	 * @return string
 	 */
 	public function _default_content() {
-		return apply_filters( 'unoform_default_content', '' );
+		return apply_filters( 'unomoonform_default_content', '' );
 	}
 
 	/**
@@ -123,7 +127,7 @@ class Uno_WP_Form_Admin_Controller extends Uno_WP_Form_Controller {
 	 */
 	public function _tag_generator( $editor_id ) {
 		$post_type = get_post_type();
-		if ( UWF_Config::NAME !== $post_type ) {
+		if ( Unomoon_Form_Config::NAME !== $post_type ) {
 			return;
 		}
 
@@ -138,40 +142,42 @@ class Uno_WP_Form_Admin_Controller extends Uno_WP_Form_Controller {
 	 * Enqueue assets.
 	 */
 	public function _admin_enqueue_scripts() {
-		$url = UNO_WP_FORM_PLUGIN_URL;
+		$url = UNOMOON_FORM_PLUGIN_URL;
 
 		wp_enqueue_style(
-			UWF_Config::NAME . '-admin',
-			$url . '/css/admin.css'
+			Unomoon_Form_Config::NAME . '-admin',
+			$url . '/css/admin.css',
+			array(),
+			UNOMOON_FORM_VERSION
 		);
 
 		wp_enqueue_style(
-			UWF_Config::NAME . '-admin-repeatable',
-			$url . '/css/admin-repeatable.css'
+			Unomoon_Form_Config::NAME . '-admin-repeatable',
+			$url . '/css/admin-repeatable.css',
+			array(),
+			UNOMOON_FORM_VERSION
 		);
 
 		wp_enqueue_script(
-			UWF_Config::NAME . '-repeatable',
-			$url . '/js/uno-wp-form-repeatable.js'
+			Unomoon_Form_Config::NAME . '-repeatable',
+			$url . '/js/unomoon-form-repeatable.js',
+			array( 'jquery' ),
+			UNOMOON_FORM_VERSION,
+			true
 		);
 
 		wp_enqueue_script(
-			UWF_Config::NAME . '-admin',
+			Unomoon_Form_Config::NAME . '-admin',
 			$url . '/js/admin.js',
-			array( 'jquery-ui-dialog', 'jquery-ui-sortable' )
+			array( 'jquery', 'jquery-ui-dialog', 'jquery-ui-sortable', Unomoon_Form_Config::NAME . '-repeatable' ),
+			UNOMOON_FORM_VERSION,
+			true
 		);
 
 		wp_enqueue_script( 'jquery-ui-dialog' );
 		wp_enqueue_script( 'jquery-ui-sortable' );
 
-		global $wp_scripts;
-		$ui = $wp_scripts->query( 'jquery-ui-core' );
-		wp_enqueue_style(
-			'jquery.ui',
-			'//ajax.googleapis.com/ajax/libs/jqueryui/' . $ui->ver . '/themes/smoothness/jquery-ui.min.css',
-			array(),
-			$ui->ver
-		);
+		Unomoon_Form_Functions::enqueue_jquery_ui_style();
 	}
 
 	/**
@@ -180,11 +186,11 @@ class Uno_WP_Form_Admin_Controller extends Uno_WP_Form_Controller {
 	 * @param int $post_id Post ID.
 	 */
 	public function _save_post( $post_id ) {
-		if ( ! isset( $_POST['post_type'] ) || UWF_Config::NAME !== $_POST['post_type'] ) {
+		if ( ! isset( $_POST['post_type'] ) || Unomoon_Form_Config::NAME !== $_POST['post_type'] ) {
 			return;
 		}
 
-		if ( ! isset( $_POST[ UWF_Config::NAME . '_nonce' ] ) ) {
+		if ( ! isset( $_POST[ Unomoon_Form_Config::NAME . '_nonce' ] ) ) {
 			return;
 		}
 
@@ -192,15 +198,21 @@ class Uno_WP_Form_Admin_Controller extends Uno_WP_Form_Controller {
 			return;
 		}
 
-		if ( ! wp_verify_nonce( $_POST[ UWF_Config::NAME . '_nonce' ], UWF_Config::NAME ) ) {
+		$nonce = sanitize_text_field( wp_unslash( $_POST[ Unomoon_Form_Config::NAME . '_nonce' ] ) );
+		if ( ! wp_verify_nonce( $nonce, Unomoon_Form_Config::NAME ) ) {
 			return;
 		}
 
-		if ( ! current_user_can( UWF_Config::CAPABILITY ) ) {
+		if ( ! current_user_can( Unomoon_Form_Config::CAPABILITY ) ) {
 			return;
 		}
 
-		$data = $_POST[ UWF_Config::NAME ];
+		if ( ! isset( $_POST[ Unomoon_Form_Config::NAME ] ) || ! is_array( $_POST[ Unomoon_Form_Config::NAME ] ) ) {
+			return;
+		}
+
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized per key in _sanitize_settings().
+		$data = $this->_sanitize_settings( wp_unslash( $_POST[ Unomoon_Form_Config::NAME ] ) );
 
 		$triminglists = array(
 			'mail_from',
@@ -213,6 +225,9 @@ class Uno_WP_Form_Admin_Controller extends Uno_WP_Form_Controller {
 			'admin_mail_reply_to',
 		);
 		foreach ( $triminglists as $name ) {
+			if ( ! isset( $data[ $name ] ) ) {
+				continue;
+			}
 			if ( function_exists( 'mb_convert_kana' ) ) {
 				$data[ $name ] = trim( mb_convert_kana( $data[ $name ], 's', get_option( 'blog_charset' ) ) );
 			} else {
@@ -229,15 +244,15 @@ class Uno_WP_Form_Admin_Controller extends Uno_WP_Form_Controller {
 
 				foreach ( $_validation as $key => $value ) {
 					if ( 'between' === $key ) {
-						if ( ! UWF_Functions::is_numeric( $value['min'] ) ) {
+						if ( ! Unomoon_Form_Functions::is_numeric( $value['min'] ) ) {
 							unset( $_validation[ $key ]['min'] );
 						}
-						if ( ! UWF_Functions::is_numeric( $value['max'] ) ) {
+						if ( ! Unomoon_Form_Functions::is_numeric( $value['max'] ) ) {
 							unset( $_validation[ $key ]['max'] );
 						}
 					}
 
-					if ( 'minlength' === $key && ! UWF_Functions::is_numeric( $value['min'] ) ) {
+					if ( 'minlength' === $key && ! Unomoon_Form_Functions::is_numeric( $value['min'] ) ) {
 						unset( $_validation[ $key ] );
 					}
 
@@ -245,7 +260,7 @@ class Uno_WP_Form_Admin_Controller extends Uno_WP_Form_Controller {
 						unset( $_validation[ $key ] );
 					}
 
-					if ( 'fileSize' === $key && ! UWF_Functions::is_numeric( $value['bytes'] ) ) {
+					if ( 'fileSize' === $key && ! Unomoon_Form_Functions::is_numeric( $value['bytes'] ) ) {
 						unset( $_validation[ $key ] );
 					}
 
@@ -276,15 +291,51 @@ class Uno_WP_Form_Admin_Controller extends Uno_WP_Form_Controller {
 			$data['scroll'] = false;
 		}
 
-		$Setting = new Uno_WP_Form_Setting( $post_id );
+		$Setting = new Unomoon_Form_Setting( $post_id );
 		$Setting->sets( $data );
 
-		if ( isset( $_POST[ UWF_Config::TRACKINGNUMBER ] ) ) {
-			$tracking_number = $_POST[ UWF_Config::TRACKINGNUMBER ];
+		if ( isset( $_POST[ Unomoon_Form_Config::TRACKINGNUMBER ] ) ) {
+			$tracking_number = absint( wp_unslash( $_POST[ Unomoon_Form_Config::TRACKINGNUMBER ] ) );
 			$Setting->update_tracking_number( $tracking_number );
 		}
 
 		$Setting->save();
+	}
+
+	/**
+	 * Sanitize the posted form settings.
+	 *
+	 * Every value is a plain string except the HTML complete message, the two
+	 * multi-line mail bodies and the four redirect URLs. Nested arrays (validation
+	 * rules, add-on fields) are sanitized recursively as plain text.
+	 *
+	 * @param array $data Unslashed settings posted from the edit screen.
+	 * @return array
+	 */
+	protected function _sanitize_settings( array $data ) {
+		$sanitized = array();
+
+		foreach ( $data as $key => $value ) {
+			$key = sanitize_key( $key );
+			if ( '' === $key ) {
+				continue;
+			}
+
+			if ( 'complete_message' === $key ) {
+				$sanitized[ $key ] = wp_kses_post( (string) $value );
+			} elseif ( in_array( $key, array( 'mail_content', 'admin_mail_content' ), true ) ) {
+				$sanitized[ $key ] = sanitize_textarea_field( (string) $value );
+			} elseif ( in_array( $key, array( 'input_url', 'confirmation_url', 'complete_url', 'validation_error_url' ), true ) ) {
+				// URL-aware: keeps percent-encoded octets and query strings that sanitize_text_field() would mangle.
+				$sanitized[ $key ] = esc_url_raw( trim( (string) $value ) );
+			} elseif ( is_array( $value ) ) {
+				$sanitized[ $key ] = map_deep( $value, 'sanitize_text_field' );
+			} else {
+				$sanitized[ $key ] = sanitize_text_field( (string) $value );
+			}
+		}
+
+		return $sanitized;
 	}
 
 	/**
@@ -293,7 +344,7 @@ class Uno_WP_Form_Admin_Controller extends Uno_WP_Form_Controller {
 	public function _complete_message() {
 		global $post;
 
-		$form_key = UWF_Functions::get_form_key_from_form_id( $post->ID );
+		$form_key = Unomoon_Form_Functions::get_form_key_from_form_id( $post->ID );
 
 		$this->_render(
 			'admin/complete-message',
@@ -310,7 +361,7 @@ class Uno_WP_Form_Admin_Controller extends Uno_WP_Form_Controller {
 	public function _url() {
 		global $post;
 
-		$form_key = UWF_Functions::get_form_key_from_form_id( $post->ID );
+		$form_key = Unomoon_Form_Functions::get_form_key_from_form_id( $post->ID );
 
 		$this->_render(
 			'admin/url',
@@ -339,8 +390,8 @@ class Uno_WP_Form_Admin_Controller extends Uno_WP_Form_Controller {
 			'target' => '',
 		);
 
-		$form_key         = UWF_Functions::get_form_key_from_form_id( $post->ID );
-		$Validation_Rules = Uno_WP_Form_Validation_Rules::instantiation( $form_key );
+		$form_key         = Unomoon_Form_Functions::get_form_key_from_form_id( $post->ID );
+		$Validation_Rules = Unomoon_Form_Validation_Rules::instantiation( $form_key );
 
 		foreach ( $Validation_Rules->get_validation_rules() as $instance ) {
 			$validation_keys[ $instance->getName() ] = '';
@@ -377,7 +428,7 @@ class Uno_WP_Form_Admin_Controller extends Uno_WP_Form_Controller {
 	public function _mail_options() {
 		global $post;
 
-		$form_key = UWF_Functions::get_form_key_from_form_id( $post->ID );
+		$form_key = Unomoon_Form_Functions::get_form_key_from_form_id( $post->ID );
 
 		$mail_sender = $this->_get_option( 'mail_sender' );
 		if ( is_null( $mail_sender ) ) {
@@ -409,7 +460,7 @@ class Uno_WP_Form_Admin_Controller extends Uno_WP_Form_Controller {
 	public function _admin_mail_options() {
 		global $post;
 
-		$form_key = UWF_Functions::get_form_key_from_form_id( $post->ID );
+		$form_key = Unomoon_Form_Functions::get_form_key_from_form_id( $post->ID );
 
 		$mail_to = $this->_get_option( 'mail_to' );
 		if ( is_null( $mail_to ) ) {
@@ -449,7 +500,7 @@ class Uno_WP_Form_Admin_Controller extends Uno_WP_Form_Controller {
 	public function _settings() {
 		global $post;
 
-		$form_key = UWF_Functions::get_form_key_from_form_id( $post->ID );
+		$form_key = Unomoon_Form_Functions::get_form_key_from_form_id( $post->ID );
 
 		$this->_render(
 			'admin/settings',
@@ -460,7 +511,7 @@ class Uno_WP_Form_Admin_Controller extends Uno_WP_Form_Controller {
 				'akismet_author'       => $this->_get_option( 'akismet_author' ),
 				'akismet_author_email' => $this->_get_option( 'akismet_author_email' ),
 				'akismet_author_url'   => $this->_get_option( 'akismet_author_url' ),
-				'tracking_number'      => $this->_get_option( UWF_Config::TRACKINGNUMBER ),
+				'tracking_number'      => $this->_get_option( Unomoon_Form_Config::TRACKINGNUMBER ),
 			),
 			$form_key
 		);
@@ -487,9 +538,9 @@ class Uno_WP_Form_Admin_Controller extends Uno_WP_Form_Controller {
 	 */
 	protected function _get_option( $key ) {
 		global $post;
-		$Setting = new Uno_WP_Form_Setting( $post->ID );
+		$Setting = new Unomoon_Form_Setting( $post->ID );
 
-		if ( UWF_Config::TRACKINGNUMBER === $key ) {
+		if ( Unomoon_Form_Config::TRACKINGNUMBER === $key ) {
 			$value = $Setting->get_tracking_number();
 		} else {
 			$value = $Setting->get( $key );
@@ -500,7 +551,7 @@ class Uno_WP_Form_Admin_Controller extends Uno_WP_Form_Controller {
 		}
 
 		if ( 'auto-draft' === $post->post_status ) {
-			return apply_filters( 'unoform_default_settings', null, $key );
+			return apply_filters( 'unomoonform_default_settings', null, $key );
 		}
 		return '';
 	}

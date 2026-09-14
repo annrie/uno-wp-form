@@ -1,14 +1,18 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
- * Uno_WP_Form_Json_Parser
+ * Unomoon_Form_Json_Parser
  */
-class Uno_WP_Form_Json_Parser {
+class Unomoon_Form_Json_Parser {
 
 	/**
 	 * Json from shortcode
@@ -176,7 +180,7 @@ class Uno_WP_Form_Json_Parser {
 			}
 			$js[ trim( $key ) ] = $value;
 		}
-		return json_encode( $js );
+		return wp_json_encode( $js );
 	}
 
 	/**

@@ -1,14 +1,18 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
- * Uno_WP_Form_Validation_Rule_FileType
+ * Unomoon_Form_Validation_Rule_FileType
  */
-class Uno_WP_Form_Validation_Rule_FileType extends Uno_WP_Form_Abstract_Validation_Rule {
+class Unomoon_Form_Validation_Rule_FileType extends Unomoon_Form_Abstract_Validation_Rule {
 
 	/**
 	 * Validation rule name.
@@ -27,13 +31,13 @@ class Uno_WP_Form_Validation_Rule_FileType extends Uno_WP_Form_Abstract_Validati
 	public function rule( $name, array $options = array() ) {
 		$value = $this->Data->get( $name );
 
-		if ( UWF_Functions::is_empty( $value ) ) {
+		if ( Unomoon_Form_Functions::is_empty( $value ) ) {
 			return;
 		}
 
 		$defaults = array(
 			'types'   => '',
-			'message' => __( 'This file is invalid.', 'uno-wp-form' ),
+			'message' => __( 'This file is invalid.', 'unomoon-form' ),
 		);
 		$options  = array_merge( $defaults, $options );
 		$_types   = explode( ',', $options['types'] );
@@ -41,7 +45,7 @@ class Uno_WP_Form_Validation_Rule_FileType extends Uno_WP_Form_Abstract_Validati
 		foreach ( $_types as $type ) {
 			$types[] = preg_quote( trim( $type ), '/' );
 		}
-		$types   = implode( '|', UWF_Functions::array_clean( $types ) );
+		$types   = implode( '|', Unomoon_Form_Functions::array_clean( $types ) );
 		$pattern = '/\.(' . $types . ')$/i';
 		if ( ! preg_match( $pattern, $value ) ) {
 			return $options['message'];
@@ -63,8 +67,8 @@ class Uno_WP_Form_Validation_Rule_FileType extends Uno_WP_Form_Abstract_Validati
 		?>
 		<table>
 			<tr>
-				<td><?php esc_html_e( 'Permitted Extension', 'uno-wp-form' ); ?></td>
-				<td><input type="text" value="<?php echo esc_attr( $types ); ?>" name="<?php echo UWF_Config::NAME; ?>[validation][<?php echo $key; ?>][<?php echo esc_attr( $this->get_name() ); ?>][types]" /> <span class="uwf_note"><?php esc_html_e( 'Example:jpg or jpg,txt,…', 'uno-wp-form' ); ?></span></td>
+				<td><?php esc_html_e( 'Permitted Extension', 'unomoon-form' ); ?></td>
+				<td><input type="text" value="<?php echo esc_attr( $types ); ?>" name="<?php echo esc_attr( Unomoon_Form_Config::NAME ); ?>[validation][<?php echo esc_attr( $key ); ?>][<?php echo esc_attr( $this->get_name() ); ?>][types]" /> <span class="unomoonform_note"><?php esc_html_e( 'Example:jpg or jpg,txt,…', 'unomoon-form' ); ?></span></td>
 			</tr>
 		</table>
 		<?php

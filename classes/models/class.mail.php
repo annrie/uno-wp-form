@@ -1,14 +1,18 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
- * Uno_WP_Form_Mail
+ * Unomoon_Form_Mail
  */
-class Uno_WP_Form_Mail {
+class Unomoon_Form_Mail {
 
 	/**
 	 * @var string
@@ -61,7 +65,7 @@ class Uno_WP_Form_Mail {
 	public $attachments = array();
 
 	/**
-	 * @var Uno_WP_Form_Mail_Parser
+	 * @var Unomoon_Form_Mail_Parser
 	 */
 	protected $Mail_Parser;
 
@@ -77,7 +81,7 @@ class Uno_WP_Form_Mail {
 		$this->reply_to = trim( $this->reply_to );
 
 		if ( ! $this->to ) {
-			return apply_filters( 'unoform_is_mail_sended', false );
+			return apply_filters( 'unomoonform_is_mail_sended', false );
 		}
 
 		add_action( 'phpmailer_init', array( $this, '_set_return_path' ) );
@@ -103,17 +107,13 @@ class Uno_WP_Form_Mail {
 			$this->body = ' ';
 		}
 
-		if ( defined( 'MWFORM_DEBUG' ) && true === MWFORM_DEBUG ) {
-			$is_mail_sended = $this->_put_mail_log( $headers );
-		} else {
-			$is_mail_sended = wp_mail( $this->to, $this->subject, $this->body, $headers, array_values( $this->attachments ) );
-		}
+		$is_mail_sended = wp_mail( $this->to, $this->subject, $this->body, $headers, array_values( $this->attachments ) );
 
 		remove_action( 'phpmailer_init', array( $this, '_set_return_path' ) );
 		remove_filter( 'wp_mail_from', array( $this, '_set_mail_from' ) );
 		remove_filter( 'wp_mail_from_name', array( $this, '_set_mail_from_name' ) );
 
-		return apply_filters( 'unoform_is_mail_sended', $is_mail_sended );
+		return apply_filters( 'unomoonform_is_mail_sended', $is_mail_sended );
 	}
 
 	/**
@@ -205,9 +205,9 @@ class Uno_WP_Form_Mail {
 	/**
 	 * Set defaults setting for admin mail.
 	 *
-	 * @param Uno_WP_Form_Setting $Setting Uno_WP_Form_Setting object.
+	 * @param Unomoon_Form_Setting $Setting Unomoon_Form_Setting object.
 	 */
-	public function set_admin_mail_raw_params( Uno_WP_Form_Setting $Setting ) {
+	public function set_admin_mail_raw_params( Unomoon_Form_Setting $Setting ) {
 		$this->subject     = $Setting->get( 'admin_mail_subject' );
 		$this->body        = $Setting->get( 'admin_mail_content' );
 		$this->to          = $Setting->get( 'mail_to' );
@@ -222,24 +222,24 @@ class Uno_WP_Form_Mail {
 	/**
 	 * Set defaults setting for reply mail.
 	 *
-	 * @param Uno_WP_Form_Setting $Setting Uno_WP_Form_Setting object.
+	 * @param Unomoon_Form_Setting $Setting Unomoon_Form_Setting object.
 	 */
-	public function set_reply_mail_raw_params( Uno_WP_Form_Setting $Setting ) {
+	public function set_reply_mail_raw_params( Unomoon_Form_Setting $Setting ) {
 		$this->to          = '';
 		$this->cc          = '';
 		$this->bcc         = '';
 		$this->attachments = array();
 
 		$form_id               = $Setting->get( 'post_id' );
-		$form_key              = UWF_Functions::get_form_key_from_form_id( $form_id );
-		$Data                  = Uno_WP_Form_Data::connect( $form_key );
+		$form_key              = Unomoon_Form_Functions::get_form_key_from_form_id( $form_id );
+		$Data                  = Unomoon_Form_Data::connect( $form_key );
 		$automatic_reply_email = $Setting->get( 'automatic_reply_email' );
 
 		if ( ! $form_id ) {
 			return;
 		}
 
-		$Validation              = new Uno_WP_Form_Validation_Rule_Mail( $Data );
+		$Validation              = new Unomoon_Form_Validation_Rule_Mail( $Data );
 		$is_invalid_mail_address = $Validation->rule(
 			$automatic_reply_email
 		);
@@ -259,10 +259,10 @@ class Uno_WP_Form_Mail {
 	/**
 	 * Replace {name} to content in mail content.
 	 *
-	 * @param Uno_WP_Form_Setting $Setting Uno_WP_Form_Setting object.
+	 * @param Unomoon_Form_Setting $Setting Unomoon_Form_Setting object.
 	 */
 	public function parse( $Setting ) {
-		$this->Mail_Parser = new Uno_WP_Form_Mail_Parser( $this, $Setting );
+		$this->Mail_Parser = new Unomoon_Form_Mail_Parser( $this, $Setting );
 		$Mail              = $this->Mail_Parser->get_parsed_mail_object();
 		foreach ( get_object_vars( $Mail ) as $key => $value ) {
 			$this->$key = $value;
@@ -272,11 +272,11 @@ class Uno_WP_Form_Mail {
 	/**
 	 * Save to database.
 	 *
-	 * @param Uno_WP_Form_Setting $Setting Uno_WP_Form_Setting object.
+	 * @param Unomoon_Form_Setting $Setting Unomoon_Form_Setting object.
 	 * @return int
 	 */
 	public function save( $Setting ) {
-		$this->Mail_Parser = new Uno_WP_Form_Mail_Parser( $this, $Setting );
+		$this->Mail_Parser = new Unomoon_Form_Mail_Parser( $this, $Setting );
 		$this->Mail_Parser->save();
 		return $this->get_saved_mail_id();
 	}
@@ -290,70 +290,5 @@ class Uno_WP_Form_Mail {
 		if ( $this->Mail_Parser ) {
 			return $this->Mail_Parser->get_saved_mail_id();
 		}
-	}
-
-	/**
-	 * Logging that Uno WP Form sending mail.
-	 *
-	 * @param string $headers Mail headers.
-	 * @return bool
-	 */
-	protected function _put_mail_log( $headers ) {
-		// Update properties
-		wp_mail( '', $this->subject, '', $headers, array() );
-
-		$temp_dir = Uno_WP_Form_Directory::get();
-		$temp_dir = apply_filters( 'unoform_log_directory', $temp_dir );
-
-		$contents  = '====================';
-		$contents .= "\n\n";
-		$contents .= 'Send Date: %1$s';
-		$contents .= "\n";
-		$contents .= 'To: %2$s';
-		$contents .= "\n";
-		$contents .= 'Sender: %3$s';
-		$contents .= "\n";
-		$contents .= 'Reply-to: %4$s';
-		$contents .= "\n";
-		$contents .= 'From: %5$s';
-		$contents .= "\n";
-		$contents .= 'Return-Path: %6$s';
-		$contents .= "\n";
-		$contents .= 'Subject: %7$s';
-		$contents .= "\n";
-		$contents .= 'headers:%8$s';
-		$contents .= "\n";
-		$contents .= '-----';
-		$contents .= "\n";
-		$contents .= '%9$s';
-		$contents .= "\n";
-		$contents .= '-----';
-		$contents .= "\n";
-		$contents .= 'attachments:';
-		$contents .= "\n";
-		$contents .= '%10$s';
-		$contents .= "\n\n";
-
-		$contents = sprintf(
-			$contents,
-			date_i18n( 'M j Y, H:i:s' ),
-			$this->to,
-			$this->sender,
-			$this->reply_to,
-			$this->from,
-			$this->return_path,
-			$this->subject,
-			implode( "\n", $headers ),
-			$this->body,
-			implode( "\n", $this->attachments )
-		);
-
-		$is_mail_sended = file_put_contents( $temp_dir . '/uno-wp-form-debug.log', $contents, FILE_APPEND );
-
-		if ( false === $is_mail_sended ) {
-			return false;
-		}
-
-		return true;
 	}
 }

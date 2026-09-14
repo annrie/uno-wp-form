@@ -1,14 +1,18 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
- * Uno_WP_Form_Akismet
+ * Unomoon_Form_Akismet
  */
-class Uno_WP_Form_Akismet {
+class Unomoon_Form_Akismet {
 
 	/**
 	 * Return akismet api key when akismet is active
@@ -33,7 +37,7 @@ class Uno_WP_Form_Akismet {
 	 * @param string          $akismet_author       Akismet author.
 	 * @param string          $akismet_author_email Akismet author e-mail.
 	 * @param string          $akismet_author_url   Akismet author url.
-	 * @param Uno_WP_Form_Data $Data Uno_WP_Form_Data object.
+	 * @param Unomoon_Form_Data $Data Unomoon_Form_Data object.
 	 * @return bool
 	 */
 	public function is_valid( $akismet_author, $akismet_author_email, $akismet_author_url, $Data ) {
@@ -79,10 +83,10 @@ class Uno_WP_Form_Akismet {
 		$akismet['blog']         = home_url();
 		$akismet['blog_lang']    = get_locale();
 		$akismet['blog_charset'] = get_option( 'blog_charset' );
-		$akismet['user_ip']      = preg_replace( '/[^0-9., ]/', '', $_SERVER['REMOTE_ADDR'] );
-		$akismet['user_agent']   = $_SERVER['HTTP_USER_AGENT'];
-		$akismet['referrer']     = $_SERVER['HTTP_REFERER'];
-		$akismet['comment_type'] = UWF_Config::NAME;
+		$akismet['user_ip']      = isset( $_SERVER['REMOTE_ADDR'] ) ? preg_replace( '/[^0-9a-fA-F:., ]/', '', sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) ) : '';
+		$akismet['user_agent']   = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
+		$akismet['referrer']     = isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : '';
+		$akismet['comment_type'] = Unomoon_Form_Config::NAME;
 
 		if ( $permalink ) {
 			$akismet['permalink'] = $permalink;
@@ -100,11 +104,15 @@ class Uno_WP_Form_Akismet {
 			$akismet['comment_content'] = $content;
 		}
 
+		// Akismet asks for the request environment; pass it on as plain text without credentials.
 		foreach ( $_SERVER as $key => $value ) {
 			if ( in_array( $key, array( 'HTTP_COOKIE', 'HTTP_COOKIE2', 'PHP_AUTH_PW' ), true ) ) {
 				continue;
 			}
-			$akismet[ $key ] = $value;
+			if ( ! is_scalar( $value ) ) {
+				continue;
+			}
+			$akismet[ $key ] = sanitize_text_field( wp_unslash( (string) $value ) );
 		}
 
 		$query_string = http_build_query( $akismet, '', '&' );
@@ -118,7 +126,7 @@ class Uno_WP_Form_Akismet {
 				$akismet_api_port
 			);
 		}
-		$response = apply_filters( 'unoform_akismet_responce', $response );
+		$response = apply_filters( 'unomoonform_akismet_responce', $response );
 		return ( 'true' === $response[1] ) ? true : false;
 	}
 }

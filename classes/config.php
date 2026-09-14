@@ -1,63 +1,67 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
- * UWF_Config
+ * Unomoon_Form_Config
  */
-class UWF_Config {
+class Unomoon_Form_Config {
 
 	/**
 	 * Plugin ID.
 	 *
 	 * @var string
 	 */
-	const NAME = 'uno-wp-form';
+	const NAME = 'unomoon-form';
 
 	/**
 	 * Text Domain.
 	 *
 	 * @var string
 	 */
-	const DOMAIN = 'uno-wp-form';
+	const DOMAIN = 'unomoon-form';
 
 	/**
 	 * Prefix of post type of saved inquiry data.
 	 *
 	 * @var string
 	 */
-	const DBDATA = 'uwf_';
+	const DBDATA = 'unomoon_'; // Keep short: post type names are limited to 20 characters (prefix + form ID).
 
 	/**
 	 * The name of field that array of uploaded file names.
 	 *
 	 * @var string
 	 */
-	const UPLOAD_FILE_KEYS = 'uwf_upload_files';
+	const UPLOAD_FILE_KEYS = 'unomoonform_upload_files';
 
 	/**
 	 * The name of field that array of custom mail tag names.
 	 *
 	 * @var string
 	 */
-	const CUSTOM_MAIL_TAG_KEYS = 'uwf_custom_mail_tags';
+	const CUSTOM_MAIL_TAG_KEYS = 'unomoonform_custom_mail_tags';
 
 	/**
 	 * $_FILES.
 	 *
 	 * @var string
 	 */
-	const UPLOAD_FILES = 'uwf_files';
+	const UPLOAD_FILES = 'unomoonform_files';
 
 	/**
 	 * Field name of Akismet.
 	 *
 	 * @var string
 	 */
-	const AKISMET = 'uwf_akismet';
+	const AKISMET = 'unomoonform_akismet';
 
 	/**
 	 * Capability.
@@ -92,7 +96,7 @@ class UWF_Config {
 	 *
 	 * @var string
 	 */
-	const CONTACT_DATA_NAME = '_uno-wp-form_data';
+	const CONTACT_DATA_NAME = '_unomoon-form_data';
 
 	/**
 	 * Name of meta data of saved inquiry data.
@@ -106,12 +110,12 @@ class UWF_Config {
 	 *
 	 * @var string
 	 */
-	const SEND_ERROR = 'uno-wp-form-send-error';
+	const SEND_ERROR = 'unomoon-form-send-error';
 
 	/**
 	 * Nonce field name.
 	 *
 	 * @var string
 	 */
-	const TOKEN_NAME = 'uno_wp_form_token';
+	const TOKEN_NAME = 'unomoon_form_token';
 }

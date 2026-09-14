@@ -18,17 +18,17 @@
 /**
  * DB保存データのカスタムフィールド
  */
-#uno-wp-form_custom_fields table,
-#uno-wp-form_data_custom_fields table {
+#unomoon-form_custom_fields table,
+#unomoon-form_data_custom_fields table {
 	font-size: 100%;
 	border-top: #dfdfdf solid 1px;
 	border-right: #dfdfdf solid 1px;
 	width: 100%;
 }
-#uno-wp-form_custom_fields table th,
-#uno-wp-form_custom_fields table td,
-#uno-wp-form_data_custom_fields table th,
-#uno-wp-form_data_custom_fields table td {
+#unomoon-form_custom_fields table th,
+#unomoon-form_custom_fields table td,
+#unomoon-form_data_custom_fields table th,
+#unomoon-form_data_custom_fields table td {
 	border-bottom: #dfdfdf solid 1px;
 	border-left: #dfdfdf solid 1px;
 	padding: 5px 10px;
@@ -36,11 +36,11 @@
 	vertical-align: top;
 	width: 30%;
 }
-#uno-wp-form_custom_fields table td,
-#uno-wp-form_data_custom_fields table td {
+#unomoon-form_custom_fields table td,
+#unomoon-form_data_custom_fields table td {
 	background-color: #fff;
 	width: 70%;
 }
-#uno-wp-form_data_custom_fields textarea {
+#unomoon-form_data_custom_fields textarea {
 	width: 100%;
 }

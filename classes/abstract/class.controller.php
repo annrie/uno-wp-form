@@ -1,14 +1,18 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
- * Uno_WP_Form_Controller
+ * Unomoon_Form_Controller
  */
-class Uno_WP_Form_Controller {
+class Unomoon_Form_Controller {
 
 	/**
 	 * Rendering template
@@ -32,10 +36,11 @@ class Uno_WP_Form_Controller {
 		ob_start();
 		include( $template_path );
 		$html = ob_get_clean();
-		$html = apply_filters( 'unoform_template_render', $html, $template, $args );
+		$html = apply_filters( 'unomoonform_template_render', $html, $template, $args );
 		if ( $form_key ) {
-			$html = apply_filters( 'unoform_template_render_' . $form_key, $html, $template, $args );
+			$html = apply_filters( 'unomoonform_template_render_' . $form_key, $html, $template, $args );
 		}
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Buffered output of a template file; every value is escaped inside the template.
 		echo $html;
 	}
 }

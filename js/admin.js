@@ -1,18 +1,18 @@
 jQuery( function( $ ) {
 
-	$( '#uno-wp-form_validation' ).uno_wp_form_repeatable();
+	$( '#unomoon-form_validation' ).unomoon_form_repeatable();
 
 	/**
 	 * 完了ページの入力エリアからオリジナルボタンを消去
 	 */
 	$( window ).on( 'load', function() {
-		$( '#uno-wp-form_complete_message_metabox input[id^="qt_uno-wp-form_complete_message_unoform_"]' ).remove();
+		$( '#unomoon-form_complete_message_metabox input[id^="qt_unomoon-form_complete_message_unomoonform_"]' ).remove();
 	} );
 
 	/**
 	 * フォームタグジェネレータ
 	 */
-	function unoform_create_shortcode( dialog_id ) {
+	function unomoonform_create_shortcode( dialog_id ) {
 		var attributes      = [];
 		var shortcode_name  = dialog_id.replace( 'dialog-', '' );
 		var element_content = null;
@@ -64,14 +64,14 @@ jQuery( function( $ ) {
 		return shortcode_name + '-' + Math.floor( Math.random() * 1000 );
 	}
 
-	$( '.unoform-dialog' ).dialog( {
+	$( '.unomoonform-dialog' ).dialog( {
 		bgiframe: true,
 		autoOpen: false,
 		resizable: true,
 		width: 500,
 		buttons: {
 			'Insert': function() {
-				send_to_editor( unoform_create_shortcode( $( this ).attr( 'id' ) ) );
+				send_to_editor( unomoonform_create_shortcode( $( this ).attr( 'id' ) ) );
 				$( this ).dialog( 'close' );
 			},
 			'Cancel': function() {
@@ -82,15 +82,15 @@ jQuery( function( $ ) {
 		}
 	} );
 
-	$( '.add-unoform-btn .button' ).click( function() {
-		var select = $( '.add-unoform-btn select' ).val();
+	$( '.add-unomoonform-btn .button' ).click( function() {
+		var select = $( '.add-unomoonform-btn select' ).val();
 		$( '#dialog-' + select ).dialog( 'open' );
 	} );
 
 	/**
 	 * sortable
 	 */
-	$( '#uno-wp-form_validation .repeatable-boxes' ).sortable( {
+	$( '#unomoon-form_validation .repeatable-boxes' ).sortable( {
 		items : '> .repeatable-box',
 		handle: '.sortable-icon-handle'
 	} );

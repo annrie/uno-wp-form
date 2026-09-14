@@ -1,14 +1,18 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
- * Uno_WP_Form_Contact_Data_List_Controller
+ * Unomoon_Form_Contact_Data_List_Controller
  */
-class Uno_WP_Form_Contact_Data_List_Controller extends Uno_WP_Form_Controller {
+class Unomoon_Form_Contact_Data_List_Controller extends Unomoon_Form_Controller {
 
 	/**
 	 * @var string
@@ -27,24 +31,25 @@ class Uno_WP_Form_Contact_Data_List_Controller extends Uno_WP_Form_Controller {
 	 * Constructor.
 	 */
 	public function __construct() {
-		$contact_data_post_types = Uno_WP_Form_Contact_Data_Setting::get_form_post_types();
+		$contact_data_post_types = Unomoon_Form_Contact_Data_Setting::get_form_post_types();
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Screen selector only; validated against the known post types.
 		if ( ! isset( $_GET['post_type'] ) ) {
 			exit;
 		}
 
-		$this->post_type = $_GET['post_type'];
+		$this->post_type = sanitize_key( wp_unslash( $_GET['post_type'] ) );
+		// phpcs:enable
 		if ( ! in_array( $this->post_type, $contact_data_post_types, true ) ) {
 			exit;
 		}
 
-		if ( ! empty( $_POST ) ) {
-			$CSV = new Uno_WP_Form_CSV( $this->post_type );
+		if ( ! empty( $_POST ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce is verified in Unomoon_Form_CSV::download().
+			$CSV = new Unomoon_Form_CSV( $this->post_type );
 			$CSV->download();
 		}
 
 		add_action( 'pre_get_posts', array( $this, '_pre_get_posts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, '_admin_enqueue_scripts' ) );
-		add_action( 'admin_print_styles', array( $this, '_admin_print_styles' ) );
 		add_action( 'in_admin_footer', array( $this, '_add_csv_download_button' ) );
 		add_filter( 'wp_count_posts', array( $this, '_wp_count_posts' ), 10, 2 );
 
@@ -74,7 +79,7 @@ class Uno_WP_Form_Contact_Data_List_Controller extends Uno_WP_Form_Controller {
 		$post_type   = $wp_query->get( 'post_type' );
 		$post_status = $wp_query->get( 'post_status' );
 
-		$args = apply_filters( 'unoform_get_inquiry_data_args-' . $post_type, array() );
+		$args = apply_filters( 'unomoonform_get_inquiry_data_args-' . $post_type, array() );
 		if ( empty( $args ) || ! is_array( $args ) ) {
 			$args = array();
 		}
@@ -95,30 +100,25 @@ class Uno_WP_Form_Contact_Data_List_Controller extends Uno_WP_Form_Controller {
 	 * Enqueue assets.
 	 */
 	public function _admin_enqueue_scripts() {
-		$url = UNO_WP_FORM_PLUGIN_URL;
-		wp_enqueue_style( UWF_Config::NAME . '-admin-data-list', $url . '/css/admin-data-list.css' );
-		wp_enqueue_script( UWF_Config::NAME . '-admin-data-list', $url . '/js/admin-data-list.js' );
-	}
-
-	/**
-	 * Delete add new link.
-	 */
-	public function _admin_print_styles() {
-		$this->_render( 'contact-data-list/admin-print-styles' );
+		$url = UNOMOON_FORM_PLUGIN_URL;
+		wp_enqueue_style( Unomoon_Form_Config::NAME . '-admin-data-list', $url . '/css/admin-data-list.css', array(), UNOMOON_FORM_VERSION );
+		wp_enqueue_script( Unomoon_Form_Config::NAME . '-admin-data-list', $url . '/js/admin-data-list.js', array( 'jquery' ), UNOMOON_FORM_VERSION, true );
+		// Hide the meta box area on the list screen.
+		wp_add_inline_style( Unomoon_Form_Config::NAME . '-admin-data-list', '#normal-sortables { display: none; }' );
 	}
 
 	/**
 	 * Render csv download button.
 	 */
 	public function _add_csv_download_button() {
-		if ( true !== apply_filters( 'unoform_csv_button_' . $this->post_type, true ) ) {
+		if ( true !== apply_filters( 'unomoonform_csv_button_' . $this->post_type, true ) ) {
 			return;
 		}
-		$page = ( basename( $_SERVER['PHP_SELF'] ) );
-		if ( 'edit.php' !== $page ) {
+		global $pagenow;
+		if ( 'edit.php' !== $pagenow ) {
 			return;
 		}
-		$action = $_SERVER['REQUEST_URI'];
+		$action = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
 		$this->_render(
 			'contact-data-list/csv-button',
 			array(
@@ -135,7 +135,7 @@ class Uno_WP_Form_Contact_Data_List_Controller extends Uno_WP_Form_Controller {
 	 * @return object
 	 */
 	public function _wp_count_posts( $counts, $type ) {
-		$args = apply_filters( 'unoform_get_inquiry_data_args-' . $type, array() );
+		$args = apply_filters( 'unomoonform_get_inquiry_data_args-' . $type, array() );
 		if ( empty( $args ) || ! is_array( $args ) ) {
 			$args = array();
 		}
@@ -167,9 +167,9 @@ class Uno_WP_Form_Contact_Data_List_Controller extends Uno_WP_Form_Controller {
 		global $posts;
 
 		unset( $columns['date'] );
-		$columns['post_date']       = __( 'Registed Date', 'uno-wp-form' );
-		$columns['admin_mail_to']   = __( 'Admin Email To', 'uno-wp-form' );
-		$columns['response_status'] = __( 'Response Status', 'uno-wp-form' );
+		$columns['post_date']       = __( 'Registed Date', 'unomoon-form' );
+		$columns['admin_mail_to']   = __( 'Admin Email To', 'unomoon-form' );
+		$columns['response_status'] = __( 'Response Status', 'unomoon-form' );
 		$_columns                   = array();
 
 		foreach ( $posts as $post ) {
@@ -183,8 +183,8 @@ class Uno_WP_Form_Contact_Data_List_Controller extends Uno_WP_Form_Controller {
 					continue;
 				}
 
-				if ( UWF_Config::TRACKINGNUMBER === $key ) {
-					$_columns[ $key ] = UWF_Functions::get_tracking_number_title( $this->post_type );
+				if ( Unomoon_Form_Config::TRACKINGNUMBER === $key ) {
+					$_columns[ $key ] = Unomoon_Form_Functions::get_tracking_number_title( $this->post_type );
 					continue;
 				}
 
@@ -193,7 +193,7 @@ class Uno_WP_Form_Contact_Data_List_Controller extends Uno_WP_Form_Controller {
 		}
 
 		ksort( $_columns );
-		$_columns = apply_filters( 'unoform_inquiry_data_columns-' . $this->post_type, $_columns );
+		$_columns = apply_filters( 'unomoonform_inquiry_data_columns-' . $this->post_type, $_columns );
 
 		// Meta keys can be attacker-influenced (they derive from mail-content tags),
 		// and WordPress prints the column identifier verbatim into the heading id
@@ -240,9 +240,9 @@ class Uno_WP_Form_Contact_Data_List_Controller extends Uno_WP_Form_Controller {
 			return $key;
 		}
 
-		$base = 'uwf-' . sanitize_key( $key );
-		if ( 'uwf-' === $base ) {
-			$base = 'uwf-col';
+		$base = 'unomoonform-' . sanitize_key( $key );
+		if ( 'unomoonform-' === $base ) {
+			$base = 'unomoonform-col';
 		}
 		$id = $base;
 		$n  = 2;
@@ -268,7 +268,7 @@ class Uno_WP_Form_Contact_Data_List_Controller extends Uno_WP_Form_Controller {
 
 		$post                 = get_post( $post_id );
 		$post_custom_keys     = get_post_custom_keys( $post_id );
-		$contact_data_setting = new Uno_WP_Form_Contact_Data_Setting( $post_id );
+		$contact_data_setting = new Unomoon_Form_Contact_Data_Setting( $post_id );
 
 		if ( 'post_date' === $column ) {
 			$value = esc_html( $post->post_date );
@@ -285,9 +285,9 @@ class Uno_WP_Form_Contact_Data_List_Controller extends Uno_WP_Form_Controller {
 			if ( $contact_data_setting->is_upload_file_key( $column ) ) {
 				// 過去バージョンでの不具合でメタデータが空になっていることがあるのでその場合は代替処理
 				if ( '' === $post_meta ) {
-					$post_meta = UWF_Functions::get_multimedia_id__fallback( $post, $column );
+					$post_meta = Unomoon_Form_Functions::get_multimedia_id__fallback( $post, $column );
 				}
-				$value = UWF_Functions::get_multimedia_data( $post_meta );
+				$value = Unomoon_Form_Functions::get_multimedia_data( $post_meta );
 			} elseif ( '' === $post_meta || null === $post_meta || false === $post_meta ) {
 				$value = '&nbsp;';
 			} else {

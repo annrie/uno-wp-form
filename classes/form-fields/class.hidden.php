@@ -1,14 +1,18 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
- * Uno_WP_Form_Field_Hidden
+ * Unomoon_Form_Field_Hidden
  */
-class Uno_WP_Form_Field_Hidden extends Uno_WP_Form_Abstract_Form_Field {
+class Unomoon_Form_Field_Hidden extends Unomoon_Form_Abstract_Form_Field {
 
 	/**
 	 * Set shortcode_name and display_name.
@@ -18,8 +22,8 @@ class Uno_WP_Form_Field_Hidden extends Uno_WP_Form_Abstract_Form_Field {
 	 */
 	protected function set_names() {
 		return array(
-			'shortcode_name' => 'unoform_hidden',
-			'display_name'   => __( 'Hidden', 'uno-wp-form' ),
+			'shortcode_name' => 'unomoonform_hidden',
+			'display_name'   => __( 'Hidden', 'unomoon-form' ),
 		);
 	}
 
@@ -74,22 +78,22 @@ class Uno_WP_Form_Field_Hidden extends Uno_WP_Form_Abstract_Form_Field {
 	 *
 	 * @param array $options Options.
 	 */
-	public function unoform_tag_generator_dialog( array $options = array() ) {
+	public function unomoonform_tag_generator_dialog( array $options = array() ) {
 		?>
 		<p>
-			<strong>name<span class="uwf_require">*</span></strong>
+			<strong>name<span class="unomoonform_require">*</span></strong>
 			<?php $name = $this->get_value_for_generator( 'name', $options ); ?>
 			<input type="text" name="name" value="<?php echo esc_attr( $name ); ?>" />
 		</p>
 		<p>
-			<strong><?php esc_html_e( 'Default value', 'uno-wp-form' ); ?></strong>
+			<strong><?php esc_html_e( 'Default value', 'unomoon-form' ); ?></strong>
 			<?php $value = $this->get_value_for_generator( 'value', $options ); ?>
 			<input type="text" name="value" value="<?php echo esc_attr( $value ); ?>" />
 		</p>
 		<p>
-			<strong><?php esc_html_e( 'Display', 'uno-wp-form' ); ?></strong>
+			<strong><?php esc_html_e( 'Display', 'unomoon-form' ); ?></strong>
 			<?php $echo = $this->get_value_for_generator( 'echo', $options ); ?>
-			<input type="checkbox" name="echo" value="true" <?php checked( 'true', $echo ); ?> /> <?php esc_html_e( 'Display hidden value.', 'uno-wp-form' ); ?>
+			<input type="checkbox" name="echo" value="true" <?php checked( 'true', $echo ); ?> /> <?php esc_html_e( 'Display hidden value.', 'unomoon-form' ); ?>
 		</p>
 		<?php
 	}

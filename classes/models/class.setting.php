@@ -1,14 +1,18 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
- * Uno_WP_Form_Setting
+ * Unomoon_Form_Setting
  */
-class Uno_WP_Form_Setting {
+class Unomoon_Form_Setting {
 
 	/**
 	 * Form ID.
@@ -226,17 +230,17 @@ class Uno_WP_Form_Setting {
 	 * @param int $post_id Post ID.
 	 */
 	public function __construct( $post_id ) {
-		if ( UWF_Config::NAME !== get_post_type( $post_id ) ) {
+		if ( Unomoon_Form_Config::NAME !== get_post_type( $post_id ) ) {
 			return;
 		}
 
 		$this->post_id = $post_id;
 
-		$form_key     = UWF_Functions::get_form_key_from_form_id( $this->post_id );
-		$this->extend = apply_filters( 'unoform_settings_extend_fields', $this->extend );
-		$this->extend = apply_filters( 'unoform_settings_extend_fields_' . $form_key, $this->extend );
+		$form_key     = Unomoon_Form_Functions::get_form_key_from_form_id( $this->post_id );
+		$this->extend = apply_filters( 'unomoonform_settings_extend_fields', $this->extend );
+		$this->extend = apply_filters( 'unomoonform_settings_extend_fields_' . $form_key, $this->extend );
 
-		$values = get_post_meta( $this->post_id, UWF_Config::NAME, true );
+		$values = get_post_meta( $this->post_id, Unomoon_Form_Config::NAME, true );
 		if ( ! is_array( $values ) ) {
 			return;
 		}
@@ -291,9 +295,10 @@ class Uno_WP_Form_Setting {
 			}
 			$new_values[ $key ] = $value;
 		}
-		update_post_meta( $this->post_id, UWF_Config::NAME, $new_values );
-		$form_key = UWF_Functions::get_form_key_from_form_id( $this->post_id );
-		do_action( 'unoform_settings_save_' . $form_key, $this->post_id );
+		// Values are held unslashed; update_post_meta() expects slashed input.
+		update_post_meta( $this->post_id, Unomoon_Form_Config::NAME, wp_slash( $new_values ) );
+		$form_key = Unomoon_Form_Functions::get_form_key_from_form_id( $this->post_id );
+		do_action( 'unomoonform_settings_save_' . $form_key, $this->post_id );
 	}
 
 	/**
@@ -302,7 +307,7 @@ class Uno_WP_Form_Setting {
 	 * @return array
 	 */
 	public function get_posts() {
-		$Admin = new Uno_WP_Form_Admin();
+		$Admin = new Unomoon_Form_Admin();
 		return $Admin->get_forms();
 	}
 
@@ -312,7 +317,7 @@ class Uno_WP_Form_Setting {
 	 * @return int
 	 */
 	public function get_tracking_number() {
-		$tracking_number = get_post_meta( $this->post_id, UWF_Config::TRACKINGNUMBER, true );
+		$tracking_number = get_post_meta( $this->post_id, Unomoon_Form_Config::TRACKINGNUMBER, true );
 		if ( empty( $tracking_number ) ) {
 			$tracking_number = 1;
 		}
@@ -329,11 +334,11 @@ class Uno_WP_Form_Setting {
 		if ( is_null( $count ) ) {
 			$tracking_number     = $this->get_tracking_number();
 			$new_tracking_number = $tracking_number + 1;
-		} elseif ( UWF_Functions::is_numeric( $count ) ) {
+		} elseif ( Unomoon_Form_Functions::is_numeric( $count ) ) {
 			$new_tracking_number = $count;
 		}
 		if ( ! is_null( $new_tracking_number ) ) {
-			update_post_meta( $this->post_id, UWF_Config::TRACKINGNUMBER, $new_tracking_number );
+			update_post_meta( $this->post_id, Unomoon_Form_Config::TRACKINGNUMBER, $new_tracking_number );
 		}
 	}
 }

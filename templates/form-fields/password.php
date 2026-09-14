@@ -1,17 +1,21 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 ?>
 
 <input type="password"
 	name="<?php echo esc_attr( $name ); ?>"
-	<?php echo UWF_Functions::generate_input_attribute( 'id', $id ); ?>
-	<?php echo UWF_Functions::generate_input_attribute( 'class', $class ); ?>
-	<?php echo UWF_Functions::generate_input_attribute( 'size', $size ); ?>
-	<?php echo UWF_Functions::generate_input_attribute( 'maxlength', $maxlength ); ?>
-	<?php echo UWF_Functions::generate_input_attribute( 'value', $value ); ?>
-	<?php echo UWF_Functions::generate_input_attribute( 'placeholder', $placeholder ); ?>
+	<?php Unomoon_Form_Functions::input_attribute( 'id', $id ); ?>
+	<?php Unomoon_Form_Functions::input_attribute( 'class', $class ); ?>
+	<?php Unomoon_Form_Functions::input_attribute( 'size', $size ); ?>
+	<?php Unomoon_Form_Functions::input_attribute( 'maxlength', $maxlength ); ?>
+	<?php Unomoon_Form_Functions::input_attribute( 'value', $value ); ?>
+	<?php Unomoon_Form_Functions::input_attribute( 'placeholder', $placeholder ); ?>
 />

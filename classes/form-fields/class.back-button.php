@@ -1,14 +1,18 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
- * Uno_WP_Form_Field_Back_Button
+ * Unomoon_Form_Field_Back_Button
  */
-class Uno_WP_Form_Field_Back_Button extends Uno_WP_Form_Abstract_Form_Field {
+class Unomoon_Form_Field_Back_Button extends Unomoon_Form_Abstract_Form_Field {
 
 	/**
 	 * Types of form type.
@@ -26,8 +30,8 @@ class Uno_WP_Form_Field_Back_Button extends Uno_WP_Form_Abstract_Form_Field {
 	 */
 	protected function set_names() {
 		return array(
-			'shortcode_name' => 'unoform_backButton',
-			'display_name'   => __( 'Back Button', 'uno-wp-form' ),
+			'shortcode_name' => 'unomoonform_backButton',
+			'display_name'   => __( 'Back Button', 'unomoon-form' ),
 		);
 	}
 
@@ -39,7 +43,7 @@ class Uno_WP_Form_Field_Back_Button extends Uno_WP_Form_Abstract_Form_Field {
 	protected function set_defaults() {
 		return array(
 			'class' => null,
-			'value' => __( 'Back', 'uno-wp-form' ),
+			'value' => __( 'Back', 'unomoon-form' ),
 		);
 	}
 
@@ -56,7 +60,7 @@ class Uno_WP_Form_Field_Back_Button extends Uno_WP_Form_Abstract_Form_Field {
 	 */
 	protected function confirm_page() {
 		return $this->Form->submit(
-			UWF_Config::BACK_BUTTON,
+			Unomoon_Form_Config::BACK_BUTTON,
 			$this->atts['value'],
 			array(
 				'class' => $this->atts['class'],
@@ -70,7 +74,7 @@ class Uno_WP_Form_Field_Back_Button extends Uno_WP_Form_Abstract_Form_Field {
 	 *
 	 * @param array $options Options.
 	 */
-	public function unoform_tag_generator_dialog( array $options = array() ) {
+	public function unomoonform_tag_generator_dialog( array $options = array() ) {
 		?>
 		<p>
 			<strong>class</strong>
@@ -78,7 +82,7 @@ class Uno_WP_Form_Field_Back_Button extends Uno_WP_Form_Abstract_Form_Field {
 			<input type="text" name="class" value="<?php echo esc_attr( $class ); ?>" />
 		</p>
 		<p>
-			<strong><?php esc_html_e( 'String on the button', 'uno-wp-form' ); ?></strong>
+			<strong><?php esc_html_e( 'String on the button', 'unomoon-form' ); ?></strong>
 			<?php $value = $this->get_value_for_generator( 'value', $options ); ?>
 			<input type="text" name="value" value="<?php echo esc_attr( $value ); ?>" />
 		</p>

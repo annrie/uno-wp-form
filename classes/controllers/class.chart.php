@@ -1,14 +1,25 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
- * Uno_WP_Form_Chart_Controller
+ * Unomoon_Form_Chart_Controller
  */
-class Uno_WP_Form_Chart_Controller extends Uno_WP_Form_Controller {
+class Unomoon_Form_Chart_Controller extends Unomoon_Form_Controller {
+
+	/**
+	 * Chart types that can be rendered.
+	 *
+	 * @var array
+	 */
+	const CHART_TYPES = array( 'pie', 'bar' );
 
 	/**
 	 * Post type of saved inquiry data to display in this chart.
@@ -28,11 +39,13 @@ class Uno_WP_Form_Chart_Controller extends Uno_WP_Form_Controller {
 	 * Constructor.
 	 */
 	public function __construct() {
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Read-only screen selector, validated against known post types below.
 		if ( ! empty( $_GET['formkey'] ) ) {
-			$this->formkey = $_GET['formkey'];
+			$this->formkey = sanitize_key( wp_unslash( $_GET['formkey'] ) );
 		}
+		// phpcs:enable
 
-		$contact_data_post_types = Uno_WP_Form_Contact_Data_Setting::get_form_post_types();
+		$contact_data_post_types = Unomoon_Form_Contact_Data_Setting::get_form_post_types();
 		if ( ! in_array( $this->formkey, $contact_data_post_types, true ) ) {
 			exit;
 		}
@@ -47,51 +60,49 @@ class Uno_WP_Form_Chart_Controller extends Uno_WP_Form_Controller {
 	 * Enqueue assets.
 	 */
 	public function _admin_enqueue_scripts() {
-		global $wp_scripts;
-
-		$ui = $wp_scripts->query( 'jquery-ui-core' );
-		wp_enqueue_style(
-			'jquery.ui',
-			'//ajax.googleapis.com/ajax/libs/jqueryui/' . $ui->ver . '/themes/smoothness/jquery-ui.min.css',
-			array( 'jquery' ),
-			$ui->ver
-		);
+		Unomoon_Form_Functions::enqueue_jquery_ui_style();
 
 		wp_enqueue_script( 'jquery-ui-sortable' );
 
-		$url = UNO_WP_FORM_PLUGIN_URL;
+		$url = UNOMOON_FORM_PLUGIN_URL;
 
 		wp_enqueue_style(
-			UWF_Config::NAME . '-admin-repeatable',
-			$url . '/css/admin-repeatable.css'
+			Unomoon_Form_Config::NAME . '-admin-repeatable',
+			$url . '/css/admin-repeatable.css',
+			array(),
+			UNOMOON_FORM_VERSION
 		);
 
 		wp_enqueue_script(
-			'jsapi',
-			'https://www.google.com/jsapi'
-		);
-
-		wp_enqueue_script(
-			UWF_Config::NAME . '-repeatable',
-			$url . '/js/uno-wp-form-repeatable.js',
+			Unomoon_Form_Config::NAME . '-repeatable',
+			$url . '/js/unomoon-form-repeatable.js',
 			array( 'jquery' ),
-			null,
+			UNOMOON_FORM_VERSION,
+			true
+		);
+
+		// Bundled Chart.js (MIT). Replaces the Google Charts loader so that nothing is fetched from external servers.
+		wp_enqueue_script(
+			Unomoon_Form_Config::NAME . '-chartjs',
+			$url . '/js/vendor/chart.umd.js',
+			array(),
+			'4.5.1',
 			true
 		);
 
 		wp_enqueue_script(
-			UWF_Config::NAME . '-google-chart',
-			$url . '/js/uno-wp-form-google-chart.js',
-			array( 'jquery' ),
-			null,
+			Unomoon_Form_Config::NAME . '-chart',
+			$url . '/js/unomoon-form-chart.js',
+			array( 'jquery', Unomoon_Form_Config::NAME . '-chartjs' ),
+			UNOMOON_FORM_VERSION,
 			true
 		);
 
 		wp_enqueue_script(
-			UWF_Config::NAME . '-admin-chart',
+			Unomoon_Form_Config::NAME . '-admin-chart',
 			$url . '/js/admin-chart.js',
-			array( 'jquery', 'jquery-ui-sortable' ),
-			null,
+			array( 'jquery', 'jquery-ui-sortable', Unomoon_Form_Config::NAME . '-repeatable' ),
+			UNOMOON_FORM_VERSION,
 			true
 		);
 	}
@@ -100,15 +111,19 @@ class Uno_WP_Form_Chart_Controller extends Uno_WP_Form_Controller {
 	 * Save.
 	 */
 	public function _save() {
-		if ( ! isset( $_POST[ UWF_Config::NAME . '-chart-nonce-field' ] ) ) {
+		if ( ! isset( $_POST[ Unomoon_Form_Config::NAME . '-chart-nonce-field' ] ) ) {
 			return;
 		}
 
-		if ( empty( $_POST[ UWF_Config::NAME . '-chart-nonce-field' ] ) ) {
+		if ( empty( $_POST[ Unomoon_Form_Config::NAME . '-chart-nonce-field' ] ) ) {
 			return;
 		}
 
-		if ( ! check_admin_referer( UWF_Config::NAME . '-chart-action', UWF_Config::NAME . '-chart-nonce-field' ) ) {
+		if ( ! check_admin_referer( Unomoon_Form_Config::NAME . '-chart-action', Unomoon_Form_Config::NAME . '-chart-nonce-field' ) ) {
+			return;
+		}
+
+		if ( ! current_user_can( Unomoon_Form_Config::CAPABILITY ) ) {
 			return;
 		}
 
@@ -116,12 +131,16 @@ class Uno_WP_Form_Chart_Controller extends Uno_WP_Form_Controller {
 			return;
 		}
 
-		$option_name      = UWF_Config::NAME . '-chart-' . $this->formkey;
-		$sanitized_values = $this->_sanitize( $_POST[ $option_name ] );
-		update_option( $option_name, $sanitized_values );
-		wp_redirect(
+		$option_name = Unomoon_Form_Config::NAME . '-chart-' . $this->formkey;
+		$posted      = array();
+		if ( isset( $_POST[ $option_name ] ) && is_array( $_POST[ $option_name ] ) ) {
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized per value in _sanitize().
+			$posted = wp_unslash( $_POST[ $option_name ] );
+		}
+		update_option( $option_name, $this->_sanitize( $posted ) );
+		wp_safe_redirect(
 			admin_url(
-				'edit.php?post_type=' . UWF_Config::NAME . '&page=' . UWF_Config::NAME . '-chart&formkey=' . $this->formkey
+				'edit.php?post_type=' . Unomoon_Form_Config::NAME . '&page=' . Unomoon_Form_Config::NAME . '-chart&formkey=' . $this->formkey
 			)
 		);
 		exit;
@@ -133,7 +152,7 @@ class Uno_WP_Form_Chart_Controller extends Uno_WP_Form_Controller {
 	public function _index() {
 		$post_type = $this->formkey;
 
-		$args = apply_filters( 'unoform_get_inquiry_data_args-' . $post_type, array() );
+		$args = apply_filters( 'unomoonform_get_inquiry_data_args-' . $post_type, array() );
 		if ( empty( $args ) || ! is_array( $args ) ) {
 			$args = array();
 		}
@@ -164,10 +183,20 @@ class Uno_WP_Form_Chart_Controller extends Uno_WP_Form_Controller {
 
 		// postdata
 		$postdata = array();
-		$option   = get_option( UWF_Config::NAME . '-chart-' . $post_type );
+		$option   = get_option( Unomoon_Form_Config::NAME . '-chart-' . $post_type );
 		if ( is_array( $option ) && isset( $option['chart'] ) && is_array( $option['chart'] ) ) {
 			$postdata = $option['chart'];
 		}
+
+		$chart_data = $this->_build_chart_data( $postdata, $custom_keys, count( $form_posts ) );
+
+		// Hand the aggregated data to the renderer as a JSON literal instead of an inline <script> in the template.
+		wp_add_inline_script(
+			Unomoon_Form_Config::NAME . '-chart',
+			'var unomoonformChartData = ' . wp_json_encode( $chart_data ) . ';',
+			'before'
+		);
+
 		$default_keys = array(
 			'target'    => '',
 			'separator' => '',
@@ -183,9 +212,55 @@ class Uno_WP_Form_Chart_Controller extends Uno_WP_Form_Controller {
 				'form_posts'  => $form_posts,
 				'custom_keys' => $custom_keys,
 				'postdata'    => $postdata,
+				'chart_data'  => $chart_data,
 			),
 			$this->formkey
 		);
+	}
+
+	/**
+	 * Aggregate saved inquiry data into a series for each configured chart.
+	 *
+	 * @param array $postdata    Chart rows saved in the option (target / chart / separator).
+	 * @param array $custom_keys Meta key => meta value => array of post IDs.
+	 * @param int   $total       Number of inquiries.
+	 * @return array Chart row index => array( target, chart, labels, counts, total ).
+	 */
+	protected function _build_chart_data( array $postdata, array $custom_keys, $total ) {
+		$chart_data = array();
+
+		foreach ( $postdata as $postdata_key => $chart ) {
+			if ( empty( $chart['target'] ) || ! isset( $custom_keys[ $chart['target'] ] ) ) {
+				continue;
+			}
+
+			$separator = isset( $chart['separator'] ) ? (string) $chart['separator'] : '';
+			$raw_data  = array();
+			foreach ( $custom_keys[ $chart['target'] ] as $item => $values ) {
+				$item  = (string) $item;
+				$items = ( '' !== $separator && false !== strpos( $item, $separator ) ) ? explode( $separator, $item ) : array( $item );
+				foreach ( $items as $_item ) {
+					if ( '' === $_item ) {
+						$_item = '(Empty)';
+					}
+					if ( empty( $raw_data[ $_item ] ) ) {
+						$raw_data[ $_item ] = count( $values );
+					} else {
+						$raw_data[ $_item ] += count( $values );
+					}
+				}
+			}
+
+			$chart_data[ $postdata_key ] = array(
+				'target' => (string) $chart['target'],
+				'chart'  => ( isset( $chart['chart'] ) && in_array( $chart['chart'], self::CHART_TYPES, true ) ) ? $chart['chart'] : 'pie',
+				'labels' => array_map( 'strval', array_keys( $raw_data ) ),
+				'counts' => array_values( $raw_data ),
+				'total'  => (int) $total,
+			);
+		}
+
+		return $chart_data;
 	}
 
 	/**
@@ -202,11 +277,17 @@ class Uno_WP_Form_Chart_Controller extends Uno_WP_Form_Controller {
 		$new_input = array();
 
 		foreach ( $input['chart'] as $key => $value ) {
-			if ( empty( $value['target'] ) ) {
+			if ( ! is_array( $value ) || empty( $value['target'] ) ) {
 				continue;
 			}
 
-			$new_input['chart'][ $key ] = $value;
+			$chart = isset( $value['chart'] ) ? sanitize_key( $value['chart'] ) : '';
+
+			$new_input['chart'][ absint( $key ) ] = array(
+				'target'    => sanitize_text_field( $value['target'] ),
+				'chart'     => in_array( $chart, self::CHART_TYPES, true ) ? $chart : 'pie',
+				'separator' => isset( $value['separator'] ) ? sanitize_text_field( $value['separator'] ) : '',
+			);
 		}
 
 		return $new_input;

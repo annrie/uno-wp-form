@@ -1,14 +1,18 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
- * Uno_WP_Form_Session
+ * Unomoon_Form_Session
  */
-class Uno_WP_Form_Session {
+class Unomoon_Form_Session {
 
 	/**
 	 * Session name.
@@ -30,20 +34,25 @@ class Uno_WP_Form_Session {
 	protected $expiration = 1440;
 
 	/**
+	 * Prefix of the transient key. Keeps session storage inside a namespace
+	 * of its own, so a forged cookie can never address another transient.
+	 */
+	const TRANSIENT_PREFIX = 'unomoonform_session_';
+
+	/**
 	 * Constructor.
 	 *
 	 * @param string $name Session name.
 	 */
 	public function __construct( $name ) {
-		$this->name = UWF_Config::NAME . '_session_' . $name;
+		$this->name = Unomoon_Form_Config::NAME . '_session_' . $name;
 
-		if ( isset( $_COOKIE[ $this->name ] ) ) {
-			$session_id = $_COOKIE[ $this->name ];
-		} else {
+		$session_id = $this->_get_session_id_from_cookie();
+		if ( null === $session_id ) {
 			$session_id = sha1( wp_create_nonce( $this->name ) . ip2long( $this->get_remote_addr() ) . uniqid() );
-			$secure     = apply_filters( 'unoform_secure_cookie', is_ssl() );
+			$secure     = apply_filters( 'unomoonform_secure_cookie', is_ssl() );
 			try {
-				set_error_handler( array( 'Uno_WP_Form_Session', 'error_handler' ) );
+				set_error_handler( array( 'Unomoon_Form_Session', 'error_handler' ) );
 				setcookie(
 					$this->name,
 					$session_id,
@@ -58,10 +67,42 @@ class Uno_WP_Form_Session {
 				);
 			} catch ( ErrorException $e ) {
 				// No process...
+			} finally {
+				restore_error_handler();
 			}
 		}
 
 		$this->session_id = $session_id;
+	}
+
+	/**
+	 * Return the session ID stored in the cookie, or null when it is missing or malformed.
+	 *
+	 * The ID is always a 40 character hex string (sha1), so anything else is rejected
+	 * before it can be used as part of a transient key.
+	 *
+	 * @return string|null
+	 */
+	protected function _get_session_id_from_cookie() {
+		if ( ! isset( $_COOKIE[ $this->name ] ) ) {
+			return null;
+		}
+
+		$session_id = sanitize_text_field( wp_unslash( $_COOKIE[ $this->name ] ) );
+		if ( ! preg_match( '/\A[a-f0-9]{40}\z/', $session_id ) ) {
+			return null;
+		}
+
+		return $session_id;
+	}
+
+	/**
+	 * Return the transient key for this session.
+	 *
+	 * @return string
+	 */
+	protected function _transient_key() {
+		return self::TRANSIENT_PREFIX . $this->session_id;
 	}
 
 	/**
@@ -88,7 +129,7 @@ class Uno_WP_Form_Session {
 	 * @param array $data Saving session data.
 	 */
 	public function save( array $data ) {
-		$transient_data = get_transient( $this->session_id );
+		$transient_data = get_transient( $this->_transient_key() );
 		if ( ! is_array( $transient_data ) ) {
 			$transient_data = array();
 		}
@@ -96,7 +137,7 @@ class Uno_WP_Form_Session {
 		foreach ( $data as $key => $value ) {
 			$transient_data[ $key ] = $value;
 		}
-		set_transient( $this->session_id, $transient_data, $this->expiration );
+		set_transient( $this->_transient_key(), $transient_data, $this->expiration );
 	}
 
 	/**
@@ -106,13 +147,13 @@ class Uno_WP_Form_Session {
 	 * @param mixed  $value Session value.
 	 */
 	public function set( $key, $value ) {
-		$transient_data = get_transient( $this->session_id );
+		$transient_data = get_transient( $this->_transient_key() );
 		if ( ! is_array( $transient_data ) ) {
 			$transient_data = array();
 		}
 
 		$transient_data[ $key ] = $value;
-		set_transient( $this->session_id, $transient_data, $this->expiration );
+		set_transient( $this->_transient_key(), $transient_data, $this->expiration );
 	}
 
 	/**
@@ -122,7 +163,7 @@ class Uno_WP_Form_Session {
 	 * @param mixed  $value Session value.
 	 */
 	public function push( $key, $value ) {
-		$transient_data = get_transient( $this->session_id );
+		$transient_data = get_transient( $this->_transient_key() );
 		if ( ! is_array( $transient_data ) ) {
 			$transient_data = array();
 		}
@@ -137,7 +178,7 @@ class Uno_WP_Form_Session {
 				$transient_data[ $key ][] = $value;
 			}
 		}
-		set_transient( $this->session_id, $transient_data, $this->expiration );
+		set_transient( $this->_transient_key(), $transient_data, $this->expiration );
 	}
 
 	/**
@@ -147,7 +188,7 @@ class Uno_WP_Form_Session {
 	 * @return mixed
 	 */
 	public function get( $key ) {
-		$transient_data = get_transient( $this->session_id );
+		$transient_data = get_transient( $this->_transient_key() );
 		if ( is_array( $transient_data ) && isset( $transient_data[ $key ] ) ) {
 			return $transient_data[ $key ];
 		}
@@ -159,7 +200,7 @@ class Uno_WP_Form_Session {
 	 * @return array
 	 */
 	public function gets() {
-		$transient_data = get_transient( $this->session_id );
+		$transient_data = get_transient( $this->_transient_key() );
 		if ( is_array( $transient_data ) ) {
 			return $transient_data;
 		}
@@ -172,10 +213,10 @@ class Uno_WP_Form_Session {
 	 * @param string $key Session value name.
 	 */
 	public function clear_value( $key ) {
-		$transient_data = get_transient( $this->session_id );
+		$transient_data = get_transient( $this->_transient_key() );
 		if ( is_array( $transient_data ) && isset( $transient_data[ $key ] ) ) {
 			unset( $transient_data[ $key ] );
-			set_transient( $this->session_id, $transient_data, $this->expiration );
+			set_transient( $this->_transient_key(), $transient_data, $this->expiration );
 		}
 	}
 
@@ -183,7 +224,7 @@ class Uno_WP_Form_Session {
 	 * Clear values.
 	 */
 	public function clear_values() {
-		delete_transient( $this->session_id );
+		delete_transient( $this->_transient_key() );
 	}
 
 	/**
@@ -193,7 +234,10 @@ class Uno_WP_Form_Session {
 	 */
 	protected function get_remote_addr() {
 		if ( isset( $_SERVER['REMOTE_ADDR'] ) ) {
-			return $_SERVER['REMOTE_ADDR'];
+			$remote_addr = sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) );
+			if ( filter_var( $remote_addr, FILTER_VALIDATE_IP ) ) {
+				return $remote_addr;
+			}
 		}
 		return '127.0.0.1';
 	}

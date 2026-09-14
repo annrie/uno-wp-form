@@ -1,17 +1,21 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
- * Uno_WP_Form_Form_Fields
+ * Unomoon_Form_Form_Fields
  */
-class Uno_WP_Form_Form_Fields {
+class Unomoon_Form_Form_Fields {
 
 	/**
-	 * @var array Array of Uno_WP_Form_Form_Fields
+	 * @var array Array of Unomoon_Form_Form_Fields
 	 */
 	protected static $Instances;
 
@@ -33,7 +37,7 @@ class Uno_WP_Form_Form_Fields {
 			new $class_name();
 		}
 
-		self::$form_fields = apply_filters( 'unoform_form_fields', self::$form_fields );
+		self::$form_fields = apply_filters( 'unomoonform_form_fields', self::$form_fields );
 	}
 
 	/**
@@ -68,7 +72,7 @@ class Uno_WP_Form_Form_Fields {
 	protected static function _get_class_name_from_form_field_filename( $filename ) {
 		$class_name = preg_replace( '/^class\./', '', basename( $filename, '.php' ) );
 		$class_name = str_replace( '-', '_', $class_name );
-		$class_name = 'Uno_WP_Form_Field_' . $class_name;
+		$class_name = 'Unomoon_Form_Field_' . $class_name;
 		return $class_name;
 	}
 }

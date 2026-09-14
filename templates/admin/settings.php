@@ -1,26 +1,30 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 ?>
 
 <div class="section">
 	<label>
 		<input
 			type="checkbox"
-			name="<?php echo esc_attr( UWF_Config::NAME ); ?>[querystring]"
+			name="<?php echo esc_attr( Unomoon_Form_Config::NAME ); ?>[querystring]"
 			value="1"
 			<?php checked( $querystring, 1 ); ?>
 		/>
-		<?php esc_html_e( 'Activate Query string of post', 'uno-wp-form' ); ?>
+		<?php esc_html_e( 'Activate Query string of post', 'unomoon-form' ); ?>
 	</label>
 	<br />
-	<span class="uwf_note">
-		<?php esc_html_e( 'If this field is active, Uno WP Form get query string. And get post data from query string "post_id". You can use $post\'s property in editor.', 'uno-wp-form' ); ?>
+	<span class="unomoonform_note">
+		<?php esc_html_e( 'If this field is active, Unomoon Form get query string. And get post data from query string "post_id". You can use $post\'s property in editor.', 'unomoon-form' ); ?>
 		<br />
-		<?php esc_html_e( 'Example: {ID}, {post_title}, {post_meta} etc...', 'uno-wp-form' ); ?>
+		<?php esc_html_e( 'Example: {ID}, {post_title}, {post_meta} etc...', 'unomoon-form' ); ?>
 	</span>
 </div>
 
@@ -28,11 +32,11 @@
 	<label>
 		<input
 			type="checkbox"
-			name="<?php echo esc_attr( UWF_Config::NAME ); ?>[usedb]"
+			name="<?php echo esc_attr( Unomoon_Form_Config::NAME ); ?>[usedb]"
 			value="1"
 			<?php checked( $usedb, 1 ); ?>
 		/>
-		<?php esc_html_e( 'Saving inquiry data in database', 'uno-wp-form' ); ?>
+		<?php esc_html_e( 'Saving inquiry data in database', 'unomoon-form' ); ?>
 	</label>
 </div>
 
@@ -40,20 +44,20 @@
 	<label>
 		<input
 			type="checkbox"
-			name="<?php echo esc_attr( UWF_Config::NAME ); ?>[scroll]"
+			name="<?php echo esc_attr( Unomoon_Form_Config::NAME ); ?>[scroll]"
 			value="1"
 			<?php checked( $scroll, 1 ); ?>
 		/>
-		<?php esc_html_e( 'Enable scrolling of screen transition.', 'uno-wp-form' ); ?>
+		<?php esc_html_e( 'Enable scrolling of screen transition.', 'unomoon-form' ); ?>
 	</label>
 </div>
 
 <div class="section">
-	<?php esc_html_e( 'Next Tracking Number', 'uno-wp-form' ); ?>
+	<?php esc_html_e( 'Next Tracking Number', 'unomoon-form' ); ?>
 	<br />
 	<input
 		type="number"
-		name="<?php echo esc_attr( UWF_Config::TRACKINGNUMBER ); ?>"
+		name="<?php echo esc_attr( Unomoon_Form_Config::TRACKINGNUMBER ); ?>"
 		id="tracking_number_field"
 		value="<?php echo esc_attr( $tracking_number ); ?>"
 		step="1"
@@ -62,29 +66,29 @@
 	/>
 	<br />
 	<input type="checkbox" name="open_tracking_number_field" />
-	<?php esc_html_e( 'I want to change.', 'uno-wp-form' ); ?>
+	<?php esc_html_e( 'I want to change.', 'unomoon-form' ); ?>
 </div>
 
 <div class="section">
 	<table border="0" cellpadding="0" cellspacing="0" class="akismet">
 		<tr>
-			<th colspan="2"><?php esc_html_e( 'Akismet Setting', 'uno-wp-form' ); ?></th>
+			<th colspan="2"><?php esc_html_e( 'Akismet Setting', 'unomoon-form' ); ?></th>
 		</tr>
 		<tr>
 			<td>author</td>
-			<td><input type="text" name="<?php echo esc_attr( UWF_Config::NAME ); ?>[akismet_author]" value="<?php echo esc_attr( $akismet_author ); ?>" /></td>
+			<td><input type="text" name="<?php echo esc_attr( Unomoon_Form_Config::NAME ); ?>[akismet_author]" value="<?php echo esc_attr( $akismet_author ); ?>" /></td>
 		</tr>
 		<tr>
 			<td>email</td>
-			<td><input type="text" name="<?php echo esc_attr( UWF_Config::NAME ); ?>[akismet_author_email]" value="<?php echo esc_attr( $akismet_author_email ); ?>" /></td>
+			<td><input type="text" name="<?php echo esc_attr( Unomoon_Form_Config::NAME ); ?>[akismet_author_email]" value="<?php echo esc_attr( $akismet_author_email ); ?>" /></td>
 		</tr>
 		<tr>
 			<td>url</td>
-			<td><input type="text" name="<?php echo esc_attr( UWF_Config::NAME ); ?>[akismet_author_url]" value="<?php echo esc_attr( $akismet_author_url ); ?>" /></td>
+			<td><input type="text" name="<?php echo esc_attr( Unomoon_Form_Config::NAME ); ?>[akismet_author_url]" value="<?php echo esc_attr( $akismet_author_url ); ?>" /></td>
 		</tr>
 	</table>
-	<span class="uwf_note"><?php esc_html_e( 'Input the key to use Akismet.', 'uno-wp-form' ); ?></span>
+	<span class="unomoonform_note"><?php esc_html_e( 'Input the key to use Akismet.', 'unomoon-form' ); ?></span>
 </div>
 
 <?php
-do_action( 'unoform_settings_meta_box' );
+do_action( 'unomoonform_settings_meta_box' );

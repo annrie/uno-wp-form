@@ -1,14 +1,18 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
- * Uno_WP_Form_Field_Text
+ * Unomoon_Form_Field_Text
  */
-class Uno_WP_Form_Field_Text extends Uno_WP_Form_Abstract_Form_Field {
+class Unomoon_Form_Field_Text extends Unomoon_Form_Abstract_Form_Field {
 
 	/**
 	 * Types of form type.
@@ -26,8 +30,8 @@ class Uno_WP_Form_Field_Text extends Uno_WP_Form_Abstract_Form_Field {
 	 */
 	protected function set_names() {
 		return array(
-			'shortcode_name' => 'unoform_text',
-			'display_name'   => __( 'Text', 'uno-wp-form' ),
+			'shortcode_name' => 'unomoonform_text',
+			'display_name'   => __( 'Text', 'unomoon-form' ),
 		);
 	}
 
@@ -101,10 +105,10 @@ class Uno_WP_Form_Field_Text extends Uno_WP_Form_Abstract_Form_Field {
 	 *
 	 * @param array $options Options.
 	 */
-	public function unoform_tag_generator_dialog( array $options = array() ) {
+	public function unomoonform_tag_generator_dialog( array $options = array() ) {
 		?>
 		<p>
-			<strong>name<span class="uwf_require">*</span></strong>
+			<strong>name<span class="unomoonform_require">*</span></strong>
 			<?php $name = $this->get_value_for_generator( 'name', $options ); ?>
 			<input type="text" name="name" value="<?php echo esc_attr( $name ); ?>" />
 		</p>
@@ -129,7 +133,7 @@ class Uno_WP_Form_Field_Text extends Uno_WP_Form_Abstract_Form_Field {
 			<input type="text" name="maxlength" value="<?php echo esc_attr( $maxlength ); ?>" />
 		</p>
 		<p>
-			<strong><?php esc_html_e( 'Default value', 'uno-wp-form' ); ?></strong>
+			<strong><?php esc_html_e( 'Default value', 'unomoon-form' ); ?></strong>
 			<?php $value = $this->get_value_for_generator( 'value', $options ); ?>
 			<input type="text" name="value" value="<?php echo esc_attr( $value ); ?>" />
 		</p>
@@ -139,14 +143,14 @@ class Uno_WP_Form_Field_Text extends Uno_WP_Form_Abstract_Form_Field {
 			<input type="text" name="placeholder" value="<?php echo esc_attr( $placeholder ); ?>" />
 		</p>
 		<p>
-			<strong><?php esc_html_e( 'Display error', 'uno-wp-form' ); ?></strong>
+			<strong><?php esc_html_e( 'Display error', 'unomoon-form' ); ?></strong>
 			<?php $show_error = $this->get_value_for_generator( 'show_error', $options ); ?>
-			<label><input type="checkbox" name="show_error" value="false" <?php checked( 'false', $show_error ); ?> /> <?php esc_html_e( 'Don\'t display error.', 'uno-wp-form' ); ?></label>
+			<label><input type="checkbox" name="show_error" value="false" <?php checked( 'false', $show_error ); ?> /> <?php esc_html_e( 'Don\'t display error.', 'unomoon-form' ); ?></label>
 		</p>
 		<p>
-			<strong><?php esc_html_e( 'Convert half alphanumeric', 'uno-wp-form' ); ?></strong>
+			<strong><?php esc_html_e( 'Convert half alphanumeric', 'unomoon-form' ); ?></strong>
 			<?php $conv_half_alphanumeric = $this->get_value_for_generator( 'conv_half_alphanumeric', $options ); ?>
-			<label><input type="checkbox" name="conv_half_alphanumeric" value="true" <?php checked( 'true', $conv_half_alphanumeric ); ?> /> <?php esc_html_e( 'Convert.', 'uno-wp-form' ); ?></label>
+			<label><input type="checkbox" name="conv_half_alphanumeric" value="true" <?php checked( 'true', $conv_half_alphanumeric ); ?> /> <?php esc_html_e( 'Convert.', 'unomoon-form' ); ?></label>
 		</p>
 		<?php
 	}

@@ -1,14 +1,18 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
- * Uno_WP_Form_Contact_Data_Setting
+ * Unomoon_Form_Contact_Data_Setting
  */
-class Uno_WP_Form_Contact_Data_Setting {
+class Unomoon_Form_Contact_Data_Setting {
 
 	/**
 	 * Inquiry data ID.
@@ -51,7 +55,7 @@ class Uno_WP_Form_Contact_Data_Setting {
 	 * @param int $post_id Post ID.
 	 */
 	public function __construct( $post_id ) {
-		if ( ! UWF_Functions::is_contact_data_post_type( get_post_type( $post_id ) ) ) {
+		if ( ! Unomoon_Form_Functions::is_contact_data_post_type( get_post_type( $post_id ) ) ) {
 			return;
 		}
 
@@ -66,7 +70,7 @@ class Uno_WP_Form_Contact_Data_Setting {
 			$post_meta[ $key ] = $value[0];
 		}
 
-		$permit_values = get_post_meta( $this->post_id, UWF_config::INQUIRY_DATA_NAME, true );
+		$permit_values = get_post_meta( $this->post_id, Unomoon_Form_Config::INQUIRY_DATA_NAME, true );
 		if ( ! $permit_values ) {
 			$permit_values = array();
 		}
@@ -86,12 +90,12 @@ class Uno_WP_Form_Contact_Data_Setting {
 		$contact_data_post_type = get_post_type( $this->post_id );
 
 		$response_statuses = array(
-			'not-supported' => esc_html__( 'Not supported', 'uno-wp-form' ),
-			'reservation'   => esc_html__( 'Reservation', 'uno-wp-form' ),
-			'supported'     => esc_html__( 'Supported', 'uno-wp-form' ),
+			'not-supported' => esc_html__( 'Not supported', 'unomoon-form' ),
+			'reservation'   => esc_html__( 'Reservation', 'unomoon-form' ),
+			'supported'     => esc_html__( 'Supported', 'unomoon-form' ),
 		);
 
-		return apply_filters( 'unoform_response_statuses_' . $contact_data_post_type, $response_statuses );
+		return apply_filters( 'unomoonform_response_statuses_' . $contact_data_post_type, $response_statuses );
 	}
 
 	/**
@@ -191,17 +195,18 @@ class Uno_WP_Form_Contact_Data_Setting {
 		foreach ( $permit_keys as $key ) {
 			$permit_values[ $key ] = $this->$key;
 		}
-		update_post_meta( $this->post_id, UWF_config::INQUIRY_DATA_NAME, $permit_values );
+		// Values are held unslashed; update_post_meta() expects slashed input.
+		update_post_meta( $this->post_id, Unomoon_Form_Config::INQUIRY_DATA_NAME, wp_slash( $permit_values ) );
 
 		foreach ( $this->options as $key => $value ) {
 			if ( is_null( $value ) ) {
 				$value = '';
 			}
-			update_post_meta( $this->post_id, $key, $value );
+			update_post_meta( $this->post_id, $key, wp_slash( $value ) );
 		}
 
 		$contact_data_post_type = get_post_type( $this->post_id );
-		do_action( 'unoform_contact_data_save-' . $contact_data_post_type, $this->post_id );
+		do_action( 'unomoonform_contact_data_save-' . $contact_data_post_type, $this->post_id );
 	}
 
 	/**
@@ -211,17 +216,17 @@ class Uno_WP_Form_Contact_Data_Setting {
 	 */
 	public static function get_form_post_types() {
 		$contact_data_post_types = array();
-		$Admin                   = new Uno_WP_Form_Admin();
+		$Admin                   = new Unomoon_Form_Admin();
 		$forms                   = $Admin->get_forms_using_database();
 		foreach ( $forms as $form ) {
-			$post_type                 = UWF_Functions::get_contact_data_post_type_from_form_id( $form->ID );
+			$post_type                 = Unomoon_Form_Functions::get_contact_data_post_type_from_form_id( $form->ID );
 			$contact_data_post_types[] = $post_type;
 		}
 
 		$raw_post_types          = $contact_data_post_types;
 		$new_post_types          = array();
 		$contact_data_post_types = apply_filters(
-			'unoform_contact_data_post_types',
+			'unomoonform_contact_data_post_types',
 			$contact_data_post_types
 		);
 
@@ -243,9 +248,9 @@ class Uno_WP_Form_Contact_Data_Setting {
 	 * @return array
 	 */
 	public static function get_posts() {
-		UWF_Functions::deprecated_message(
-			'Uno_WP_Form_Contact_Data_Setting::get_posts()',
-			'Uno_WP_Form_Contact_Data_Setting::get_form_post_types()'
+		Unomoon_Form_Functions::deprecated_message(
+			'Unomoon_Form_Contact_Data_Setting::get_posts()',
+			'Unomoon_Form_Contact_Data_Setting::get_form_post_types()'
 		);
 
 		return self::get_form_post_types();
@@ -282,12 +287,12 @@ class Uno_WP_Form_Contact_Data_Setting {
 	 * @return array
 	 */
 	protected function _get_upload_file_keys() {
-		// 前のバージョンでは UWF_Config::UPLOAD_FILE_KEYS を配列で保持していなかったので分岐させる
-		$_upload_file_keys = get_post_meta( $this->post_id, '_' . UWF_Config::UPLOAD_FILE_KEYS, true );
+		// 前のバージョンでは Unomoon_Form_Config::UPLOAD_FILE_KEYS を配列で保持していなかったので分岐させる
+		$_upload_file_keys = get_post_meta( $this->post_id, '_' . Unomoon_Form_Config::UPLOAD_FILE_KEYS, true );
 		if ( is_array( $_upload_file_keys ) ) {
 			$upload_file_keys = $_upload_file_keys;
 		} else {
-			$upload_file_keys = get_post_custom_values( '_' . UWF_Config::UPLOAD_FILE_KEYS, $this->post_id );
+			$upload_file_keys = get_post_custom_values( '_' . Unomoon_Form_Config::UPLOAD_FILE_KEYS, $this->post_id );
 		}
 		return $upload_file_keys;
 	}

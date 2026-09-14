@@ -1,8 +1,12 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
-echo $column;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+echo wp_kses_post( $column );

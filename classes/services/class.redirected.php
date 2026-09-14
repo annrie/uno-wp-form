@@ -1,14 +1,18 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
- * Uno_WP_Form_Redirected
+ * Unomoon_Form_Redirected
  */
-class Uno_WP_Form_Redirected {
+class Unomoon_Form_Redirected {
 
 	/**
 	 * @var string
@@ -16,7 +20,7 @@ class Uno_WP_Form_Redirected {
 	protected $form_key;
 
 	/**
-	 * @var Uno_WP_Form_Setting
+	 * @var Unomoon_Form_Setting
 	 */
 	protected $Setting;
 
@@ -34,7 +38,7 @@ class Uno_WP_Form_Redirected {
 	 * Constructor.
 	 *
 	 * @param string             $form_key Form key.
-	 * @param Uno_WP_Form_Setting $setting  Uno_WP_Form_Setting object.
+	 * @param Unomoon_Form_Setting $setting  Unomoon_Form_Setting object.
 	 * @param boolean            $is_valid Return true when valid.
 	 * @param string             $post_condition back|confirm|complete.
 	 */
@@ -97,8 +101,8 @@ class Uno_WP_Form_Redirected {
 	 * @return string
 	 */
 	public function get_url() {
-		$Data = Uno_WP_Form_Data::connect( $this->form_key );
-		return apply_filters( 'unoform_redirect_url_' . $this->form_key, $this->url, $Data );
+		$Data = Unomoon_Form_Data::connect( $this->form_key );
+		return apply_filters( 'unomoonform_redirect_url_' . $this->form_key, $this->url, $Data );
 	}
 
 	/**
@@ -116,7 +120,7 @@ class Uno_WP_Form_Redirected {
 	 * @return string
 	 */
 	public function get_request_uri() {
-		$request_uri = $_SERVER['REQUEST_URI'];
+		$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
 
 		if ( ! $request_uri ) {
 			return;
@@ -126,7 +130,7 @@ class Uno_WP_Form_Redirected {
 			return $request_uri;
 		}
 
-		$parse_url = parse_url( home_url() );
+		$parse_url = wp_parse_url( home_url() );
 
 		// For WP installed in subdirectory
 		if ( ! empty( $parse_url['path'] ) ) {
@@ -164,10 +168,13 @@ class Uno_WP_Form_Redirected {
 		// URL設定でURL引数が使用されている場合はそれを使う。
 		// 「URL引数を有効にする」が有効の場合は $_GET を利用する（重複するURL引数はURL設定のものが優先される ※post_id除く）
 		if ( $this->Setting->get( 'querystring' ) ) {
-			$query_string = array_merge( $_GET, $query_string );
-			if ( isset( $_GET['post_id'] ) && UWF_Functions::is_numeric( $_GET['post_id'] ) ) {
-				$query_string['post_id'] = $_GET['post_id'];
+			// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Query arguments are only carried over to the redirect URL.
+			$get          = map_deep( wp_unslash( $_GET ), 'sanitize_text_field' );
+			$query_string = array_merge( $get, $query_string );
+			if ( isset( $get['post_id'] ) && Unomoon_Form_Functions::is_numeric( $get['post_id'] ) ) {
+				$query_string['post_id'] = absint( $get['post_id'] );
 			}
+			// phpcs:enable
 		}
 
 		if ( ! empty( $query_string ) ) {
@@ -187,7 +194,7 @@ class Uno_WP_Form_Redirected {
 			return;
 		}
 
-		do_action( 'unoform_before_redirect_' . $this->form_key );
+		do_action( 'unomoonform_before_redirect_' . $this->form_key );
 
 		wp_safe_redirect( $redirect, 302 );
 		exit();
@@ -203,12 +210,9 @@ class Uno_WP_Form_Redirected {
 			return;
 		}
 
-		do_action( 'unoform_before_redirect_' . $this->form_key );
-		?>
-		<script type="text/javascript">
-		window.location = "<?php echo esc_js( $redirect ); ?>";
-		</script>
-		<?php
+		do_action( 'unomoonform_before_redirect_' . $this->form_key );
+		// Headers are already sent at this point, so fall back to a script tag printed through the core helper.
+		wp_print_inline_script_tag( 'window.location = ' . wp_json_encode( esc_url_raw( $redirect ) ) . ';' );
 	}
 
 	/**
@@ -220,7 +224,7 @@ class Uno_WP_Form_Redirected {
 		$redirect    = ( $this->get_url() ) ? $this->get_url() : $this->get_request_uri();
 		$request_uri = $this->get_request_uri();
 
-		if ( empty( $_POST ) && $redirect === $request_uri ) {
+		if ( empty( $_POST ) && $redirect === $request_uri ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Only checks whether this is a POST request.
 			return;
 		}
 

@@ -1,14 +1,18 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
- * Uno_WP_Form_Admin_List_Controller
+ * Unomoon_Form_Admin_List_Controller
  */
-class Uno_WP_Form_Admin_List_Controller extends Uno_WP_Form_Controller {
+class Unomoon_Form_Admin_List_Controller extends Unomoon_Form_Controller {
 
 	/**
 	 * Constructor.
@@ -31,8 +35,8 @@ class Uno_WP_Form_Admin_List_Controller extends Uno_WP_Form_Controller {
 	 * Enqueue assets.
 	 */
 	public function _admin_enqueue_scripts() {
-		$url = UNO_WP_FORM_PLUGIN_URL;
-		wp_enqueue_style( UWF_Config::NAME . '-admin-list', $url . '/css/admin-list.css' );
+		$url = UNOMOON_FORM_PLUGIN_URL;
+		wp_enqueue_style( Unomoon_Form_Config::NAME . '-admin-list', $url . '/css/admin-list.css', array(), UNOMOON_FORM_VERSION );
 	}
 
 	/**
@@ -44,7 +48,7 @@ class Uno_WP_Form_Admin_List_Controller extends Uno_WP_Form_Controller {
 	public function _manage_posts_columns( $columns ) {
 		$date = $columns['date'];
 		unset( $columns['date'] );
-		$columns['unoform_form_key'] = __( 'Form Key', 'uno-wp-form' );
+		$columns['unomoonform_form_key'] = __( 'Form Key', 'unomoon-form' );
 		$columns['date']            = $date;
 		return $columns;
 	}
@@ -55,7 +59,7 @@ class Uno_WP_Form_Admin_List_Controller extends Uno_WP_Form_Controller {
 	 * @param string $column_name An associative array of column headings.
 	 */
 	public function _manage_posts_custom_column( $column_name ) {
-		if ( 'unoform_form_key' === $column_name ) {
+		if ( 'unomoonform_form_key' === $column_name ) {
 			$this->_render(
 				'admin-list/form-key',
 				array(

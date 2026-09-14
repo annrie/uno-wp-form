@@ -1,27 +1,27 @@
-# Uno WP Form
+# Unomoon Form
 
 <p align="center">
   <!-- License -->
   <a href="LICENSE">
-    <img src="https://img.shields.io/github/license/annrie/uno-wp-form.svg" alt="License">
+    <img src="https://img.shields.io/github/license/annrie/unomoon-form.svg" alt="License">
   </a>
   <!-- Stars -->
-  <a href="https://github.com/annrie/uno-wp-form/stargazers">
-    <img src="https://img.shields.io/github/stars/annrie/uno-wp-form.svg" alt="Stars">
+  <a href="https://github.com/annrie/unomoon-form/stargazers">
+    <img src="https://img.shields.io/github/stars/annrie/unomoon-form.svg" alt="Stars">
   </a>
   <!-- Last commit -->
-  <a href="https://github.com/annrie/uno-wp-form/commits">
-    <img src="https://img.shields.io/github/last-commit/annrie/uno-wp-form.svg" alt="Last commit">
+  <a href="https://github.com/annrie/unomoon-form/commits">
+    <img src="https://img.shields.io/github/last-commit/annrie/unomoon-form.svg" alt="Last commit">
   </a>
 </p>
 
-Uno WP Form is a WordPress 7 compatible fork of MW WP Form.
+Unomoon Form is a WordPress 7 compatible fork of MW WP Form.
 
-Uno WP Form は、MW WP Form の開発停止を受けてフォークした、WordPress 7.0 検証済みのフォームプラグインです。
+Unomoon Form は、MW WP Form の開発停止を受けてフォークした、WordPress 7.1 検証済みのフォームプラグインです。
 
-MW WP Form development has stopped, so this fork migrates the plugin to the `uno-wp-form` namespace and keeps the shortcode-based form workflow available for current WordPress environments.
+MW WP Form development has stopped, so this fork migrates the plugin to the `unomoon-form` namespace and keeps the shortcode-based form workflow available for current WordPress environments.
 
-MW WP Form の開発が停止したため、このフォークではプラグインを `uno-wp-form` 名前空間へ移行し、ショートコードベースのフォーム作成ワークフローを現在の WordPress 環境で利用できるようにしています。
+MW WP Form の開発が停止したため、このフォークではプラグインを `unomoon-form` 名前空間へ移行し、ショートコードベースのフォーム作成ワークフローを現在の WordPress 環境で利用できるようにしています。
 
 ## Features / 主な機能
 
@@ -32,40 +32,52 @@ MW WP Form の開発が停止したため、このフォークではプラグイ
 - Admin notification email and automatic reply email / 管理者宛メールと自動返信メール
 - Inquiry data storage / 問い合わせデータ保存
 - Chart display for saved inquiry data / 保存データのグラフ表示
-- Japanese translation files / 日本語翻訳ファイル
+- Japanese translation via translate.wordpress.org / 日本語翻訳（translate.wordpress.org 経由）
+- No external scripts or styles are loaded (Chart.js and jQuery UI theme are bundled) / 外部スクリプト・スタイルの読み込みなし（Chart.js と jQuery UI テーマを同梱）
 
 ## Namespace Changes / 名前空間の変更
 
-This fork uses Uno WP Form identifiers.
+This fork uses Unomoon Form identifiers.
 
-このフォークでは Uno WP Form の識別子を使用します。
+このフォークでは Unomoon Form の識別子を使用します。
 
-- Plugin slug: `uno-wp-form`
-- Post type: `uno-wp-form`
-- Shortcode prefix: `unoform_*`
-- Hook prefix: `unoform_*`
-- Frontend wrapper class: `.uno_wp_form`
+- Plugin slug: `unomoon-form`
+- Post type: `unomoon-form`
+- Shortcode prefix: `unomoonform_*`
+- Hook prefix: `unomoonform_*`
+- Frontend wrapper class: `.unomoon_form`
 
 Existing MW WP Form data should be migrated intentionally before production use.
 
 既存の MW WP Form データを利用する場合は、本番利用前に意図的に移行してください。
 
+### Migrating from Uno WP Form (≤ 5.1.6.1) / Uno WP Form からの移行
+
+This plugin was named **Uno WP Form** until 5.1.6.1 and was renamed to comply with the WordPress.org naming rules. Every identifier changed (`uno-wp-form` → `unomoon-form`, `unoform_*` → `unomoonform_*`, inquiry post types `uwf_*` → `unomoon_*`, meta keys `uwf_*` → `unomoonform_*`). To upgrade an existing site:
+
+1. Back up the database.
+2. Deactivate Uno WP Form (and Uno WP Form reCAPTCHA if installed) and install Unomoon Form.
+3. Run the migration script with WP-CLI: `wp eval-file tools/migrate-from-uno-wp-form.php dry-run` (positional argument), check the counts, then run it again without `dry-run`.
+4. Activate Unomoon Form.
+
+このプラグインは 5.1.6.1 まで **Uno WP Form** という名前でしたが、WordPress.org の命名規則に合わせて改名しました。すべての識別子が変わっています（`uno-wp-form` → `unomoon-form`、`unoform_*` → `unomoonform_*`、問い合わせデータの post type `uwf_*` → `unomoon_*`、meta キー `uwf_*` → `unomoonform_*`）。既存サイトは、DB をバックアップした上で旧プラグインを無効化し、`wp eval-file tools/migrate-from-uno-wp-form.php dry-run`（位置引数）で件数を確認してから `dry-run` なしで実行し、その後 Unomoon Form を有効化してください。
+
 ## Requirements / 動作要件
 
 - WordPress 6.0 or later / WordPress 6.0 以上
-- Tested up to WordPress 7.0 / WordPress 7.0 検証済み
+- Tested up to WordPress 7.1 / WordPress 7.1 検証済み
 - PHP 8.0 or later / PHP 8.0 以上
 
 ## Installation / インストール
 
-1. Upload the `uno-wp-form` directory to `wp-content/plugins/`.
-2. Activate `Uno WP Form` in the WordPress admin.
-3. Create or edit forms from the `Uno WP Form` admin menu.
+1. Upload the `unomoon-form` directory to `wp-content/plugins/`.
+2. Activate `Unomoon Form` in the WordPress admin.
+3. Create or edit forms from the `Unomoon Form` admin menu.
 4. Place the generated shortcode on a page.
 
-1. `uno-wp-form` ディレクトリを `wp-content/plugins/` にアップロードします。
-2. WordPress管理画面で `Uno WP Form` を有効化します。
-3. `Uno WP Form` の管理メニューからフォームを作成または編集します。
+1. `unomoon-form` ディレクトリを `wp-content/plugins/` にアップロードします。
+2. WordPress管理画面で `Unomoon Form` を有効化します。
+3. `Unomoon Form` の管理メニューからフォームを作成または編集します。
 4. 生成されたショートコードを固定ページなどに配置します。
 
 ## Upstream / フォーク元
@@ -82,9 +94,9 @@ The fork exists because upstream development has stopped.
 
 ## Related Plugin / 関連プラグイン
 
-Uno WP Form reCAPTCHA:
+Unomoon Form reCAPTCHA:
 
-https://github.com/annrie/uno-wp-form-recaptcha
+https://github.com/annrie/unomoon-form-recaptcha
 
 ## License / ライセンス
 

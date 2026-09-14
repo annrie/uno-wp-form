@@ -1,5 +1,5 @@
 @charset "utf-8";
 
-#menu-posts-uno-wp-form .wp-submenu li a[href$="-chart"] {
+#menu-posts-unomoon-form .wp-submenu li a[href$="-chart"] {
 	display: none;
 }

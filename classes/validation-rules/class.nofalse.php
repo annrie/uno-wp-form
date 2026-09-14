@@ -1,14 +1,18 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
- * Uno_WP_Form_Validation_Rule_noFalse
+ * Unomoon_Form_Validation_Rule_noFalse
  */
-class Uno_WP_Form_Validation_Rule_noFalse extends Uno_WP_Form_Abstract_Validation_Rule {
+class Unomoon_Form_Validation_Rule_noFalse extends Unomoon_Form_Abstract_Validation_Rule {
 
 	/**
 	 * Validation rule name.
@@ -32,7 +36,7 @@ class Uno_WP_Form_Validation_Rule_noFalse extends Uno_WP_Form_Abstract_Validatio
 		}
 
 		$defaults = array(
-			'message' => __( 'Please enter.', 'uno-wp-form' ),
+			'message' => __( 'Please enter.', 'unomoon-form' ),
 		);
 		$options  = array_merge( $defaults, $options );
 		return $options['message'];

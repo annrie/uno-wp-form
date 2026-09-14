@@ -1,14 +1,18 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
- * UWF_Functions
+ * Unomoon_Form_Functions
  */
-class UWF_Functions {
+class Unomoon_Form_Functions {
 
 	/**
 	 * Return true when the variable passed as an argument exists and the numeric value.
@@ -61,14 +65,14 @@ class UWF_Functions {
 			return;
 		}
 
-		global $unoform_deprecated_message;
-		$unoform_deprecated_message .= '<div class="error ' . esc_attr( UWF_Config::NAME ) . '-deprecated-message">';
-		$unoform_deprecated_message .= sprintf(
-			'Uno WP Form dosen\'t support "<b>%s</b>" already. This will be removed in the next version. ',
-			$function_name
+		global $unomoonform_deprecated_message;
+		$unomoonform_deprecated_message .= '<div class="error ' . esc_attr( Unomoon_Form_Config::NAME ) . '-deprecated-message">';
+		$unomoonform_deprecated_message .= sprintf(
+			'Unomoon Form dosen\'t support "<b>%s</b>" already. This will be removed in the next version. ',
+			esc_html( $function_name )
 		);
 		if ( $new_function ) {
-			$unoform_deprecated_message .= sprintf( 'You should use "<b>%s</b>". ', $new_function );
+			$unomoonform_deprecated_message .= sprintf( 'You should use "<b>%s</b>". ', esc_html( $new_function ) );
 		}
 
 		// phpcs:disable PHPCompatibility.FunctionUse.ArgumentFunctionsReportCurrentValue.NeedsInspection
@@ -78,23 +82,23 @@ class UWF_Functions {
 		array_shift( $debug_backtrace );
 		foreach ( $debug_backtrace as $value ) {
 			if ( isset( $value['file'], $value['line'] ) ) {
-				$unoform_deprecated_message .= sprintf( '<b>%s line %d</b>', $value['file'], $value['line'] );
+				$unomoonform_deprecated_message .= sprintf( '<b>%s line %d</b>', esc_html( $value['file'] ), (int) $value['line'] );
 			}
 			break;
 		}
-		$unoform_deprecated_message .= '</div>';
+		$unomoonform_deprecated_message .= '</div>';
 		if ( is_admin() ) {
 			if ( 'admin_notices' === current_filter() ) {
 				self::_display_deprecated_message();
 			} else {
-				add_action( 'admin_notices', 'UWF_Functions::_display_deprecated_message' );
+				add_action( 'admin_notices', 'Unomoon_Form_Functions::_display_deprecated_message' );
 			}
 		} else {
 			if ( 'the_content' === current_filter() ) {
 				self::_display_deprecated_message();
 			} else {
-				add_filter( 'the_content', 'UWF_Functions::_return_deprecated_message' );
-				error_log( strip_tags( self::_return_deprecated_message() ) );
+				add_filter( 'the_content', 'Unomoon_Form_Functions::_return_deprecated_message' );
+				error_log( wp_strip_all_tags( self::_return_deprecated_message() ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Only runs when WP_DEBUG is on.
 			}
 		}
 	}
@@ -102,11 +106,11 @@ class UWF_Functions {
 	/**
 	 * Display deprecated message.
 	 */
-	protected static function _display_deprecated_message() {
-		global $unoform_deprecated_message;
-		$content = $unoform_deprecated_message;
-		unset( $unoform_deprecated_message );
-		echo $content;
+	public static function _display_deprecated_message() {
+		global $unomoonform_deprecated_message;
+		$content                        = $unomoonform_deprecated_message;
+		$unomoonform_deprecated_message = '';
+		echo wp_kses_post( $content );
 	}
 
 	/**
@@ -115,10 +119,10 @@ class UWF_Functions {
 	 * @param string $content Content.
 	 */
 	public static function _return_deprecated_message( $content = '' ) {
-		global $unoform_deprecated_message;
-		$content = $unoform_deprecated_message . $content;
-		unset( $unoform_deprecated_message );
-		return $content;
+		global $unomoonform_deprecated_message;
+		$message                        = $unomoonform_deprecated_message;
+		$unomoonform_deprecated_message = '';
+		return wp_kses_post( $message ) . $content;
 	}
 
 	/**
@@ -162,9 +166,7 @@ class UWF_Functions {
 		}
 
 		// If it can move, even if it can not move, return only the path after rename
-		if ( rename( $filepath, $new_filepath ) ) {
-			return $new_filepath;
-		}
+		Unomoon_Form_Directory::_filesystem()->move( $filepath, $new_filepath, true );
 		return $new_filepath;
 	}
 
@@ -177,8 +179,15 @@ class UWF_Functions {
 	 * @return void
 	 */
 	public static function save_attachments_in_media( $saved_mail_id, $attachments, $form_id ) {
-		require_once( ABSPATH . 'wp-admin' . '/includes/media.php' );
-		require_once( ABSPATH . 'wp-admin' . '/includes/image.php' );
+		// wp_generate_attachment_metadata() (image.php) and the audio/video readers it calls
+		// (wp_read_audio_metadata() / wp_read_video_metadata() in media.php) live in wp-admin
+		// and are not loaded on the front end.
+		if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/image.php';
+		}
+		if ( ! function_exists( 'wp_read_audio_metadata' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/media.php';
+		}
 		$save_attached_key = array();
 		foreach ( $attachments as $key => $filepath ) {
 			if ( ! self::check_file_type( $filepath ) ) {
@@ -194,10 +203,11 @@ class UWF_Functions {
 				'post_mime_type' => $wp_check_filetype['type'],
 				'post_title'     => $key,
 				'post_status'    => 'inherit',
-				'post_content'   => __( 'Uploaded from ', 'uno-wp-form' ) . $post_type->label,
+				'post_content'   => __( 'Uploaded from ', 'unomoon-form' ) . $post_type->label,
 			);
 			$attach_id  = wp_insert_attachment( $attachment, $filepath, $saved_mail_id );
 			if ( $attach_id ) {
+				wp_update_attachment_metadata( $attach_id, wp_generate_attachment_metadata( $attach_id, $filepath ) );
 				// 代わりにここで attachment_id を保存
 				update_post_meta( $saved_mail_id, $key, $attach_id );
 				// $key が 添付ファイルのキーであるとわかるように隠し設定を保存
@@ -205,7 +215,7 @@ class UWF_Functions {
 			}
 		}
 		if ( $save_attached_key ) {
-			update_post_meta( $saved_mail_id, '_' . UWF_Config::UPLOAD_FILE_KEYS, $save_attached_key );
+			update_post_meta( $saved_mail_id, '_' . Unomoon_Form_Config::UPLOAD_FILE_KEYS, $save_attached_key );
 		}
 	}
 
@@ -325,11 +335,11 @@ class UWF_Functions {
 	 * @return string
 	 */
 	public static function get_tracking_number_title( $post_type ) {
-		$tracking_number_title = esc_html__( 'Tracking Number', 'uno-wp-form' );
+		$tracking_number_title = esc_html__( 'Tracking Number', 'unomoon-form' );
 		$form_key              = self::contact_data_post_type_to_form_key( $post_type );
 		if ( $form_key ) {
 			$tracking_number_title = apply_filters(
-				'unoform_tracking_number_title_' . $form_key,
+				'unomoonform_tracking_number_title_' . $form_key,
 				$tracking_number_title
 			);
 		}
@@ -358,8 +368,8 @@ class UWF_Functions {
 	 * @return string
 	 */
 	public static function get_form_key_from_form_id( $form_id ) {
-		if ( UWF_Functions::is_numeric( $form_id ) ) {
-			return UWF_Config::NAME . '-' . $form_id;
+		if ( Unomoon_Form_Functions::is_numeric( $form_id ) ) {
+			return Unomoon_Form_Config::NAME . '-' . $form_id;
 		}
 	}
 
@@ -370,7 +380,7 @@ class UWF_Functions {
 	 * @return int
 	 */
 	public static function get_form_id_from_form_key( $form_key ) {
-		if ( preg_match( '/^' . UWF_Config::NAME . '-(\d+)$/', $form_key, $reg ) ) {
+		if ( preg_match( '/^' . Unomoon_Form_Config::NAME . '-(\d+)$/', $form_key, $reg ) ) {
 			return $reg[1];
 		}
 	}
@@ -382,8 +392,8 @@ class UWF_Functions {
 	 * @return string
 	 */
 	public static function get_contact_data_post_type_from_form_id( $form_id ) {
-		if ( UWF_Functions::is_numeric( $form_id ) ) {
-			$contact_data_post_type = UWF_Config::DBDATA . $form_id;
+		if ( Unomoon_Form_Functions::is_numeric( $form_id ) ) {
+			$contact_data_post_type = Unomoon_Form_Config::DBDATA . $form_id;
 			return $contact_data_post_type;
 		}
 	}
@@ -395,7 +405,7 @@ class UWF_Functions {
 	 * @return boolean
 	 */
 	public static function is_contact_data_post_type( $post_type ) {
-		return (bool) ( preg_match( '/^' . UWF_Config::DBDATA . '\d+$/', $post_type ) );
+		return (bool) ( preg_match( '/^' . Unomoon_Form_Config::DBDATA . '\d+$/', $post_type ) );
 	}
 
 	/**
@@ -440,7 +450,7 @@ class UWF_Functions {
 	 * @return int
 	 */
 	public static function get_multimedia_id__fallback( $post, $meta_key ) {
-		$contact_data_setting = new Uno_WP_Form_Contact_Data_Setting( $post->ID );
+		$contact_data_setting = new Unomoon_Form_Contact_Data_Setting( $post->ID );
 		$index                = $contact_data_setting->get_index_of_key_in_upload_file_keys( $meta_key );
 
 		if ( false === $index ) {
@@ -462,26 +472,64 @@ class UWF_Functions {
 	}
 
 	/**
-	 * Enqueue Uno WP Form assets.
+	 * Sanitize values posted from a form.
+	 *
+	 * Form values are free text and are escaped on every output, so the
+	 * sanitization here is limited to what must never reach storage:
+	 * invalid UTF-8 sequences and NUL bytes. Arrays are handled recursively.
+	 *
+	 * @param mixed $value Posted value (already unslashed).
+	 * @return mixed
+	 */
+	public static function sanitize_posted_value( $value ) {
+		if ( is_array( $value ) ) {
+			return array_map( array( __CLASS__, 'sanitize_posted_value' ), $value );
+		}
+
+		if ( is_scalar( $value ) ) {
+			return wp_kses_no_null( wp_check_invalid_utf8( (string) $value ) );
+		}
+
+		return '';
+	}
+
+	/**
+	 * Enqueue the bundled jQuery UI theme stylesheet (smoothness).
+	 *
+	 * Bundled so that no asset is loaded from a third-party CDN.
+	 *
+	 * @return void
+	 */
+	public static function enqueue_jquery_ui_style() {
+		wp_enqueue_style(
+			Unomoon_Form_Config::NAME . '-jquery-ui',
+			UNOMOON_FORM_PLUGIN_URL . '/css/vendor/jquery-ui/jquery-ui.min.css',
+			array(),
+			'1.14.1'
+		);
+	}
+
+	/**
+	 * Enqueue Unomoon Form assets.
 	 *
 	 * @param int $form_id Form ID.
 	 * @return void
 	 */
-	public static function unoform_enqueue_scripts( $form_id ) {
-		$Setting  = new Uno_WP_Form_Setting( $form_id );
-		$form_key = UWF_Functions::get_form_key_from_form_id( $form_id );
-		$url      = UNO_WP_FORM_PLUGIN_URL;
-		wp_enqueue_style( UWF_Config::NAME, $url . '/css/style.css' );
+	public static function unomoonform_enqueue_scripts( $form_id ) {
+		$Setting  = new Unomoon_Form_Setting( $form_id );
+		$form_key = Unomoon_Form_Functions::get_form_key_from_form_id( $form_id );
+		$url      = UNOMOON_FORM_PLUGIN_URL;
+		wp_enqueue_style( Unomoon_Form_Config::NAME, $url . '/css/style.css', array(), UNOMOON_FORM_VERSION );
 
 		$style  = $Setting->get( 'style' );
-		$styles = apply_filters( 'unoform_styles', array() );
+		$styles = apply_filters( 'unomoonform_styles', array() );
 		if ( is_array( $styles ) && isset( $styles[ $style ] ) ) {
 			$css = $styles[ $style ];
-			wp_enqueue_style( UWF_Config::NAME . '_style_' . $form_key, $css );
+			wp_enqueue_style( Unomoon_Form_Config::NAME . '_style_' . $form_key, $css, array(), UNOMOON_FORM_VERSION );
 		}
 
-		wp_enqueue_script( UWF_Config::NAME, $url . '/js/form.js', array( 'jquery' ), false, true );
-		do_action( 'unoform_enqueue_scripts_' . $form_key );
+		wp_enqueue_script( Unomoon_Form_Config::NAME, $url . '/js/form.js', array( 'jquery' ), UNOMOON_FORM_VERSION, true );
+		do_action( 'unomoonform_enqueue_scripts_' . $form_key );
 	}
 
 	/**
@@ -497,6 +545,27 @@ class UWF_Functions {
 		}
 
 		return sprintf(
+			'%1$s="%2$s"',
+			esc_html( $attribute_name ),
+			esc_attr( $attribute_value )
+		);
+	}
+
+	/**
+	 * Output an input field's attribute and attribute value pair, escaped.
+	 *
+	 * Echoing variant of generate_input_attribute() for use in templates.
+	 *
+	 * @param string $attribute_name  Attribute name.
+	 * @param string $attribute_value Attribute value.
+	 * @return void
+	 */
+	public static function input_attribute( $attribute_name, $attribute_value ) {
+		if ( is_null( $attribute_value ) ) {
+			return;
+		}
+
+		printf(
 			'%1$s="%2$s"',
 			esc_html( $attribute_name ),
 			esc_attr( $attribute_value )

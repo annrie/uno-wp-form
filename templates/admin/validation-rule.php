@@ -1,12 +1,16 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 ?>
 
-<b class="add-btn"><?php esc_html_e( 'Add Validation rule', 'uno-wp-form' ); ?></b>
+<b class="add-btn"><?php esc_html_e( 'Add Validation rule', 'unomoon-form' ); ?></b>
 <div class="repeatable-boxes">
 	<?php
 	foreach ( $validation as $key => $value ) :
@@ -21,7 +25,7 @@
 		<div class="remove-btn"><b>×</b></div>
 		<div class="open-btn"><span><?php echo esc_attr( $value['target'] ); ?></span><b>▼</b></div>
 		<div class="repeatable-box-content">
-			<?php esc_html_e( 'The key which applies validation', 'uno-wp-form' ); ?>：<input type="text" class="targetKey" value="<?php echo esc_attr( $value['target'] ); ?>" name="<?php echo UWF_Config::NAME; ?>[validation][<?php echo esc_attr( $key ); ?>][target]" />
+			<?php esc_html_e( 'The key which applies validation', 'unomoon-form' ); ?>：<input type="text" class="targetKey" value="<?php echo esc_attr( $value['target'] ); ?>" name="<?php echo esc_attr( Unomoon_Form_Config::NAME ); ?>[validation][<?php echo esc_attr( $key ); ?>][target]" />
 			<table border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td colspan="2">
