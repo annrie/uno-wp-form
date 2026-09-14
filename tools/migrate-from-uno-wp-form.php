@@ -51,9 +51,9 @@ $run(
 	'uno-wp-form'
 );
 $run(
-	"posts.post_type 'uwf_N' -> 'unomoonform_N'",
+	"posts.post_type 'uwf_N' -> 'unomoon_N'",
 	"SELECT COUNT(*) FROM {$wpdb->posts} WHERE post_type LIKE %s",
-	"UPDATE {$wpdb->posts} SET post_type = CONCAT( 'unomoonform_', SUBSTRING( post_type, 5 ) ) WHERE post_type LIKE %s",
+	"UPDATE {$wpdb->posts} SET post_type = CONCAT( 'unomoon_', SUBSTRING( post_type, 5 ) ) WHERE post_type LIKE %s",
 	$like( 'uwf_' ) . '%'
 );
 
@@ -91,9 +91,9 @@ $run(
 	'uno-wp-form'
 );
 $run(
-	"options 'uno-wp-form-chart-uwf_N' -> 'unomoon-form-chart-unomoonform_N'",
+	"options 'uno-wp-form-chart-uwf_N' -> 'unomoon-form-chart-unomoon_N'",
 	"SELECT COUNT(*) FROM {$wpdb->options} WHERE option_name LIKE %s",
-	"UPDATE {$wpdb->options} SET option_name = CONCAT( 'unomoon-form-chart-unomoonform_', SUBSTRING( option_name, 23 ) ) WHERE option_name LIKE %s",
+	"UPDATE {$wpdb->options} SET option_name = CONCAT( 'unomoon-form-chart-unomoon_', SUBSTRING( option_name, 23 ) ) WHERE option_name LIKE %s",
 	$like( 'uno-wp-form-chart-uwf_' ) . '%'
 );
 $run(
@@ -137,17 +137,18 @@ foreach ( $form_ids as $form_id ) {
 }
 $log( sprintf( '%s%-60s %d rows', $dry_run ? '[dry-run] ' : '', 'form settings containing [unoform shortcodes', $touched ) );
 
-// 6. Per-user screen options that embed the inquiry post type.
+// 6. Per-user screen options that embed the inquiry post type (edit_uwf_N_per_page, manageedit-uwf_Ncolumnshidden, ...).
 $run(
-	"usermeta keys containing 'uwf_' -> 'unomoonform_'",
+	"usermeta keys containing 'uwf_' -> 'unomoon_'",
 	"SELECT COUNT(*) FROM {$wpdb->usermeta} WHERE meta_key LIKE %s",
-	"UPDATE {$wpdb->usermeta} SET meta_key = REPLACE( meta_key, 'uwf_', 'unomoonform_' ) WHERE meta_key LIKE %s",
+	"UPDATE {$wpdb->usermeta} SET meta_key = REPLACE( meta_key, 'uwf_', 'unomoon_' ) WHERE meta_key LIKE %s",
 	'%' . $like( 'uwf_' ) . '%'
 );
 
 // 7. Stale transients and the old temporary upload directory.
+// (Old form-session transients were keyed by the raw sha1 session ID and simply expire; only the deprecation-notice transient is named.)
 $run(
-	"transients '_transient_unoform*' (deleted)",
+	"transient 'unoform_deprecated_shortcodes_forms' (deleted)",
 	"SELECT COUNT(*) FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name LIKE %s",
 	"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name LIKE %s",
 	$like( '_transient_unoform' ) . '%',

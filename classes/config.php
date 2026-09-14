@@ -33,7 +33,7 @@ class Unomoon_Form_Config {
 	 *
 	 * @var string
 	 */
-	const DBDATA = 'unomoonform_';
+	const DBDATA = 'unomoon_'; // Keep short: post type names are limited to 20 characters (prefix + form ID).
 
 	/**
 	 * The name of field that array of uploaded file names.
