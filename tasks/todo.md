@@ -12,7 +12,10 @@
 - [x] Phase 5: インライン script/style の enqueue 化
 - [x] Phase 6: セキュリティ修正（セッション / CSRF / nonce / sanitize / escape / upload / debug log）
 - [x] Phase 7: 移行スクリプト tools/migrate-from-uno-wp-form.php
-- [ ] Phase 8: 検証（php -l ✅、grep ✅、zip ✅、Local 動作確認 ✅、Plugin Check ERROR 0 ✅、codex-rescue ✅）→ PR
+- [x] Phase 8: 検証（php -l ✅、grep ✅、zip ✅、Local 動作確認 ✅、Plugin Check ERROR 0 ✅、codex-rescue ×2 ✅）→ PR annrie/uno-wp-form#3, annrie/uno-wp-form-recaptcha#1
+- [ ] Phase 8b: codex レビュー対応（指摘が尽きるまで）→ マージ → `gh repo rename`
+- [ ] Phase 9b: zip を WordPress.org に再提出 → 返信送信
+- [ ] Phase 10: 本番デプロイ + 移行スクリプト実行 + .mo 配置
 - [x] Phase 9: 返信ドラフト作成
 
 ## レビュー（完了時に記入）
