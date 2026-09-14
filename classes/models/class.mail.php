@@ -107,11 +107,7 @@ class Unomoon_Form_Mail {
 			$this->body = ' ';
 		}
 
-		if ( defined( 'MWFORM_DEBUG' ) && true === MWFORM_DEBUG ) {
-			$is_mail_sended = $this->_put_mail_log( $headers );
-		} else {
-			$is_mail_sended = wp_mail( $this->to, $this->subject, $this->body, $headers, array_values( $this->attachments ) );
-		}
+		$is_mail_sended = wp_mail( $this->to, $this->subject, $this->body, $headers, array_values( $this->attachments ) );
 
 		remove_action( 'phpmailer_init', array( $this, '_set_return_path' ) );
 		remove_filter( 'wp_mail_from', array( $this, '_set_mail_from' ) );
@@ -294,70 +290,5 @@ class Unomoon_Form_Mail {
 		if ( $this->Mail_Parser ) {
 			return $this->Mail_Parser->get_saved_mail_id();
 		}
-	}
-
-	/**
-	 * Logging that Unomoon Form sending mail.
-	 *
-	 * @param string $headers Mail headers.
-	 * @return bool
-	 */
-	protected function _put_mail_log( $headers ) {
-		// Update properties
-		wp_mail( '', $this->subject, '', $headers, array() );
-
-		$temp_dir = Unomoon_Form_Directory::get();
-		$temp_dir = apply_filters( 'unomoonform_log_directory', $temp_dir );
-
-		$contents  = '====================';
-		$contents .= "\n\n";
-		$contents .= 'Send Date: %1$s';
-		$contents .= "\n";
-		$contents .= 'To: %2$s';
-		$contents .= "\n";
-		$contents .= 'Sender: %3$s';
-		$contents .= "\n";
-		$contents .= 'Reply-to: %4$s';
-		$contents .= "\n";
-		$contents .= 'From: %5$s';
-		$contents .= "\n";
-		$contents .= 'Return-Path: %6$s';
-		$contents .= "\n";
-		$contents .= 'Subject: %7$s';
-		$contents .= "\n";
-		$contents .= 'headers:%8$s';
-		$contents .= "\n";
-		$contents .= '-----';
-		$contents .= "\n";
-		$contents .= '%9$s';
-		$contents .= "\n";
-		$contents .= '-----';
-		$contents .= "\n";
-		$contents .= 'attachments:';
-		$contents .= "\n";
-		$contents .= '%10$s';
-		$contents .= "\n\n";
-
-		$contents = sprintf(
-			$contents,
-			date_i18n( 'M j Y, H:i:s' ),
-			$this->to,
-			$this->sender,
-			$this->reply_to,
-			$this->from,
-			$this->return_path,
-			$this->subject,
-			implode( "\n", $headers ),
-			$this->body,
-			implode( "\n", $this->attachments )
-		);
-
-		$is_mail_sended = file_put_contents( $temp_dir . '/unomoon-form-debug.log', $contents, FILE_APPEND );
-
-		if ( false === $is_mail_sended ) {
-			return false;
-		}
-
-		return true;
 	}
 }

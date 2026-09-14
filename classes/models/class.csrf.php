@@ -74,7 +74,16 @@ class Unomoon_Form_Csrf {
 	 * @return string
 	 */
 	public static function saved_token() {
-		return filter_input( INPUT_COOKIE, static::KEY );
+		if ( ! isset( $_COOKIE[ static::KEY ] ) ) {
+			return null;
+		}
+
+		$token = sanitize_text_field( wp_unslash( $_COOKIE[ static::KEY ] ) );
+		if ( ! preg_match( '|\A[a-z0-9]+\z|', $token ) ) {
+			return null;
+		}
+
+		return $token;
 	}
 
 	/**

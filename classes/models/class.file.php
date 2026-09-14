@@ -15,6 +15,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Unomoon_Form_File {
 
 	/**
+	 * Temporary directory used while wp_handle_upload() runs.
+	 *
+	 * @var string
+	 */
+	protected $upload_dir = '';
+
+	/**
 	 * Constructor.
 	 */
 	public function __construct() {
@@ -94,17 +101,66 @@ class Unomoon_Form_File {
 		Unomoon_Form_Directory::do_empty( $new_user_file_dir, true );
 
 		$filename = sanitize_file_name( sprintf( '%1$s-%2$s', $name, $file['name'] ) );
-		$filepath = Unomoon_Form_Directory::generate_user_filepath( $form_id, $name, $filename );
-
 		try {
-			if ( ! move_uploaded_file( $file['tmp_name'], $filepath ) ) {
-				throw new \RuntimeException( '[Unomoon Form] There was an error saving the uploaded file.' );
-			}
+			$filepath = Unomoon_Form_Directory::generate_user_filepath( $form_id, $name, $filename );
 		} catch ( \Exception $e ) {
-			error_log( $e->getMessage() );
+			error_log( $e->getMessage() ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			return false;
+		}
+		if ( ! $filepath ) {
+			return false;
+		}
+
+		// Hand the file to WordPress' uploader (type/extension checks, safe moving) while keeping our temporary directory.
+		if ( ! function_exists( 'wp_handle_upload' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+		}
+
+		$this->upload_dir = $new_user_file_dir;
+		add_filter( 'upload_dir', array( $this, '_temp_upload_dir' ) );
+		$uploaded = wp_handle_upload(
+			$file,
+			array(
+				'test_form'                => false,
+				'unique_filename_callback' => function () use ( $filename ) {
+					return $filename;
+				},
+			)
+		);
+		remove_filter( 'upload_dir', array( $this, '_temp_upload_dir' ) );
+		$this->upload_dir = '';
+
+		if ( ! is_array( $uploaded ) || isset( $uploaded['error'] ) ) {
+			$message = is_array( $uploaded ) && isset( $uploaded['error'] ) ? $uploaded['error'] : 'unknown error';
+			error_log( '[Unomoon Form] There was an error saving the uploaded file: ' . $message ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			return false;
+		}
+
+		if ( wp_normalize_path( $uploaded['file'] ) !== $filepath ) {
+			// wp_handle_upload() saved the file elsewhere; keep the temporary directory clean.
+			wp_delete_file( $uploaded['file'] );
+			error_log( '[Unomoon Form] The uploaded file was saved to an unexpected location.' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 			return false;
 		}
 
 		return $filename;
+	}
+
+	/**
+	 * Point wp_handle_upload() at the per-session temporary directory.
+	 *
+	 * @param array $uploads Upload directory data from wp_upload_dir().
+	 * @return array
+	 */
+	public function _temp_upload_dir( $uploads ) {
+		if ( ! $this->upload_dir ) {
+			return $uploads;
+		}
+
+		$relative        = str_replace( $uploads['basedir'], '', $this->upload_dir );
+		$uploads['path']   = $this->upload_dir;
+		$uploads['url']    = $uploads['baseurl'] . $relative;
+		$uploads['subdir'] = $relative;
+		return $uploads;
 	}
 }

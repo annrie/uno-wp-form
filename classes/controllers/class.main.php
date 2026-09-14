@@ -47,21 +47,21 @@ class Unomoon_Form_Main_Controller {
 	 * @param WP_Query $wp_query WP_Query object.
 	 */
 	public function _remove_query_vars_from_post( $wp_query ) {
-		if ( isset( $_POST[ Unomoon_Form_Config::TOKEN_NAME ] ) ) {
-			$request_token = $_POST[ Unomoon_Form_Config::TOKEN_NAME ];
-		}
-
-		if ( ! isset( $request_token ) ) {
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nothing is written; the form token itself is verified in _template_redirect().
+		if ( ! isset( $_POST[ Unomoon_Form_Config::TOKEN_NAME ] ) ) {
 			return;
 		}
 
-		foreach ( $_POST as $key => $value ) {
+		$posted = Unomoon_Form_Functions::sanitize_posted_value( wp_unslash( $_POST ) );
+		// phpcs:enable
+
+		foreach ( $posted as $key => $value ) {
 			if ( 'token' === $key ) {
 				continue;
 			}
 
 			if ( isset( $wp_query->query_vars[ $key ] )
-				&& $wp_query->query_vars[ $key ] === $value
+				&& wp_unslash( $wp_query->query_vars[ $key ] ) === $value
 				&& ! empty( $value ) ) {
 
 				$wp_query->query_vars[ $key ] = '';
@@ -124,8 +124,9 @@ class Unomoon_Form_Main_Controller {
 		 * - 決定したリダイレクト先にリダイレクトする
 		 * - リダイレクト先が現在表示しようとしているページと同じ場合は無視する
 		 */
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- The form is protected by its own CSRF token (Unomoon_Form_Csrf::validate() below).
 		if ( ! empty( $_POST ) && ! empty( $_POST[ Unomoon_Form_Config::NAME . '-form-id' ] ) ) {
-			$form_id = $_POST[ Unomoon_Form_Config::NAME . '-form-id' ];
+			$form_id = absint( wp_unslash( $_POST[ Unomoon_Form_Config::NAME . '-form-id' ] ) );
 			if ( Unomoon_Form_Config::NAME !== get_post_type( $form_id ) ) {
 				wp_safe_redirect( home_url() );
 				exit;
@@ -141,13 +142,18 @@ class Unomoon_Form_Main_Controller {
 
 			do_action( 'unomoonform_start_main_process', $form_key );
 
-			$this->Setting    = new Unomoon_Form_Setting( (int) $form_id );
-			$this->Data       = Unomoon_Form_Data::connect( $form_key, $_POST, $_FILES );
+			$this->Setting    = new Unomoon_Form_Setting( $form_id );
+			// Posted values are unslashed and cleaned of invalid UTF-8 / NUL bytes here; each value is escaped again on output.
+			$this->Data       = Unomoon_Form_Data::connect(
+				$form_key,
+				Unomoon_Form_Functions::sanitize_posted_value( wp_unslash( $_POST ) ),
+				$_FILES // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Validated by wp_handle_upload() in Unomoon_Form_File.
+			);
 			$post_condition   = $this->Data->get_post_condition();
 			$this->Validation = new Unomoon_Form_Validation( $form_key );
 			$Redirected       = new Unomoon_Form_Redirected( $form_key, $this->Setting, $this->Validation->is_valid(), $post_condition );
 
-			$form_verify_token = $_POST[ Unomoon_Form_Config::TOKEN_NAME ];
+			$form_verify_token = isset( $_POST[ Unomoon_Form_Config::TOKEN_NAME ] ) ? sanitize_text_field( wp_unslash( $_POST[ Unomoon_Form_Config::TOKEN_NAME ] ) ) : '';
 			if ( ! Unomoon_Form_Csrf::validate( $form_verify_token ) ) {
 				wp_safe_redirect( $Redirected->redirect() );
 				exit;

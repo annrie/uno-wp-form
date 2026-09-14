@@ -151,7 +151,7 @@ class Unomoon_Form_Exec_Shortcode {
 				<!-- end .unomoon_form --></div>',
 				esc_attr( $this->form_key ),
 				esc_attr( $this->view_flg . ' ' . $old_confirm_class ),
-				$class_by_style,
+				esc_attr( $class_by_style ),
 				$Form->start() . do_shortcode( $content ) . $upload_file_hidden . $Form->end()
 			);
 		}
@@ -374,8 +374,9 @@ class Unomoon_Form_Exec_Shortcode {
 	protected function _get_class_by_style() {
 		$style = $this->Setting->get( 'style' );
 		if ( $style ) {
-			return 'unomoon_form_' . $style;
+			return sanitize_html_class( 'unomoon_form_' . $style );
 		}
+		return '';
 	}
 
 	/**

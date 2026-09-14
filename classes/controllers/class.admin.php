@@ -198,7 +198,8 @@ class Unomoon_Form_Admin_Controller extends Unomoon_Form_Controller {
 			return;
 		}
 
-		if ( ! wp_verify_nonce( $_POST[ Unomoon_Form_Config::NAME . '_nonce' ], Unomoon_Form_Config::NAME ) ) {
+		$nonce = sanitize_text_field( wp_unslash( $_POST[ Unomoon_Form_Config::NAME . '_nonce' ] ) );
+		if ( ! wp_verify_nonce( $nonce, Unomoon_Form_Config::NAME ) ) {
 			return;
 		}
 
@@ -206,7 +207,12 @@ class Unomoon_Form_Admin_Controller extends Unomoon_Form_Controller {
 			return;
 		}
 
-		$data = $_POST[ Unomoon_Form_Config::NAME ];
+		if ( ! isset( $_POST[ Unomoon_Form_Config::NAME ] ) || ! is_array( $_POST[ Unomoon_Form_Config::NAME ] ) ) {
+			return;
+		}
+
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized per key in _sanitize_settings().
+		$data = $this->_sanitize_settings( wp_unslash( $_POST[ Unomoon_Form_Config::NAME ] ) );
 
 		$triminglists = array(
 			'mail_from',
@@ -219,6 +225,9 @@ class Unomoon_Form_Admin_Controller extends Unomoon_Form_Controller {
 			'admin_mail_reply_to',
 		);
 		foreach ( $triminglists as $name ) {
+			if ( ! isset( $data[ $name ] ) ) {
+				continue;
+			}
 			if ( function_exists( 'mb_convert_kana' ) ) {
 				$data[ $name ] = trim( mb_convert_kana( $data[ $name ], 's', get_option( 'blog_charset' ) ) );
 			} else {
@@ -286,11 +295,44 @@ class Unomoon_Form_Admin_Controller extends Unomoon_Form_Controller {
 		$Setting->sets( $data );
 
 		if ( isset( $_POST[ Unomoon_Form_Config::TRACKINGNUMBER ] ) ) {
-			$tracking_number = $_POST[ Unomoon_Form_Config::TRACKINGNUMBER ];
+			$tracking_number = absint( wp_unslash( $_POST[ Unomoon_Form_Config::TRACKINGNUMBER ] ) );
 			$Setting->update_tracking_number( $tracking_number );
 		}
 
 		$Setting->save();
+	}
+
+	/**
+	 * Sanitize the posted form settings.
+	 *
+	 * Every value is a plain string except the HTML complete message and the two
+	 * multi-line mail bodies. Nested arrays (validation rules, add-on fields) are
+	 * sanitized recursively as plain text.
+	 *
+	 * @param array $data Unslashed settings posted from the edit screen.
+	 * @return array
+	 */
+	protected function _sanitize_settings( array $data ) {
+		$sanitized = array();
+
+		foreach ( $data as $key => $value ) {
+			$key = sanitize_key( $key );
+			if ( '' === $key ) {
+				continue;
+			}
+
+			if ( 'complete_message' === $key ) {
+				$sanitized[ $key ] = wp_kses_post( (string) $value );
+			} elseif ( in_array( $key, array( 'mail_content', 'admin_mail_content' ), true ) ) {
+				$sanitized[ $key ] = sanitize_textarea_field( (string) $value );
+			} elseif ( is_array( $value ) ) {
+				$sanitized[ $key ] = map_deep( $value, 'sanitize_text_field' );
+			} else {
+				$sanitized[ $key ] = sanitize_text_field( (string) $value );
+			}
+		}
+
+		return $sanitized;
 	}
 
 	/**

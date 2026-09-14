@@ -83,9 +83,9 @@ class Unomoon_Form_Akismet {
 		$akismet['blog']         = home_url();
 		$akismet['blog_lang']    = get_locale();
 		$akismet['blog_charset'] = get_option( 'blog_charset' );
-		$akismet['user_ip']      = preg_replace( '/[^0-9., ]/', '', $_SERVER['REMOTE_ADDR'] );
-		$akismet['user_agent']   = $_SERVER['HTTP_USER_AGENT'];
-		$akismet['referrer']     = $_SERVER['HTTP_REFERER'];
+		$akismet['user_ip']      = isset( $_SERVER['REMOTE_ADDR'] ) ? preg_replace( '/[^0-9a-fA-F:., ]/', '', sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) ) : '';
+		$akismet['user_agent']   = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
+		$akismet['referrer']     = isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : '';
 		$akismet['comment_type'] = Unomoon_Form_Config::NAME;
 
 		if ( $permalink ) {
@@ -104,11 +104,15 @@ class Unomoon_Form_Akismet {
 			$akismet['comment_content'] = $content;
 		}
 
+		// Akismet asks for the request environment; pass it on as plain text without credentials.
 		foreach ( $_SERVER as $key => $value ) {
 			if ( in_array( $key, array( 'HTTP_COOKIE', 'HTTP_COOKIE2', 'PHP_AUTH_PW' ), true ) ) {
 				continue;
 			}
-			$akismet[ $key ] = $value;
+			if ( ! is_scalar( $value ) ) {
+				continue;
+			}
+			$akismet[ $key ] = sanitize_text_field( wp_unslash( (string) $value ) );
 		}
 
 		$query_string = http_build_query( $akismet, '', '&' );

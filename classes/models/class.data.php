@@ -180,7 +180,8 @@ class Unomoon_Form_Data {
 	 */
 	protected function _set_request_valiables() {
 		if ( ! empty( $this->POST ) ) {
-			$this->sets( stripslashes_deep( $this->POST ) );
+			// The caller hands over unslashed, sanitized values (see Unomoon_Form_Main_Controller::_template_redirect()).
+			$this->sets( $this->POST );
 		}
 	}
 
@@ -192,7 +193,7 @@ class Unomoon_Form_Data {
 		foreach ( $this->FILES as $name => $file ) {
 			if ( ! isset( $this->POST[ $name ] ) || ! empty( $file['name'] ) ) {
 				if ( UPLOAD_ERR_OK === $file['error'] && is_uploaded_file( $file['tmp_name'] ) ) {
-					$this->set( $name, $file['name'] );
+					$this->set( $name, sanitize_file_name( $file['name'] ) );
 				} else {
 					$this->set( $name, '' );
 				}

@@ -157,11 +157,13 @@ class Unomoon_Form_Parser {
 	 * @return string|null
 	 */
 	protected function _get_post_property_from_querystring( $matches ) {
-		if ( ! isset( $_GET['post_id'] ) || ! Unomoon_Form_Functions::is_numeric( $_GET['post_id'] ) ) {
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Read-only lookup of a published post.
+		if ( ! isset( $_GET['post_id'] ) || ! Unomoon_Form_Functions::is_numeric( wp_unslash( $_GET['post_id'] ) ) ) {
 			return;
 		}
 
-		$post = get_post( $_GET['post_id'] );
+		$post = get_post( absint( wp_unslash( $_GET['post_id'] ) ) );
+		// phpcs:enable
 		if ( empty( $post->ID ) ) {
 			return;
 		}
@@ -205,16 +207,39 @@ class Unomoon_Form_Parser {
 			return;
 		}
 
-		if ( isset( $post->$meta_key ) ) {
-			return $post->$meta_key;
+		// Only public, display-safe post fields can be substituted; everything else (post_password, ...) is off limits.
+		$allowed_properties = array(
+			'ID',
+			'post_author',
+			'post_date',
+			'post_date_gmt',
+			'post_title',
+			'post_excerpt',
+			'post_name',
+			'post_modified',
+			'post_modified_gmt',
+			'post_parent',
+			'guid',
+			'menu_order',
+			'post_type',
+			'post_mime_type',
+			'comment_count',
+		);
+		if ( in_array( $meta_key, $allowed_properties, true ) ) {
+			return esc_html( (string) $post->$meta_key );
 		}
 
-		$post_meta = get_post_meta( $post->ID, $meta_key, true );
-		if ( is_array( $post_meta ) ) {
+		// Private meta (leading underscore) is never exposed.
+		if ( '' === $meta_key || '_' === substr( $meta_key, 0, 1 ) ) {
 			return;
 		}
 
-		return $post_meta;
+		$post_meta = get_post_meta( $post->ID, $meta_key, true );
+		if ( ! is_scalar( $post_meta ) ) {
+			return;
+		}
+
+		return esc_html( (string) $post_meta );
 	}
 
 	/**
@@ -238,12 +263,12 @@ class Unomoon_Form_Parser {
 			$content = str_replace(
 				$search,
 				array(
-					$user->get( 'ID' ),
-					$user->get( 'user_login' ),
-					$user->get( 'user_email' ),
-					$user->get( 'user_url' ),
-					$user->get( 'user_registered' ),
-					$user->get( 'display_name' ),
+					esc_html( (string) $user->get( 'ID' ) ),
+					esc_html( (string) $user->get( 'user_login' ) ),
+					esc_html( (string) $user->get( 'user_email' ) ),
+					esc_html( (string) $user->get( 'user_url' ) ),
+					esc_html( (string) $user->get( 'user_registered' ) ),
+					esc_html( (string) $user->get( 'display_name' ) ),
 				),
 				$content
 			);

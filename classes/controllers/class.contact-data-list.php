@@ -32,11 +32,13 @@ class Unomoon_Form_Contact_Data_List_Controller extends Unomoon_Form_Controller 
 	 */
 	public function __construct() {
 		$contact_data_post_types = Unomoon_Form_Contact_Data_Setting::get_form_post_types();
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Screen selector only; validated against the known post types.
 		if ( ! isset( $_GET['post_type'] ) ) {
 			exit;
 		}
 
-		$this->post_type = $_GET['post_type'];
+		$this->post_type = sanitize_key( wp_unslash( $_GET['post_type'] ) );
+		// phpcs:enable
 		if ( ! in_array( $this->post_type, $contact_data_post_types, true ) ) {
 			exit;
 		}
@@ -112,11 +114,11 @@ class Unomoon_Form_Contact_Data_List_Controller extends Unomoon_Form_Controller 
 		if ( true !== apply_filters( 'unomoonform_csv_button_' . $this->post_type, true ) ) {
 			return;
 		}
-		$page = ( basename( $_SERVER['PHP_SELF'] ) );
-		if ( 'edit.php' !== $page ) {
+		global $pagenow;
+		if ( 'edit.php' !== $pagenow ) {
 			return;
 		}
-		$action = $_SERVER['REQUEST_URI'];
+		$action = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
 		$this->_render(
 			'contact-data-list/csv-button',
 			array(

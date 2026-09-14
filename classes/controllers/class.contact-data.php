@@ -33,12 +33,14 @@ class Unomoon_Form_Contact_Data_Controller extends Unomoon_Form_Controller {
 			$args = array();
 		}
 
+		// phpcs:disable WordPress.Security.NonceVerification -- Only used to look up the screen's post; nothing is written here.
 		$_post_id = null;
 		if ( isset( $_GET['post'] ) ) {
-			$_post_id = $_GET['post'];
-		} elseif ( $_POST['post_ID'] ) {
-			$_post_id = $_POST['post_ID'];
+			$_post_id = absint( wp_unslash( $_GET['post'] ) );
+		} elseif ( ! empty( $_POST['post_ID'] ) ) {
+			$_post_id = absint( wp_unslash( $_POST['post_ID'] ) );
 		}
+		// phpcs:enable
 
 		$args         = array_merge(
 			$args,
@@ -108,7 +110,8 @@ class Unomoon_Form_Contact_Data_Controller extends Unomoon_Form_Controller {
 		}
 
 		$contact_data_post_types = Unomoon_Form_Contact_Data_setting::get_form_post_types();
-		if ( ! in_array( $_POST['post_type'], $contact_data_post_types, true ) ) {
+		$post_type               = sanitize_key( wp_unslash( $_POST['post_type'] ) );
+		if ( ! in_array( $post_type, $contact_data_post_types, true ) ) {
 			return;
 		}
 
@@ -116,7 +119,12 @@ class Unomoon_Form_Contact_Data_Controller extends Unomoon_Form_Controller {
 			return;
 		}
 
-		if ( ! wp_verify_nonce( $_POST[ Unomoon_Form_Config::NAME . '_nonce' ], Unomoon_Form_Config::NAME ) ) {
+		if ( ! isset( $_POST[ Unomoon_Form_Config::NAME . '_nonce' ] ) ) {
+			return;
+		}
+
+		$nonce = sanitize_text_field( wp_unslash( $_POST[ Unomoon_Form_Config::NAME . '_nonce' ] ) );
+		if ( ! wp_verify_nonce( $nonce, Unomoon_Form_Config::NAME ) ) {
 			return;
 		}
 
@@ -129,7 +137,7 @@ class Unomoon_Form_Contact_Data_Controller extends Unomoon_Form_Controller {
 		$data                 = array();
 		foreach ( $permit_keys as $key ) {
 			if ( isset( $_POST[ Unomoon_Form_Config::INQUIRY_DATA_NAME ][ $key ] ) ) {
-				$value = $_POST[ Unomoon_Form_Config::INQUIRY_DATA_NAME ][ $key ];
+				$value = sanitize_textarea_field( wp_unslash( $_POST[ Unomoon_Form_Config::INQUIRY_DATA_NAME ][ $key ] ) );
 				if ( 'response_status' === $key ) {
 					if ( ! array_key_exists( $value, $contact_data_setting->get_response_statuses() ) ) {
 						continue;

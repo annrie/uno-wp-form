@@ -69,10 +69,10 @@ class Unomoon_Form_Functions {
 		$unomoonform_deprecated_message .= '<div class="error ' . esc_attr( Unomoon_Form_Config::NAME ) . '-deprecated-message">';
 		$unomoonform_deprecated_message .= sprintf(
 			'Unomoon Form dosen\'t support "<b>%s</b>" already. This will be removed in the next version. ',
-			$function_name
+			esc_html( $function_name )
 		);
 		if ( $new_function ) {
-			$unomoonform_deprecated_message .= sprintf( 'You should use "<b>%s</b>". ', $new_function );
+			$unomoonform_deprecated_message .= sprintf( 'You should use "<b>%s</b>". ', esc_html( $new_function ) );
 		}
 
 		// phpcs:disable PHPCompatibility.FunctionUse.ArgumentFunctionsReportCurrentValue.NeedsInspection
@@ -82,7 +82,7 @@ class Unomoon_Form_Functions {
 		array_shift( $debug_backtrace );
 		foreach ( $debug_backtrace as $value ) {
 			if ( isset( $value['file'], $value['line'] ) ) {
-				$unomoonform_deprecated_message .= sprintf( '<b>%s line %d</b>', $value['file'], $value['line'] );
+				$unomoonform_deprecated_message .= sprintf( '<b>%s line %d</b>', esc_html( $value['file'] ), (int) $value['line'] );
 			}
 			break;
 		}
@@ -106,11 +106,11 @@ class Unomoon_Form_Functions {
 	/**
 	 * Display deprecated message.
 	 */
-	protected static function _display_deprecated_message() {
+	public static function _display_deprecated_message() {
 		global $unomoonform_deprecated_message;
-		$content = $unomoonform_deprecated_message;
-		unset( $unomoonform_deprecated_message );
-		echo $content;
+		$content                        = $unomoonform_deprecated_message;
+		$unomoonform_deprecated_message = '';
+		echo wp_kses_post( $content );
 	}
 
 	/**
@@ -120,9 +120,9 @@ class Unomoon_Form_Functions {
 	 */
 	public static function _return_deprecated_message( $content = '' ) {
 		global $unomoonform_deprecated_message;
-		$content = $unomoonform_deprecated_message . $content;
-		unset( $unomoonform_deprecated_message );
-		return $content;
+		$message                        = $unomoonform_deprecated_message;
+		$unomoonform_deprecated_message = '';
+		return wp_kses_post( $message ) . $content;
 	}
 
 	/**
@@ -181,8 +181,10 @@ class Unomoon_Form_Functions {
 	 * @return void
 	 */
 	public static function save_attachments_in_media( $saved_mail_id, $attachments, $form_id ) {
-		require_once( ABSPATH . 'wp-admin' . '/includes/media.php' );
-		require_once( ABSPATH . 'wp-admin' . '/includes/image.php' );
+		// wp_generate_attachment_metadata() lives in wp-admin and is not loaded on the front end.
+		if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/image.php';
+		}
 		$save_attached_key = array();
 		foreach ( $attachments as $key => $filepath ) {
 			if ( ! self::check_file_type( $filepath ) ) {
@@ -202,6 +204,7 @@ class Unomoon_Form_Functions {
 			);
 			$attach_id  = wp_insert_attachment( $attachment, $filepath, $saved_mail_id );
 			if ( $attach_id ) {
+				wp_update_attachment_metadata( $attach_id, wp_generate_attachment_metadata( $attach_id, $filepath ) );
 				// 代わりにここで attachment_id を保存
 				update_post_meta( $saved_mail_id, $key, $attach_id );
 				// $key が 添付ファイルのキーであるとわかるように隠し設定を保存
@@ -463,6 +466,28 @@ class Unomoon_Form_Functions {
 		if ( isset( $attachments[0] ) ) {
 			return $attachments[0]->ID;
 		}
+	}
+
+	/**
+	 * Sanitize values posted from a form.
+	 *
+	 * Form values are free text and are escaped on every output, so the
+	 * sanitization here is limited to what must never reach storage:
+	 * invalid UTF-8 sequences and NUL bytes. Arrays are handled recursively.
+	 *
+	 * @param mixed $value Posted value (already unslashed).
+	 * @return mixed
+	 */
+	public static function sanitize_posted_value( $value ) {
+		if ( is_array( $value ) ) {
+			return array_map( array( __CLASS__, 'sanitize_posted_value' ), $value );
+		}
+
+		if ( is_scalar( $value ) ) {
+			return wp_kses_no_null( wp_check_invalid_utf8( (string) $value ) );
+		}
+
+		return '';
 	}
 
 	/**

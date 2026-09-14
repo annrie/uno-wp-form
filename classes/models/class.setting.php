@@ -295,7 +295,8 @@ class Unomoon_Form_Setting {
 			}
 			$new_values[ $key ] = $value;
 		}
-		update_post_meta( $this->post_id, Unomoon_Form_Config::NAME, $new_values );
+		// Values are held unslashed; update_post_meta() expects slashed input.
+		update_post_meta( $this->post_id, Unomoon_Form_Config::NAME, wp_slash( $new_values ) );
 		$form_key = Unomoon_Form_Functions::get_form_key_from_form_id( $this->post_id );
 		do_action( 'unomoonform_settings_save_' . $form_key, $this->post_id );
 	}

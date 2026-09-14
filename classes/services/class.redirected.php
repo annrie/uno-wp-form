@@ -120,7 +120,7 @@ class Unomoon_Form_Redirected {
 	 * @return string
 	 */
 	public function get_request_uri() {
-		$request_uri = $_SERVER['REQUEST_URI'];
+		$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
 
 		if ( ! $request_uri ) {
 			return;
@@ -168,10 +168,13 @@ class Unomoon_Form_Redirected {
 		// URL設定でURL引数が使用されている場合はそれを使う。
 		// 「URL引数を有効にする」が有効の場合は $_GET を利用する（重複するURL引数はURL設定のものが優先される ※post_id除く）
 		if ( $this->Setting->get( 'querystring' ) ) {
-			$query_string = array_merge( $_GET, $query_string );
-			if ( isset( $_GET['post_id'] ) && Unomoon_Form_Functions::is_numeric( $_GET['post_id'] ) ) {
-				$query_string['post_id'] = $_GET['post_id'];
+			// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Query arguments are only carried over to the redirect URL.
+			$get          = map_deep( wp_unslash( $_GET ), 'sanitize_text_field' );
+			$query_string = array_merge( $get, $query_string );
+			if ( isset( $get['post_id'] ) && Unomoon_Form_Functions::is_numeric( $get['post_id'] ) ) {
+				$query_string['post_id'] = absint( $get['post_id'] );
 			}
+			// phpcs:enable
 		}
 
 		if ( ! empty( $query_string ) ) {

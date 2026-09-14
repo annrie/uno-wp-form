@@ -100,7 +100,8 @@ class Unomoon_Form_CSV {
 	 * @return int
 	 */
 	public function _get_posts_per_page() {
-		if ( isset( $_POST['download-all'] ) && 'true' === $_POST['download-all'] ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Verified by check_admin_referer() in download().
+		if ( isset( $_POST['download-all'] ) && 'true' === sanitize_text_field( wp_unslash( $_POST['download-all'] ) ) ) {
 			return -1;
 		}
 
@@ -120,11 +121,13 @@ class Unomoon_Form_CSV {
 	 */
 	public function _get_paged() {
 		$posts_per_page = $this->_get_posts_per_page();
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Verified by check_admin_referer() in download().
 		if ( isset( $_GET['paged'] ) ) {
-			if ( Unomoon_Form_Functions::is_numeric( $_GET['paged'] ) && $posts_per_page > 0 ) {
-				return $_GET['paged'];
+			if ( Unomoon_Form_Functions::is_numeric( wp_unslash( $_GET['paged'] ) ) && $posts_per_page > 0 ) {
+				return absint( wp_unslash( $_GET['paged'] ) );
 			}
 		}
+		// phpcs:enable
 		return 1;
 	}
 

@@ -195,13 +195,14 @@ class Unomoon_Form_Contact_Data_Setting {
 		foreach ( $permit_keys as $key ) {
 			$permit_values[ $key ] = $this->$key;
 		}
-		update_post_meta( $this->post_id, Unomoon_Form_Config::INQUIRY_DATA_NAME, $permit_values );
+		// Values are held unslashed; update_post_meta() expects slashed input.
+		update_post_meta( $this->post_id, Unomoon_Form_Config::INQUIRY_DATA_NAME, wp_slash( $permit_values ) );
 
 		foreach ( $this->options as $key => $value ) {
 			if ( is_null( $value ) ) {
 				$value = '';
 			}
-			update_post_meta( $this->post_id, $key, $value );
+			update_post_meta( $this->post_id, $key, wp_slash( $value ) );
 		}
 
 		$contact_data_post_type = get_post_type( $this->post_id );
