@@ -5,6 +5,10 @@
  * @license GPL-2.0+
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Unomoon_Form_Field_Select
  */

@@ -5,4 +5,8 @@
  * @license GPL-2.0+
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 echo $column;

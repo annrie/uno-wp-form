@@ -5,6 +5,10 @@
  * @license GPL-2.0+
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( 'true' === $vertically ) {
 	$vertically_class = 'vertical-item';
 } else {

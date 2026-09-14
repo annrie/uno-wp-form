@@ -4,6 +4,10 @@
  * @author websoudan
  * @license GPL-2.0+
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 ?>
 
 <button type="button"

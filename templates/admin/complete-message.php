@@ -5,6 +5,10 @@
  * @license GPL-2.0+
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 wp_editor(
 	$this->_get_option( 'complete_message' ),
 	Unomoon_Form_Config::NAME . '_complete_message',

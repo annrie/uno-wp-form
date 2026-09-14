@@ -4,6 +4,10 @@
  * @author websoudan
  * @license GPL-2.0+
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 ?>
 
 <input type="hidden" name="<?php echo esc_attr( Unomoon_Form_Config::NAME ); ?>_nonce" value="<?php echo wp_create_nonce( Unomoon_Form_Config::NAME ); ?>" />

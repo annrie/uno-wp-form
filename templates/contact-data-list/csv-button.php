@@ -4,6 +4,10 @@
  * @author websoudan
  * @license GPL-2.0+
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 ?>
 
 <form id="unomoon-form_csv" method="post" action="<?php echo esc_url( $action ); ?>">

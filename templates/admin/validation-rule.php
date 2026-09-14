@@ -4,6 +4,10 @@
  * @author websoudan
  * @license GPL-2.0+
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 ?>
 
 <b class="add-btn"><?php esc_html_e( 'Add Validation rule', 'unomoon-form' ); ?></b>

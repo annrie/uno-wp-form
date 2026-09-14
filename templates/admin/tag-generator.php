@@ -5,6 +5,10 @@
  * @license GPL-2.0+
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 do_action( 'unomoonform_tag_generator_dialog' );
 
 $types = array(
