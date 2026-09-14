@@ -1,14 +1,14 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
 /**
- * Uno_WP_Form_Parser
+ * Unomoon_Form_Parser
  */
-class Uno_WP_Form_Parser {
+class Unomoon_Form_Parser {
 
 	/**
 	 * @var string
@@ -16,12 +16,12 @@ class Uno_WP_Form_Parser {
 	protected $form_key;
 
 	/**
-	 * @var Uno_WP_Form_Setting
+	 * @var Unomoon_Form_Setting
 	 */
 	protected $Setting;
 
 	/**
-	 * @var Uno_WP_Form_Data
+	 * @var Unomoon_Form_Data
 	 */
 	protected $Data;
 
@@ -33,13 +33,13 @@ class Uno_WP_Form_Parser {
 	/**
 	 * Constructor.
 	 *
-	 * @param Uno_WP_Form_Setting $Setting Uno_WP_Form_Setting object.
+	 * @param Unomoon_Form_Setting $Setting Unomoon_Form_Setting object.
 	 */
 	public function __construct( $Setting ) {
 		$this->Setting  = $Setting;
 		$form_id        = $Setting->get( 'post_id' );
-		$this->form_key = UWF_Functions::get_form_key_from_form_id( $form_id );
-		$this->Data     = Uno_WP_Form_Data::connect( $this->form_key );
+		$this->form_key = Unomoon_Form_Functions::get_form_key_from_form_id( $form_id );
+		$this->Data     = Unomoon_Form_Data::connect( $this->form_key );
 	}
 
 	/**
@@ -60,7 +60,7 @@ class Uno_WP_Form_Parser {
 	 */
 	protected function _replace_for_mail_destination_callback( $matches ) {
 		$match = $matches[1];
-		$value = Uno_WP_Form_Parser::apply_filters_unoform_custom_mail_tag( $this->form_key, null, $match );
+		$value = Unomoon_Form_Parser::apply_filters_unomoonform_custom_mail_tag( $this->form_key, null, $match );
 
 		// Return blank when custom mail tag isn't use(= null)
 		if ( is_null( $value ) ) {
@@ -153,7 +153,7 @@ class Uno_WP_Form_Parser {
 	 * @return string|null
 	 */
 	protected function _get_post_property_from_querystring( $matches ) {
-		if ( ! isset( $_GET['post_id'] ) || ! UWF_Functions::is_numeric( $_GET['post_id'] ) ) {
+		if ( ! isset( $_GET['post_id'] ) || ! Unomoon_Form_Functions::is_numeric( $_GET['post_id'] ) ) {
 			return;
 		}
 
@@ -275,22 +275,22 @@ class Uno_WP_Form_Parser {
 	public function parse( $name ) {
 		$form_id = $this->Setting->get( 'post_id' );
 
-		// UWF_Config::TRACKINGNUMBER のときはお問い合せ番号を参照する
-		if ( UWF_Config::TRACKINGNUMBER === $name ) {
+		// Unomoon_Form_Config::TRACKINGNUMBER のときはお問い合せ番号を参照する
+		if ( Unomoon_Form_Config::TRACKINGNUMBER === $name ) {
 			if ( $form_id ) {
 				return $this->Setting->get_tracking_number( $form_id );
 			}
 		}
 
-		// @see https://github.com/inc2734/uno-wp-form/issues/99
-		if ( UWF_Config::TRACKINGNUMBER . '_for_complete_page' === $name ) {
+		// @see https://github.com/inc2734/unomoon-form/issues/99
+		if ( Unomoon_Form_Config::TRACKINGNUMBER . '_for_complete_page' === $name ) {
 			if ( $form_id ) {
 				return $this->Setting->get_tracking_number( $form_id ) - 1;
 			}
 		}
 
 		$value = $this->Data->get( $name );
-		$value = Uno_WP_Form_Parser::apply_filters_unoform_custom_mail_tag(
+		$value = Unomoon_Form_Parser::apply_filters_unomoonform_custom_mail_tag(
 			$this->Data->get_form_key(),
 			$value,
 			$name,
@@ -300,7 +300,7 @@ class Uno_WP_Form_Parser {
 	}
 
 	/**
-	 * Apply unoform_custom_mail_tag filter hook.
+	 * Apply unomoonform_custom_mail_tag filter hook.
 	 *
 	 * @param string      $form_key      Form key.
 	 * @param string|null $value         Value.
@@ -308,16 +308,16 @@ class Uno_WP_Form_Parser {
 	 * @param string      $saved_mail_id Saved mail ID.
 	 * @return string
 	 */
-	public static function apply_filters_unoform_custom_mail_tag( $form_key, $value, $name, $saved_mail_id = null ) {
+	public static function apply_filters_unomoonform_custom_mail_tag( $form_key, $value, $name, $saved_mail_id = null ) {
 		$value = apply_filters(
-			'unoform_custom_mail_tag',
+			'unomoonform_custom_mail_tag',
 			$value,
 			$name,
 			$saved_mail_id
 		);
 
 		$value = apply_filters(
-			'unoform_custom_mail_tag_' . $form_key,
+			'unomoonform_custom_mail_tag_' . $form_key,
 			$value,
 			$name,
 			$saved_mail_id

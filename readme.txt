@@ -1,4 +1,4 @@
-=== Uno WP Form ===
+=== Unomoon Form ===
 Contributors: annrie
 Tags: contact form, form, confirm, mail, shortcode
 Requires at least: 6.0
@@ -12,9 +12,9 @@ Shortcode-based contact form with a confirmation screen. A maintained fork of MW
 
 == Description ==
 
-Uno WP Form creates mail forms with confirmation screens using shortcodes. It is a GPL fork of MW WP Form by inc2734 / Web の相談所.
+Unomoon Form creates mail forms with confirmation screens using shortcodes. It is a GPL fork of MW WP Form by inc2734 / Web の相談所.
 
-Uno WP Form は、ショートコードで確認画面付きのメールフォームを作成できます。MW WP Form の GPL フォークです。
+Unomoon Form は、ショートコードで確認画面付きのメールフォームを作成できます。MW WP Form の GPL フォークです。
 
 = Why this fork exists =
 
@@ -31,9 +31,9 @@ Nothing about the form workflow is changed. If you are happy with MW WP Form and
 
 = Differences from MW WP Form =
 
-This fork migrates plugin identifiers, post types, shortcode prefixes, hooks, assets and admin labels to the `uno-wp-form` / `unoform_*` namespace. **Shortcodes are not compatible**: `[mwform_text]` becomes `[unoform_text]`, and so on. The two plugins can therefore be installed side by side, but forms are not shared between them.
+This fork migrates plugin identifiers, post types, shortcode prefixes, hooks, assets and admin labels to the `unomoon-form` / `unomoonform_*` namespace. **Shortcodes are not compatible**: `[mwform_text]` becomes `[unomoonform_text]`, and so on. The two plugins can therefore be installed side by side, but forms are not shared between them.
 
-プラグイン識別子、投稿タイプ、ショートコード接頭辞、フック、アセット、管理画面ラベルを `uno-wp-form` / `unoform_*` 名前空間へ移行しています。**ショートコードに互換性はありません。**
+プラグイン識別子、投稿タイプ、ショートコード接頭辞、フック、アセット、管理画面ラベルを `unomoon-form` / `unomoonform_*` 名前空間へ移行しています。**ショートコードに互換性はありません。**
 
 = Features =
 
@@ -50,7 +50,7 @@ This fork migrates plugin identifiers, post types, shortcode prefixes, hooks, as
 
 = Documentation =
 
-Japanese documentation, including how this fork differs from MW WP Form and the things people commonly trip over: https://cielos.phantomoon.com/uno-wp-form/
+Japanese documentation, including how this fork differs from MW WP Form and the things people commonly trip over: https://cielos.phantomoon.com/unomoon-form/
 
 = Credits =
 
@@ -66,23 +66,23 @@ License: https://developers.google.com/terms
 
 == Installation ==
 
-1. Upload the `uno-wp-form` folder to the `/wp-content/plugins/` directory.
+1. Upload the `unomoon-form` folder to the `/wp-content/plugins/` directory.
 2. Activate the plugin through the `Plugins` menu in WordPress.
-3. Create a form from the Uno WP Form admin screen.
+3. Create a form from the Unomoon Form admin screen.
 4. Place the generated shortcode on a page.
 
-1. `uno-wp-form` フォルダを `/wp-content/plugins/` へアップロードします。
+1. `unomoon-form` フォルダを `/wp-content/plugins/` へアップロードします。
 2. 管理画面の「プラグイン」から有効化します。
-3. Uno WP Form の管理画面でフォームを作成します。
+3. Unomoon Form の管理画面でフォームを作成します。
 4. 生成されたショートコードを固定ページなどに配置します。
 
 == Frequently Asked Questions ==
 
 = Can I use MW WP Form shortcodes as-is? =
 
-No. This fork uses the `unoform_*` shortcode namespace. `[mwform_text]` becomes `[unoform_text]`, `[mwform_submitButton]` becomes `[unoform_submitButton]`, and so on. Hooks follow the same rule (`mwform_*` becomes `unoform_*`).
+No. This fork uses the `unomoonform_*` shortcode namespace. `[mwform_text]` becomes `[unomoonform_text]`, `[mwform_submitButton]` becomes `[unomoonform_submitButton]`, and so on. Hooks follow the same rule (`mwform_*` becomes `unomoonform_*`).
 
-いいえ。`unoform_*` 名前空間を使用します。フックも同様です。
+いいえ。`unomoonform_*` 名前空間を使用します。フックも同様です。
 
 = Can I run this alongside MW WP Form? =
 
@@ -92,15 +92,15 @@ Yes. Identifiers, post types and database keys are all distinct, so the two plug
 
 = What are the submit button attributes? =
 
-`[unoform_submitButton confirm_value="..." submit_value="..."]`. One tag covers both screens: on the input screen it renders the "go to confirmation" button labelled with `confirm_value`, and on the confirmation screen it renders the send button labelled with `submit_value`.
+`[unomoonform_submitButton confirm_value="..." submit_value="..."]`. One tag covers both screens: on the input screen it renders the "go to confirmation" button labelled with `confirm_value`, and on the confirmation screen it renders the send button labelled with `submit_value`.
 
-Note that unrecognised attributes are silently ignored, and the Japanese defaults happen to read "確認画面へ" and "送信する" — so a misspelled attribute can still look correct. To place the buttons separately, use `[unoform_confirmButton]` and `[unoform_submitButton]`.
+Note that unrecognised attributes are silently ignored, and the Japanese defaults happen to read "確認画面へ" and "送信する" — so a misspelled attribute can still look correct. To place the buttons separately, use `[unomoonform_confirmButton]` and `[unomoonform_submitButton]`.
 
-送信ボタンは `[unoform_submitButton confirm_value="..." submit_value="..."]` です。1つのタグが入力画面と確認画面の両方を兼ねます。**指定されていない属性は黙って無視される**ため、属性名を間違えても既定のラベルで正しく動いているように見えることがあります。
+送信ボタンは `[unomoonform_submitButton confirm_value="..." submit_value="..."]` です。1つのタグが入力画面と確認画面の両方を兼ねます。**指定されていない属性は黙って無視される**ため、属性名を間違えても既定のラベルで正しく動いているように見えることがあります。
 
 = Where should I report issues? =
 
-Please use GitHub Issues: https://github.com/annrie/uno-wp-form/issues
+Please use GitHub Issues: https://github.com/annrie/unomoon-form/issues
 
 == Screenshots ==
 
@@ -123,7 +123,7 @@ Version numbers are `<upstream version>.<fork release>`. For example 5.1.6.1 is 
 
 = 5.1.4.1 =
 * Initial release of the fork, based on MW WP Form 5.1.4.
-* Migrated identifiers, post types, shortcode prefixes, hooks, assets and admin labels to the `uno-wp-form` / `unoform_*` namespace.
+* Migrated identifiers, post types, shortcode prefixes, hooks, assets and admin labels to the `unomoon-form` / `unomoonform_*` namespace.
 
 == Upgrade Notice ==
 

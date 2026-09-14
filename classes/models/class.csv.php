@@ -1,14 +1,14 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
 /**
- * Uno_WP_Form_CSV
+ * Unomoon_Form_CSV
  */
-class Uno_WP_Form_CSV {
+class Unomoon_Form_CSV {
 
 	/**
 	 * @var string
@@ -28,15 +28,15 @@ class Uno_WP_Form_CSV {
 	 * Download CSV.
 	 */
 	public function download() {
-		$key_of_csv_download = UWF_Config::NAME . '-csv-download';
+		$key_of_csv_download = Unomoon_Form_Config::NAME . '-csv-download';
 
-		if ( ! isset( $_POST[ $key_of_csv_download ] ) || ! check_admin_referer( UWF_Config::NAME ) ) {
+		if ( ! isset( $_POST[ $key_of_csv_download ] ) || ! check_admin_referer( Unomoon_Form_Config::NAME ) ) {
 			return;
 		}
 
 		$csv = $this->_generate_csv();
 
-		$file_name = 'uno_wp_form_' . date_i18n( 'YmdHis' ) . '.csv';
+		$file_name = 'unomoon_form_' . date_i18n( 'YmdHis' ) . '.csv';
 		header( 'Content-Type: application/octet-stream' );
 		header( 'Content-Disposition: attachment; filename=' . $file_name );
 		echo $csv;
@@ -52,7 +52,7 @@ class Uno_WP_Form_CSV {
 		$posts_per_page = $this->_get_posts_per_page();
 		$paged          = $this->_get_paged();
 
-		$args = apply_filters( 'unoform_get_inquiry_data_args-' . $this->post_type, array() );
+		$args = apply_filters( 'unomoonform_get_inquiry_data_args-' . $this->post_type, array() );
 		if ( empty( $args ) || ! is_array( $args ) ) {
 			$args = array();
 		}
@@ -85,7 +85,7 @@ class Uno_WP_Form_CSV {
 			}
 			$csv .= implode( ',', $row ) . "\r\n";
 		}
-		$to_encoding = apply_filters( 'unoform_csv_encoding-' . $this->post_type, 'sjis-win' );
+		$to_encoding = apply_filters( 'unomoonform_csv_encoding-' . $this->post_type, 'sjis-win' );
 
 		return mb_convert_encoding( $csv, $to_encoding, get_option( 'blog_charset' ) );
 	}
@@ -117,7 +117,7 @@ class Uno_WP_Form_CSV {
 	public function _get_paged() {
 		$posts_per_page = $this->_get_posts_per_page();
 		if ( isset( $_GET['paged'] ) ) {
-			if ( UWF_Functions::is_numeric( $_GET['paged'] ) && $posts_per_page > 0 ) {
+			if ( Unomoon_Form_Functions::is_numeric( $_GET['paged'] ) && $posts_per_page > 0 ) {
 				return $_GET['paged'];
 			}
 		}
@@ -133,8 +133,8 @@ class Uno_WP_Form_CSV {
 	protected function _get_csv_headings( array $posts ) {
 		$columns  = array(
 			'ID'              => 'ID',
-			'admin_mail_to'   => __( 'Admin Email To', 'uno-wp-form' ),
-			'response_status' => __( 'Response Status', 'uno-wp-form' ),
+			'admin_mail_to'   => __( 'Admin Email To', 'unomoon-form' ),
+			'response_status' => __( 'Response Status', 'unomoon-form' ),
 			'post_date'       => 'post_date',
 			'post_modified'   => 'post_modified',
 			'post_title'      => 'post_title',
@@ -151,8 +151,8 @@ class Uno_WP_Form_CSV {
 					continue;
 				}
 
-				if ( UWF_Config::TRACKINGNUMBER === $key ) {
-					$columns[ $key ] = UWF_Functions::get_tracking_number_title( $this->post_type );
+				if ( Unomoon_Form_Config::TRACKINGNUMBER === $key ) {
+					$columns[ $key ] = Unomoon_Form_Functions::get_tracking_number_title( $this->post_type );
 					continue;
 				}
 
@@ -161,10 +161,10 @@ class Uno_WP_Form_CSV {
 		}
 
 		ksort( $_columns );
-		$_columns = apply_filters( 'unoform_inquiry_data_columns-' . $this->post_type, $_columns );
+		$_columns = apply_filters( 'unomoonform_inquiry_data_columns-' . $this->post_type, $_columns );
 		$columns  = array_merge( $columns, $_columns );
-		$columns  = array_merge( $columns, array( 'memo' => __( 'Memo', 'uno-wp-form' ) ) );
-		$columns  = apply_filters( 'unoform_csv_columns-' . $this->post_type, $columns );
+		$columns  = array_merge( $columns, array( 'memo' => __( 'Memo', 'unomoon-form' ) ) );
+		$columns  = apply_filters( 'unomoonform_csv_columns-' . $this->post_type, $columns );
 		return $columns;
 	}
 
@@ -183,7 +183,7 @@ class Uno_WP_Form_CSV {
 			setup_postdata( $post );
 			$columns = array();
 			foreach ( $headings as $key => $value ) {
-				$contact_data_setting = new Uno_WP_Form_Contact_Data_Setting( $post->ID );
+				$contact_data_setting = new Unomoon_Form_Contact_Data_Setting( $post->ID );
 				$response_statuses    = $contact_data_setting->get_response_statuses();
 				$column               = '';
 
@@ -194,15 +194,15 @@ class Uno_WP_Form_CSV {
 					$column = $contact_data_setting->get( 'admin_mail_to' );
 				} elseif ( 'memo' === $key ) {
 					$column = $contact_data_setting->get( 'memo' );
-				} elseif ( UWF_Config::TRACKINGNUMBER === $key ) {
-					$column = get_post_meta( get_the_ID(), UWF_Config::TRACKINGNUMBER, true );
+				} elseif ( Unomoon_Form_Config::TRACKINGNUMBER === $key ) {
+					$column = get_post_meta( get_the_ID(), Unomoon_Form_Config::TRACKINGNUMBER, true );
 				} elseif ( isset( $post->$key ) ) {
 					$post_meta = $post->$key;
 
 					if ( $contact_data_setting->is_upload_file_key( $key ) ) {
 						// 過去バージョンでの不具合でメタデータが空になっていることがあるのでその場合は代替処理
 						if ( '' === $post_meta ) {
-							$post_meta = UWF_Functions::get_multimedia_id__fallback( $post, $key );
+							$post_meta = Unomoon_Form_Functions::get_multimedia_id__fallback( $post, $key );
 						}
 						$column = wp_get_attachment_url( $post_meta );
 					} else {

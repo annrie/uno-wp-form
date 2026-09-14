@@ -1,14 +1,14 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
 /**
- * Uno_WP_Form_Field_Submit_Button
+ * Unomoon_Form_Field_Submit_Button
  */
-class Uno_WP_Form_Field_Submit_Button extends Uno_WP_Form_Abstract_Form_Field {
+class Unomoon_Form_Field_Submit_Button extends Unomoon_Form_Abstract_Form_Field {
 
 	/**
 	 * Types of form type.
@@ -26,8 +26,8 @@ class Uno_WP_Form_Field_Submit_Button extends Uno_WP_Form_Abstract_Form_Field {
 	 */
 	protected function set_names() {
 		return array(
-			'shortcode_name' => 'unoform_submitButton',
-			'display_name'   => __( 'Confirm &amp; Submit', 'uno-wp-form' ),
+			'shortcode_name' => 'unomoonform_submitButton',
+			'display_name'   => __( 'Confirm &amp; Submit', 'unomoon-form' ),
 		);
 	}
 
@@ -40,8 +40,8 @@ class Uno_WP_Form_Field_Submit_Button extends Uno_WP_Form_Abstract_Form_Field {
 		return array(
 			'name'          => '',
 			'class'         => null,
-			'confirm_value' => __( 'Confirm', 'uno-wp-form' ),
-			'submit_value'  => __( 'Send', 'uno-wp-form' ),
+			'confirm_value' => __( 'Confirm', 'unomoon-form' ),
+			'submit_value'  => __( 'Send', 'unomoon-form' ),
 		);
 	}
 
@@ -53,7 +53,7 @@ class Uno_WP_Form_Field_Submit_Button extends Uno_WP_Form_Abstract_Form_Field {
 	protected function input_page() {
 		if ( ! empty( $this->atts['confirm_value'] ) ) {
 			return $this->Form->submit(
-				UWF_Config::CONFIRM_BUTTON,
+				Unomoon_Form_Config::CONFIRM_BUTTON,
 				$this->atts['confirm_value'],
 				array(
 					'class' => $this->atts['class'],
@@ -90,7 +90,7 @@ class Uno_WP_Form_Field_Submit_Button extends Uno_WP_Form_Abstract_Form_Field {
 	 *
 	 * @param array $options Options.
 	 */
-	public function unoform_tag_generator_dialog( array $options = array() ) {
+	public function unomoonform_tag_generator_dialog( array $options = array() ) {
 		?>
 		<p>
 			<strong>name</strong>
@@ -103,12 +103,12 @@ class Uno_WP_Form_Field_Submit_Button extends Uno_WP_Form_Abstract_Form_Field {
 			<input type="text" name="class" value="<?php echo esc_attr( $class ); ?>" />
 		</p>
 		<p>
-			<strong><?php esc_html_e( 'String on the confirm button', 'uno-wp-form' ); ?></strong>
+			<strong><?php esc_html_e( 'String on the confirm button', 'unomoon-form' ); ?></strong>
 			<?php $confirm_value = $this->get_value_for_generator( 'confirm_value', $options ); ?>
 			<input type="text" name="confirm_value" value="<?php echo esc_attr( $confirm_value ); ?>" />
 		</p>
 		<p>
-			<strong><?php esc_html_e( 'String on the submit button', 'uno-wp-form' ); ?></strong>
+			<strong><?php esc_html_e( 'String on the submit button', 'unomoon-form' ); ?></strong>
 			<?php $submit_value = $this->get_value_for_generator( 'submit_value', $options ); ?>
 			<input type="text" name="submit_value" value="<?php echo esc_attr( $submit_value ); ?>" />
 		</p>

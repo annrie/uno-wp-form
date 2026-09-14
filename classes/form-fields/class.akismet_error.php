@@ -1,14 +1,14 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
 /**
- * Uno_WP_Form_Field_Akismet_Error
+ * Unomoon_Form_Field_Akismet_Error
  */
-class Uno_WP_Form_Field_Akismet_Error extends Uno_WP_Form_Abstract_Form_Field {
+class Unomoon_Form_Field_Akismet_Error extends Unomoon_Form_Abstract_Form_Field {
 
 	/**
 	 * Types of form type.
@@ -26,8 +26,8 @@ class Uno_WP_Form_Field_Akismet_Error extends Uno_WP_Form_Abstract_Form_Field {
 	 */
 	protected function set_names() {
 		return array(
-			'shortcode_name' => 'unoform_akismet_error',
-			'display_name'   => __( 'Akismet Error', 'uno-wp-form' ),
+			'shortcode_name' => 'unomoonform_akismet_error',
+			'display_name'   => __( 'Akismet Error', 'unomoon-form' ),
 		);
 	}
 
@@ -46,11 +46,11 @@ class Uno_WP_Form_Field_Akismet_Error extends Uno_WP_Form_Abstract_Form_Field {
 	 * @return string
 	 */
 	protected function input_page() {
-		$error = $this->get_error( UWF_Config::AKISMET );
+		$error = $this->get_error( Unomoon_Form_Config::AKISMET );
 		if ( $error ) {
 			return sprintf(
 				'<span class="akismet_error">%s</span>',
-				$this->get_error( UWF_Config::AKISMET )
+				$this->get_error( Unomoon_Form_Config::AKISMET )
 			);
 		}
 	}

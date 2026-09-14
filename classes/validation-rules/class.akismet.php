@@ -1,14 +1,14 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
 /**
- * Uno_WP_Form_Validation_Rule_Akismet
+ * Unomoon_Form_Validation_Rule_Akismet
  */
-class Uno_WP_Form_Validation_Rule_Akismet extends Uno_WP_Form_Abstract_Validation_Rule {
+class Unomoon_Form_Validation_Rule_Akismet extends Unomoon_Form_Abstract_Validation_Rule {
 
 	/**
 	 * Validation rule name.
@@ -26,7 +26,7 @@ class Uno_WP_Form_Validation_Rule_Akismet extends Uno_WP_Form_Abstract_Validatio
 	 */
 	public function rule( $name, array $options = array() ) {
 		$defaults = array(
-			'message' => __( 'The contents which you input were judged with spam.', 'uno-wp-form' ),
+			'message' => __( 'The contents which you input were judged with spam.', 'unomoon-form' ),
 		);
 		$options  = array_merge( $defaults, $options );
 		return $options['message'];

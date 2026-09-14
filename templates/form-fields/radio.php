@@ -1,6 +1,6 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
@@ -12,16 +12,16 @@ if ( 'true' === $vertically ) {
 }
 ?>
 <?php foreach ( $fields as $field_value => $field ) : ?>
-	<span class="unoform-radio-field <?php echo esc_attr( $vertically_class ); ?>">
-		<label <?php echo UWF_Functions::generate_input_attribute( 'for', $field['id'] ); ?>>
+	<span class="unomoonform-radio-field <?php echo esc_attr( $vertically_class ); ?>">
+		<label <?php echo Unomoon_Form_Functions::generate_input_attribute( 'for', $field['id'] ); ?>>
 			<input type="radio"
 				name="<?php echo esc_attr( $field['name'] ); ?>"
 				value="<?php echo esc_attr( $field_value ); ?>"
 				<?php checked( $field_value, $value, true ); ?>
-				<?php echo UWF_Functions::generate_input_attribute( 'id', $field['id'] ); ?>
-				<?php echo UWF_Functions::generate_input_attribute( 'class', $field['class'] ); ?>
+				<?php echo Unomoon_Form_Functions::generate_input_attribute( 'id', $field['id'] ); ?>
+				<?php echo Unomoon_Form_Functions::generate_input_attribute( 'class', $field['class'] ); ?>
 			/>
-			<span class="unoform-radio-field-text"><?php echo esc_attr( $field['label'] ); ?></span>
+			<span class="unomoonform-radio-field-text"><?php echo esc_attr( $field['label'] ); ?></span>
 		</label>
 	</span>
 <?php endforeach; ?>

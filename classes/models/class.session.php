@@ -1,14 +1,14 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
 /**
- * Uno_WP_Form_Session
+ * Unomoon_Form_Session
  */
-class Uno_WP_Form_Session {
+class Unomoon_Form_Session {
 
 	/**
 	 * Session name.
@@ -35,15 +35,15 @@ class Uno_WP_Form_Session {
 	 * @param string $name Session name.
 	 */
 	public function __construct( $name ) {
-		$this->name = UWF_Config::NAME . '_session_' . $name;
+		$this->name = Unomoon_Form_Config::NAME . '_session_' . $name;
 
 		if ( isset( $_COOKIE[ $this->name ] ) ) {
 			$session_id = $_COOKIE[ $this->name ];
 		} else {
 			$session_id = sha1( wp_create_nonce( $this->name ) . ip2long( $this->get_remote_addr() ) . uniqid() );
-			$secure     = apply_filters( 'unoform_secure_cookie', is_ssl() );
+			$secure     = apply_filters( 'unomoonform_secure_cookie', is_ssl() );
 			try {
-				set_error_handler( array( 'Uno_WP_Form_Session', 'error_handler' ) );
+				set_error_handler( array( 'Unomoon_Form_Session', 'error_handler' ) );
 				setcookie(
 					$this->name,
 					$session_id,

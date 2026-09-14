@@ -1,5 +1,5 @@
-# Translation of Plugins - Uno WP Form in Japanese
-# This file is distributed under the same license as the Plugins - Uno WP Form package.
+# Translation of Plugins - Unomoon Form in Japanese
+# This file is distributed under the same license as the Plugins - Unomoon Form package.
 msgid ""
 msgstr ""
 "PO-Revision-Date: 2022-05-18 23:37:29+0000\n"
@@ -9,7 +9,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: GlotPress/4.0.0-rc.1\n"
 "Language: ja_JP\n"
-"Project-Id-Version: Plugins - Uno WP Form\n"
+"Project-Id-Version: Plugins - Unomoon Form\n"
 
 #: classes/controllers/class.contact-data-list.php:163
 #: classes/models/class.csv.php:136 templates/contact-data/detail.php:58
@@ -113,14 +113,14 @@ msgid "Custom Mail Tag"
 msgstr "カスタムメールタグ"
 
 #. Description of the plugin
-#: uno-wp-form.php
-msgid "Uno WP Form is shortcode base contact form plugin. This plugin have many features. For example you can use many validation rules, inquiry data saving, and chart aggregation using saved inquiry data."
-msgstr "Uno WP Form はショートコードベースのフォームプラグインです。多くの機能を持っており、例えば、多くのバリデーションルール、問い合わせデータの保存、そしてグラフ機能集計などを使用することができます。"
+#: unomoon-form.php
+msgid "Unomoon Form is shortcode base contact form plugin. This plugin have many features. For example you can use many validation rules, inquiry data saving, and chart aggregation using saved inquiry data."
+msgstr "Unomoon Form はショートコードベースのフォームプラグインです。多くの機能を持っており、例えば、多くのバリデーションルール、問い合わせデータの保存、そしてグラフ機能集計などを使用することができます。"
 
 #. Plugin Name of the plugin
-#: uno-wp-form.php
-msgid "Uno WP Form"
-msgstr "Uno WP Form"
+#: unomoon-form.php
+msgid "Unomoon Form"
+msgstr "Unomoon Form"
 
 #: templates/stores-inquiry-data-form-list/index.php:36
 msgid "cases"
@@ -274,8 +274,8 @@ msgid "Example: {ID}, {post_title}, {post_meta} etc..."
 msgstr "例：{ID}、{post_title}、{post_meta}など…"
 
 #: templates/admin/settings.php:21
-msgid "If this field is active, Uno WP Form get query string. And get post data from query string \"post_id\". You can use $post's property in editor."
-msgstr "有効にした場合、Uno WP FormはURL引数を取得します。また、URL引数 ”post_id” をもとに投稿を取得します。その投稿（$post） のプロパティを使用できるようになります。"
+msgid "If this field is active, Unomoon Form get query string. And get post data from query string \"post_id\". You can use $post's property in editor."
+msgstr "有効にした場合、Unomoon FormはURL引数を取得します。また、URL引数 ”post_id” をもとに投稿を取得します。その投稿（$post） のプロパティを使用できるようになります。"
 
 #: templates/admin/settings.php:17
 msgid "Activate Query string of post"
@@ -337,60 +337,60 @@ msgstr "送信先（E-mailアドレス）"
 msgid "It is automatically converted to Tracking number when you input {%s}."
 msgstr "{%s} と入力すると問い合わせ番号に自動的に変換されます。"
 
-#: uno-wp-form.php:199
+#: unomoon-form.php:199
 msgid "No data found in Trash"
 msgstr "ゴミ箱にデータはありません"
 
-#: uno-wp-form.php:198
+#: unomoon-form.php:198
 msgid "No data found"
 msgstr "データがありません"
 
-#: uno-wp-form.php:197
+#: unomoon-form.php:197
 msgid "Search"
 msgstr "検索"
 
-#: uno-wp-form.php:196
+#: unomoon-form.php:196
 msgid "View"
 msgstr "表示"
 
-#: uno-wp-form.php:195
+#: unomoon-form.php:195
 msgid "Edit "
 msgstr "編集"
 
-#: uno-wp-form.php:176
+#: unomoon-form.php:176
 msgid "No Forms found in Trash"
 msgstr "ゴミ箱にフォームはありません"
 
-#: uno-wp-form.php:175
+#: unomoon-form.php:175
 msgid "No Forms found"
 msgstr "フォームがありません"
 
-#: uno-wp-form.php:174
+#: unomoon-form.php:174
 msgid "Search Forms"
 msgstr "フォームを検索"
 
-#: uno-wp-form.php:173
+#: unomoon-form.php:173
 msgid "View Form"
 msgstr "フォームを表示"
 
-#: uno-wp-form.php:172
+#: unomoon-form.php:172
 msgid "New Form"
 msgstr "新しいフォーム"
 
-#: uno-wp-form.php:171
+#: unomoon-form.php:171
 msgid "Edit Form"
 msgstr "フォームを編集"
 
-#: uno-wp-form.php:170
+#: unomoon-form.php:170
 msgid "Add New Form"
 msgstr "フォームを追加"
 
-#: uno-wp-form.php:125 uno-wp-form.php:126
+#: unomoon-form.php:125 unomoon-form.php:126
 #: templates/stores-inquiry-data-form-list/index.php:10
 msgid "Inquiry data"
 msgstr "問い合わせデータ"
 
-#: uno-wp-form.php:106 uno-wp-form.php:107 templates/chart/index.php:12
+#: unomoon-form.php:106 unomoon-form.php:107 templates/chart/index.php:12
 msgid "Chart"
 msgstr "グラフ"
 

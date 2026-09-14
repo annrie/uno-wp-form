@@ -1,16 +1,16 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
 /**
- * Uno_WP_Form_Csrf
+ * Unomoon_Form_Csrf
  */
-class Uno_WP_Form_Csrf {
+class Unomoon_Form_Csrf {
 
-	const KEY = 'uno-wp-form-token';
+	const KEY = 'unomoon-form-token';
 
 	/**
 	 * @var string
@@ -39,7 +39,7 @@ class Uno_WP_Form_Csrf {
 		$saved_token   = static::saved_token();
 		static::$token = ! $saved_token ? static::generate_token() : $saved_token;
 		if ( ! $saved_token && ! headers_sent() ) {
-			$secure = apply_filters( 'unoform_secure_cookie', is_ssl() );
+			$secure = apply_filters( 'unomoonform_secure_cookie', is_ssl() );
 			setcookie(
 				static::KEY,
 				static::$token,

@@ -1,14 +1,14 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
 /**
- * Uno_WP_Form_Akismet
+ * Unomoon_Form_Akismet
  */
-class Uno_WP_Form_Akismet {
+class Unomoon_Form_Akismet {
 
 	/**
 	 * Return akismet api key when akismet is active
@@ -33,7 +33,7 @@ class Uno_WP_Form_Akismet {
 	 * @param string          $akismet_author       Akismet author.
 	 * @param string          $akismet_author_email Akismet author e-mail.
 	 * @param string          $akismet_author_url   Akismet author url.
-	 * @param Uno_WP_Form_Data $Data Uno_WP_Form_Data object.
+	 * @param Unomoon_Form_Data $Data Unomoon_Form_Data object.
 	 * @return bool
 	 */
 	public function is_valid( $akismet_author, $akismet_author_email, $akismet_author_url, $Data ) {
@@ -82,7 +82,7 @@ class Uno_WP_Form_Akismet {
 		$akismet['user_ip']      = preg_replace( '/[^0-9., ]/', '', $_SERVER['REMOTE_ADDR'] );
 		$akismet['user_agent']   = $_SERVER['HTTP_USER_AGENT'];
 		$akismet['referrer']     = $_SERVER['HTTP_REFERER'];
-		$akismet['comment_type'] = UWF_Config::NAME;
+		$akismet['comment_type'] = Unomoon_Form_Config::NAME;
 
 		if ( $permalink ) {
 			$akismet['permalink'] = $permalink;
@@ -118,7 +118,7 @@ class Uno_WP_Form_Akismet {
 				$akismet_api_port
 			);
 		}
-		$response = apply_filters( 'unoform_akismet_responce', $response );
+		$response = apply_filters( 'unomoonform_akismet_responce', $response );
 		return ( 'true' === $response[1] ) ? true : false;
 	}
 }

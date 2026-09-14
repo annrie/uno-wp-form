@@ -1,14 +1,14 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
 /**
- * Uno_WP_Form_Validation_Rule_MinLength
+ * Unomoon_Form_Validation_Rule_MinLength
  */
-class Uno_WP_Form_Validation_Rule_MinLength extends Uno_WP_Form_Abstract_Validation_Rule {
+class Unomoon_Form_Validation_Rule_MinLength extends Unomoon_Form_Abstract_Validation_Rule {
 
 	/**
 	 * Validation rule name.
@@ -26,19 +26,19 @@ class Uno_WP_Form_Validation_Rule_MinLength extends Uno_WP_Form_Abstract_Validat
 	 */
 	public function rule( $name, array $options = array() ) {
 		$value = $this->Data->get( $name );
-		$value = UWF_Functions::convert_eol( $value );
+		$value = Unomoon_Form_Functions::convert_eol( $value );
 
-		if ( UWF_Functions::is_empty( $value ) ) {
+		if ( Unomoon_Form_Functions::is_empty( $value ) ) {
 			return;
 		}
 
 		$defaults = array(
 			'min'     => 0,
-			'message' => __( 'The number of characters is a few.', 'uno-wp-form' ),
+			'message' => __( 'The number of characters is a few.', 'unomoon-form' ),
 		);
 		$options  = array_merge( $defaults, $options );
 		$length   = mb_strlen( $value, get_bloginfo( 'charset' ) );
-		if ( UWF_Functions::is_numeric( $options['min'] ) && $options['min'] > $length ) {
+		if ( Unomoon_Form_Functions::is_numeric( $options['min'] ) && $options['min'] > $length ) {
 			return $options['message'];
 		}
 	}
@@ -58,8 +58,8 @@ class Uno_WP_Form_Validation_Rule_MinLength extends Uno_WP_Form_Abstract_Validat
 		?>
 		<table>
 			<tr>
-				<td><?php esc_html_e( 'The number of the minimum characters', 'uno-wp-form' ); ?></td>
-				<td><input type="text" value="<?php echo esc_attr( $min ); ?>" size="3" name="<?php echo UWF_Config::NAME; ?>[validation][<?php echo $key; ?>][<?php echo esc_attr( $this->get_name() ); ?>][min]" /></td>
+				<td><?php esc_html_e( 'The number of the minimum characters', 'unomoon-form' ); ?></td>
+				<td><input type="text" value="<?php echo esc_attr( $min ); ?>" size="3" name="<?php echo Unomoon_Form_Config::NAME; ?>[validation][<?php echo $key; ?>][<?php echo esc_attr( $this->get_name() ); ?>][min]" /></td>
 			</tr>
 		</table>
 		<?php

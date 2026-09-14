@@ -13,32 +13,32 @@
 #wpbody-content {
 	padding-bottom: 85px; /* default: 65px */;
 }
-#uno-wp-form_csv {
+#unomoon-form_csv {
 	position: absolute;
 	top: -34px;
 }
-#uno-wp-form_csv .button-primary {
+#unomoon-form_csv .button-primary {
 }
 
 /**
- * .uno-wp-form-table
+ * .unomoon-form-table
  */
-.uno-wp-form-table-count,
-.uno-wp-form-table-date {
+.unomoon-form-table-count,
+.unomoon-form-table-date {
 	width: 20%;
 }
 
 /**
  * .wp-list-table
  */
-.uno-wp-form-wp-list-table {
+.unomoon-form-wp-list-table {
 	overflow: auto;
 	width: 100%;
 }
-.uno-wp-form-wp-list-table .wp-list-table {
+.unomoon-form-wp-list-table .wp-list-table {
 	table-layout: auto;
 	width: 100%;
 }
-.uno-wp-form-wp-list-table .wp-list-table th {
+.unomoon-form-wp-list-table .wp-list-table th {
 	white-space: nowrap;
 }

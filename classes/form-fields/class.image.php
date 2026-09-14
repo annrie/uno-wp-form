@@ -1,14 +1,14 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
 /**
- * Uno_WP_Form_Field_Image
+ * Unomoon_Form_Field_Image
  */
-class Uno_WP_Form_Field_Image extends Uno_WP_Form_Abstract_Form_Field {
+class Unomoon_Form_Field_Image extends Unomoon_Form_Abstract_Form_Field {
 
 	/**
 	 * Types of form type.
@@ -26,8 +26,8 @@ class Uno_WP_Form_Field_Image extends Uno_WP_Form_Abstract_Form_Field {
 	 */
 	protected function set_names() {
 		return array(
-			'shortcode_name' => 'unoform_image',
-			'display_name'   => __( 'Image', 'uno-wp-form' ),
+			'shortcode_name' => 'unomoonform_image',
+			'display_name'   => __( 'Image', 'unomoon-form' ),
 		);
 	}
 
@@ -60,21 +60,21 @@ class Uno_WP_Form_Field_Image extends Uno_WP_Form_Abstract_Form_Field {
 		);
 		$value = $this->Data->get_raw( $this->atts['name'] );
 
-		$upload_file_keys = $this->Data->get_post_value_by_key( UWF_Config::UPLOAD_FILE_KEYS );
+		$upload_file_keys = $this->Data->get_post_value_by_key( Unomoon_Form_Config::UPLOAD_FILE_KEYS );
 		if (
 			! empty( $value )
 			&& is_array( $upload_file_keys )
 			&& in_array( $this->atts['name'], $upload_file_keys, true )
 		) {
-			$form_id  = UWF_Functions::get_form_id_from_form_key( $this->Data->get_form_key() );
-			$filepath = Uno_WP_Form_Directory::generate_user_filepath( $form_id, $this->atts['name'], $value );
+			$form_id  = Unomoon_Form_Functions::get_form_id_from_form_key( $this->Data->get_form_key() );
+			$filepath = Unomoon_Form_Directory::generate_user_filepath( $form_id, $this->atts['name'], $value );
 			if ( file_exists( $filepath ) ) {
 				$_ret .= sprintf(
 					'<div class="%s_image">
 						%s
 						%s
 					</div>',
-					esc_attr( UWF_Config::NAME ),
+					esc_attr( Unomoon_Form_Config::NAME ),
 					esc_html( $value ),
 					$this->Form->hidden( $this->atts['name'], $value )
 				);
@@ -94,15 +94,15 @@ class Uno_WP_Form_Field_Image extends Uno_WP_Form_Abstract_Form_Field {
 	protected function confirm_page() {
 		$value = $this->Data->get_raw( $this->atts['name'] );
 		if ( $value ) {
-			$form_id  = UWF_Functions::get_form_id_from_form_key( $this->Data->get_form_key() );
-			$filepath = Uno_WP_Form_Directory::generate_user_filepath( $form_id, $this->atts['name'], $value );
+			$form_id  = Unomoon_Form_Functions::get_form_id_from_form_key( $this->Data->get_form_key() );
+			$filepath = Unomoon_Form_Directory::generate_user_filepath( $form_id, $this->atts['name'], $value );
 			if ( file_exists( $filepath ) ) {
 				return sprintf(
 					'<div class="%s_image">
 						%s
 						%s
 					</div>',
-					esc_attr( UWF_Config::NAME ),
+					esc_attr( Unomoon_Form_Config::NAME ),
 					esc_html( $value ),
 					$this->Form->hidden( $this->atts['name'], $value )
 				);
@@ -116,10 +116,10 @@ class Uno_WP_Form_Field_Image extends Uno_WP_Form_Abstract_Form_Field {
 	 *
 	 * @param array $options Options.
 	 */
-	public function unoform_tag_generator_dialog( array $options = array() ) {
+	public function unomoonform_tag_generator_dialog( array $options = array() ) {
 		?>
 		<p>
-			<strong>name<span class="uwf_require">*</span></strong>
+			<strong>name<span class="unomoonform_require">*</span></strong>
 			<?php $name = $this->get_value_for_generator( 'name', $options ); ?>
 			<input type="text" name="name" value="<?php echo esc_attr( $name ); ?>" />
 		</p>
@@ -134,9 +134,9 @@ class Uno_WP_Form_Field_Image extends Uno_WP_Form_Abstract_Form_Field {
 			<input type="text" name="class" value="<?php echo esc_attr( $class ); ?>" />
 		</p>
 		<p>
-			<strong><?php esc_html_e( 'Display error', 'uno-wp-form' ); ?></strong>
+			<strong><?php esc_html_e( 'Display error', 'unomoon-form' ); ?></strong>
 			<?php $show_error = $this->get_value_for_generator( 'show_error', $options ); ?>
-			<label><input type="checkbox" name="show_error" value="false" <?php checked( 'false', $show_error ); ?> /> <?php esc_html_e( 'Don\'t display error.', 'uno-wp-form' ); ?></label>
+			<label><input type="checkbox" name="show_error" value="false" <?php checked( 'false', $show_error ); ?> /> <?php esc_html_e( 'Don\'t display error.', 'unomoon-form' ); ?></label>
 		</p>
 		<?php
 	}

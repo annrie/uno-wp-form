@@ -1,11 +1,11 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
-do_action( 'unoform_tag_generator_dialog' );
+do_action( 'unomoonform_tag_generator_dialog' );
 
 $types = array(
 	'input'        => 'input',
@@ -15,30 +15,30 @@ $types = array(
 	'error'        => 'error',
 	'other'        => 'other',
 );
-$group = apply_filters( 'unoform_tag_generator_group', $types );
+$group = apply_filters( 'unomoonform_tag_generator_group', $types );
 
 $labels = array(
-	'input'        => __( 'Input fields', 'uno-wp-form' ),
-	'select'       => __( 'Select fields', 'uno-wp-form' ),
-	'button'       => __( 'Button fields (button)', 'uno-wp-form' ),
-	'input_button' => __( 'Button fields (input)', 'uno-wp-form' ),
-	'error'        => __( 'Error fields', 'uno-wp-form' ),
-	'other'        => __( 'Other fields', 'uno-wp-form' ),
+	'input'        => __( 'Input fields', 'unomoon-form' ),
+	'select'       => __( 'Select fields', 'unomoon-form' ),
+	'button'       => __( 'Button fields (button)', 'unomoon-form' ),
+	'input_button' => __( 'Button fields (input)', 'unomoon-form' ),
+	'error'        => __( 'Error fields', 'unomoon-form' ),
+	'other'        => __( 'Other fields', 'unomoon-form' ),
 );
-$labels = apply_filters( 'unoform_tag_generator_labels', $labels );
+$labels = apply_filters( 'unomoonform_tag_generator_labels', $labels );
 ?>
-<div class="add-unoform-btn">
+<div class="add-unomoonform-btn">
 	<select>
-		<option value=""><?php echo esc_html_e( 'Select this.', 'uno-wp-form' ); ?></option>
+		<option value=""><?php echo esc_html_e( 'Select this.', 'unomoon-form' ); ?></option>
 		<?php foreach ( $group as $type ) : ?>
 			<?php
 			$label = isset( $labels[ $type ] ) ? $labels[ $type ] : $type;
-			$tag   = 'other' === $type ? 'unoform_tag_generator_option' : 'unoform_tag_generator_' . $type . '_option';
+			$tag   = 'other' === $type ? 'unomoonform_tag_generator_option' : 'unomoonform_tag_generator_' . $type . '_option';
 			?>
 			<optgroup label="<?php echo esc_attr( $label ); ?>">
 				<?php do_action( $tag ); ?>
 			</optgroup>
 		<?php endforeach; ?>
 	</select>
-	<span class="button"><?php esc_html_e( 'Add form tag', 'uno-wp-form' ); ?></span>
+	<span class="button"><?php esc_html_e( 'Add form tag', 'unomoon-form' ); ?></span>
 </div>

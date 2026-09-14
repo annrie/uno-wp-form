@@ -1,14 +1,14 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
 /**
- * Uno_WP_Form_Field_Zip
+ * Unomoon_Form_Field_Zip
  */
-class Uno_WP_Form_Field_Zip extends Uno_WP_Form_Abstract_Form_Field {
+class Unomoon_Form_Field_Zip extends Unomoon_Form_Abstract_Form_Field {
 
 	/**
 	 * Types of form type.
@@ -26,8 +26,8 @@ class Uno_WP_Form_Field_Zip extends Uno_WP_Form_Abstract_Form_Field {
 	 */
 	protected function set_names() {
 		return array(
-			'shortcode_name' => 'unoform_zip',
-			'display_name'   => __( 'Zip Code', 'uno-wp-form' ),
+			'shortcode_name' => 'unomoonform_zip',
+			'display_name'   => __( 'Zip Code', 'unomoon-form' ),
 		);
 	}
 
@@ -97,7 +97,7 @@ class Uno_WP_Form_Field_Zip extends Uno_WP_Form_Abstract_Form_Field {
 	 *
 	 * @param array $options Options.
 	 */
-	public function unoform_tag_generator_dialog( array $options = array() ) {
+	public function unomoonform_tag_generator_dialog( array $options = array() ) {
 		?>
 		<p>
 			<strong>name</strong>
@@ -110,14 +110,14 @@ class Uno_WP_Form_Field_Zip extends Uno_WP_Form_Abstract_Form_Field {
 			<input type="text" name="class" value="<?php echo esc_attr( $class ); ?>" />
 		</p>
 		<p>
-			<strong><?php esc_html_e( 'Display error', 'uno-wp-form' ); ?></strong>
+			<strong><?php esc_html_e( 'Display error', 'unomoon-form' ); ?></strong>
 			<?php $show_error = $this->get_value_for_generator( 'show_error', $options ); ?>
-			<label><input type="checkbox" name="show_error" value="false" <?php checked( 'false', $show_error ); ?> /> <?php esc_html_e( 'Don\'t display error.', 'uno-wp-form' ); ?></label>
+			<label><input type="checkbox" name="show_error" value="false" <?php checked( 'false', $show_error ); ?> /> <?php esc_html_e( 'Don\'t display error.', 'unomoon-form' ); ?></label>
 		</p>
 		<p>
-			<strong><?php esc_html_e( 'Convert half alphanumeric', 'uno-wp-form' ); ?></strong>
+			<strong><?php esc_html_e( 'Convert half alphanumeric', 'unomoon-form' ); ?></strong>
 			<?php $conv_half_alphanumeric = $this->get_value_for_generator( 'conv_half_alphanumeric', $options ); ?>
-			<label><input type="checkbox" name="conv_half_alphanumeric" value="false" <?php checked( 'false', $conv_half_alphanumeric ); ?> /> <?php esc_html_e( 'Don\'t Convert.', 'uno-wp-form' ); ?></label>
+			<label><input type="checkbox" name="conv_half_alphanumeric" value="false" <?php checked( 'false', $conv_half_alphanumeric ); ?> /> <?php esc_html_e( 'Don\'t Convert.', 'unomoon-form' ); ?></label>
 		</p>
 		<?php
 	}
@@ -125,11 +125,11 @@ class Uno_WP_Form_Field_Zip extends Uno_WP_Form_Abstract_Form_Field {
 	/**
 	 * This form field is for Japanese environments only.
 	 *
-	 * @param array $form_fields Array of Uno_WP_Form_Abstract_Form_Field.
+	 * @param array $form_fields Array of Unomoon_Form_Abstract_Form_Field.
 	 * @return array
 	 */
-	public function _unoform_form_fields( array $form_fields ) {
-		$form_fields = parent::_unoform_form_fields( $form_fields );
+	public function _unomoonform_form_fields( array $form_fields ) {
+		$form_fields = parent::_unomoonform_form_fields( $form_fields );
 
 		if ( 'ja' === get_locale() ) {
 			return $form_fields;

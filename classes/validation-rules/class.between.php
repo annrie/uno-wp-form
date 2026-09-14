@@ -1,14 +1,14 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
 /**
- * Uno_WP_Form_Validation_Rule_Between
+ * Unomoon_Form_Validation_Rule_Between
  */
-class Uno_WP_Form_Validation_Rule_Between extends Uno_WP_Form_Abstract_Validation_Rule {
+class Unomoon_Form_Validation_Rule_Between extends Unomoon_Form_Abstract_Validation_Rule {
 
 	/**
 	 * Validation rule name.
@@ -26,21 +26,21 @@ class Uno_WP_Form_Validation_Rule_Between extends Uno_WP_Form_Abstract_Validatio
 	 */
 	public function rule( $name, array $options = array() ) {
 		$value = $this->Data->get( $name );
-		$value = UWF_Functions::convert_eol( $value );
+		$value = Unomoon_Form_Functions::convert_eol( $value );
 
-		if ( UWF_Functions::is_empty( $value ) ) {
+		if ( Unomoon_Form_Functions::is_empty( $value ) ) {
 			return;
 		}
 
 		$defaults = array(
 			'min'     => 0,
 			'max'     => 0,
-			'message' => __( 'The number of characters is invalid.', 'uno-wp-form' ),
+			'message' => __( 'The number of characters is invalid.', 'unomoon-form' ),
 		);
 		$options  = array_merge( $defaults, $options );
 		$length   = mb_strlen( $value, get_bloginfo( 'charset' ) );
-		if ( UWF_Functions::is_numeric( $options['min'] ) ) {
-			if ( UWF_Functions::is_numeric( $options['max'] ) ) {
+		if ( Unomoon_Form_Functions::is_numeric( $options['min'] ) ) {
+			if ( Unomoon_Form_Functions::is_numeric( $options['max'] ) ) {
 				if ( $options['min'] > $length || $length > $options['max'] ) {
 					return $options['message'];
 				}
@@ -49,7 +49,7 @@ class Uno_WP_Form_Validation_Rule_Between extends Uno_WP_Form_Abstract_Validatio
 			if ( $options['min'] > $length ) {
 				return $options['message'];
 			}
-		} elseif ( UWF_Functions::is_numeric( $options['max'] ) ) {
+		} elseif ( Unomoon_Form_Functions::is_numeric( $options['max'] ) ) {
 			if ( $options['max'] < $length ) {
 				return $options['message'];
 			}
@@ -77,11 +77,11 @@ class Uno_WP_Form_Validation_Rule_Between extends Uno_WP_Form_Abstract_Validatio
 		?>
 		<table>
 			<tr>
-				<td><?php esc_html_e( 'The range of the number of characters', 'uno-wp-form' ); ?></td>
+				<td><?php esc_html_e( 'The range of the number of characters', 'unomoon-form' ); ?></td>
 				<td>
-					<input type="text" value="<?php echo esc_attr( $min ); ?>" size="3" name="<?php echo UWF_Config::NAME; ?>[validation][<?php echo $key; ?>][<?php echo esc_attr( $this->get_name() ); ?>][min]" />
+					<input type="text" value="<?php echo esc_attr( $min ); ?>" size="3" name="<?php echo Unomoon_Form_Config::NAME; ?>[validation][<?php echo $key; ?>][<?php echo esc_attr( $this->get_name() ); ?>][min]" />
 					〜
-					<input type="text" value="<?php echo esc_attr( $max ); ?>" size="3" name="<?php echo UWF_Config::NAME; ?>[validation][<?php echo $key; ?>][<?php echo esc_attr( $this->get_name() ); ?>][max]" />
+					<input type="text" value="<?php echo esc_attr( $max ); ?>" size="3" name="<?php echo Unomoon_Form_Config::NAME; ?>[validation][<?php echo $key; ?>][<?php echo esc_attr( $this->get_name() ); ?>][max]" />
 				</td>
 			</tr>
 		</table>

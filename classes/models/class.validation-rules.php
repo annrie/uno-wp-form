@@ -1,17 +1,17 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
 /**
- * Uno_WP_Form_Validation_Rules
+ * Unomoon_Form_Validation_Rules
  */
-class Uno_WP_Form_Validation_Rules {
+class Unomoon_Form_Validation_Rules {
 
 	/**
-	 * @var array Array of Uno_WP_Form_Validation_Rules.
+	 * @var array Array of Unomoon_Form_Validation_Rules.
 	 */
 	protected static $Instances;
 
@@ -64,7 +64,7 @@ class Uno_WP_Form_Validation_Rules {
 				continue;
 			}
 
-			new $class_name( Uno_WP_Form_Data::connect( $this->form_key ) );
+			new $class_name( Unomoon_Form_Data::connect( $this->form_key ) );
 		}
 	}
 
@@ -72,7 +72,7 @@ class Uno_WP_Form_Validation_Rules {
 	 * Instantiation.
 	 *
 	 * @param string $form_key Form key.
-	 * @return Uno_WP_Form_Validation_Rules
+	 * @return Unomoon_Form_Validation_Rules
 	 */
 	public static function instantiation( $form_key ) {
 		if ( isset( self::$Instances[ $form_key ] ) ) {
@@ -90,16 +90,16 @@ class Uno_WP_Form_Validation_Rules {
 	 */
 	public function get_validation_rules() {
 		self::$validation_rules = apply_filters(
-			'unoform_validation_rules',
+			'unomoonform_validation_rules',
 			self::$validation_rules,
 			null // backward compatibility
 		);
 
 		foreach ( self::$validation_rules as $validation_rule => $validation_rule_object ) {
-			if ( is_a( $validation_rule_object, 'Uno_WP_Form_Abstract_Validation_Rule' ) ) {
+			if ( is_a( $validation_rule_object, 'Unomoon_Form_Abstract_Validation_Rule' ) ) {
 				// For backward compatibility (< 4.0.0)
 				if ( method_exists( $validation_rule_object, 'set_Data' ) && ! $validation_rule_object->is_set_Data() ) {
-					$validation_rule_object->set_Data( Uno_WP_Form_Data::connect( $this->form_key ) );
+					$validation_rule_object->set_Data( Unomoon_Form_Data::connect( $this->form_key ) );
 				}
 			} else {
 				unset( self::$validation_rules[ $validation_rule ] );
@@ -118,7 +118,7 @@ class Uno_WP_Form_Validation_Rules {
 	protected static function _get_class_name_from_validation_rule_filename( $filename ) {
 		$class_name = preg_replace( '/^class\./', '', basename( $filename, '.php' ) );
 		$class_name = str_replace( '-', '_', $class_name );
-		$class_name = 'Uno_WP_Form_Validation_Rule_' . $class_name;
+		$class_name = 'Unomoon_Form_Validation_Rule_' . $class_name;
 		return $class_name;
 	}
 }

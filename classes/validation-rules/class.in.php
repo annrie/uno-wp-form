@@ -1,14 +1,14 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
 /**
- * Uno_WP_Form_Validation_Rule_In
+ * Unomoon_Form_Validation_Rule_In
  */
-class Uno_WP_Form_Validation_Rule_In extends Uno_WP_Form_Abstract_Validation_Rule {
+class Unomoon_Form_Validation_Rule_In extends Unomoon_Form_Abstract_Validation_Rule {
 
 	/**
 	 * Validation rule name.
@@ -28,13 +28,13 @@ class Uno_WP_Form_Validation_Rule_In extends Uno_WP_Form_Abstract_Validation_Rul
 		$value = $this->Data->get( $name );
 		$value = (string) $value;
 
-		if ( UWF_Functions::is_empty( $value ) ) {
+		if ( Unomoon_Form_Functions::is_empty( $value ) ) {
 			return;
 		}
 
 		$defaults = array(
 			'options' => array(),
-			'message' => __( 'This value is invalid.', 'uno-wp-form' ),
+			'message' => __( 'This value is invalid.', 'unomoon-form' ),
 		);
 		$options  = array_merge( $defaults, $options );
 		if ( is_array( $options['options'] ) ) {

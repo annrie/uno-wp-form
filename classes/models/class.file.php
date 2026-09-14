@@ -1,14 +1,14 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
 /**
- * Uno_WP_Form_File
+ * Unomoon_Form_File
  */
-class Uno_WP_Form_File {
+class Unomoon_Form_File {
 
 	/**
 	 * Constructor.
@@ -66,11 +66,11 @@ class Uno_WP_Form_File {
 
 		try {
 			if ( UPLOAD_ERR_OK !== $error && UPLOAD_ERR_NO_FILE !== $error ||
-				! UWF_Functions::check_file_type( $file['tmp_name'], $file['name'] ) ) {
+				! Unomoon_Form_Functions::check_file_type( $file['tmp_name'], $file['name'] ) ) {
 				if ( UPLOAD_ERR_INI_SIZE === $error || UPLOAD_ERR_FORM_SIZE === $error ) {
-					throw new \RuntimeException( '[Uno WP Form] File size of the uploaded file is too large.' );
+					throw new \RuntimeException( '[Unomoon Form] File size of the uploaded file is too large.' );
 				}
-				throw new \RuntimeException( '[Uno WP Form] An error occurred during file upload.' );
+				throw new \RuntimeException( '[Unomoon Form] An error occurred during file upload.' );
 			}
 		} catch ( \Exception $e ) {
 			error_log( $e->getMessage() );
@@ -78,23 +78,23 @@ class Uno_WP_Form_File {
 		}
 
 		try {
-			$new_user_file_dir = Uno_WP_Form_Directory::generate_user_file_dirpath( $form_id, $name );
+			$new_user_file_dir = Unomoon_Form_Directory::generate_user_file_dirpath( $form_id, $name );
 			if ( ! wp_mkdir_p( $new_user_file_dir ) ) {
-				throw new \RuntimeException( '[Uno WP Form] Creation of a temporary directory for file upload failed.' );
+				throw new \RuntimeException( '[Unomoon Form] Creation of a temporary directory for file upload failed.' );
 			}
 		} catch ( \Exception $e ) {
 			error_log( $e->getMessage() );
 			return false;
 		}
 
-		Uno_WP_Form_Directory::do_empty( $new_user_file_dir, true );
+		Unomoon_Form_Directory::do_empty( $new_user_file_dir, true );
 
 		$filename = sanitize_file_name( sprintf( '%1$s-%2$s', $name, $file['name'] ) );
-		$filepath = Uno_WP_Form_Directory::generate_user_filepath( $form_id, $name, $filename );
+		$filepath = Unomoon_Form_Directory::generate_user_filepath( $form_id, $name, $filename );
 
 		try {
 			if ( ! move_uploaded_file( $file['tmp_name'], $filepath ) ) {
-				throw new \RuntimeException( '[Uno WP Form] There was an error saving the uploaded file.' );
+				throw new \RuntimeException( '[Unomoon Form] There was an error saving the uploaded file.' );
 			}
 		} catch ( \Exception $e ) {
 			error_log( $e->getMessage() );

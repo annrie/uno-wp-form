@@ -1,9 +1,9 @@
 /**
- * uno_wp_form_google_chart
+ * unomoon_form_google_chart
  * Created: August 31, 2014
  */
 jQuery( function( $ ) {
-	$.fn.uno_wp_form_google_chart = function( config ) {
+	$.fn.unomoon_form_google_chart = function( config ) {
 		var defaults = {
 			chart: 'pie',
 			data : []

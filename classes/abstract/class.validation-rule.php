@@ -1,14 +1,14 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
 /**
- * Uno_WP_Form_Abstract_Validation_Rule
+ * Unomoon_Form_Abstract_Validation_Rule
  */
-abstract class Uno_WP_Form_Abstract_Validation_Rule {
+abstract class Unomoon_Form_Abstract_Validation_Rule {
 
 	/**
 	 * Validation rule name.
@@ -18,46 +18,46 @@ abstract class Uno_WP_Form_Abstract_Validation_Rule {
 	protected $name;
 
 	/**
-	 * @var Uno_WP_Form_Data
+	 * @var Unomoon_Form_Data
 	 */
 	protected $Data;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param Uno_WP_Form_Data $Data Uno_WP_Form_Data object.
+	 * @param Unomoon_Form_Data $Data Unomoon_Form_Data object.
 	 */
-	public function __construct( Uno_WP_Form_Data $Data = null ) {
+	public function __construct( Unomoon_Form_Data $Data = null ) {
 		if ( ! $this->get_name() ) {
-			exit( 'Uno_WP_Form_Abstract_Validation_Rule::$name must override.' );
+			exit( 'Unomoon_Form_Abstract_Validation_Rule::$name must override.' );
 		}
 
 		if ( ! is_null( $Data ) ) {
 			$this->Data = $Data;
 		}
 
-		add_filter( 'unoform_validation_rules', array( $this, '_unoform_validation_rules' ) );
+		add_filter( 'unomoonform_validation_rules', array( $this, '_unomoonform_validation_rules' ) );
 	}
 
 	/**
 	 * Generate array of validation rules.
 	 *
-	 * @param array $validation_rules Array of Uno_WP_Form_Abstract_Validation_Rule.
+	 * @param array $validation_rules Array of Unomoon_Form_Abstract_Validation_Rule.
 	 * @return array
 	 */
-	public function _unoform_validation_rules( array $validation_rules ) {
+	public function _unomoonform_validation_rules( array $validation_rules ) {
 		$validation_rules[ $this->get_name() ] = $this;
 		return $validation_rules;
 	}
 
 	/**
-	 * Inject Uno_WP_Form_Data.
+	 * Inject Unomoon_Form_Data.
 	 *
 	 * @deprecated
 	 *
-	 * @param Uno_WP_Form_Data $Data Uno_WP_Form_Data object.
+	 * @param Unomoon_Form_Data $Data Unomoon_Form_Data object.
 	 */
-	public function set_Data( Uno_WP_Form_Data $Data ) {
+	public function set_Data( Unomoon_Form_Data $Data ) {
 		$this->Data = $Data;
 	}
 
@@ -67,7 +67,7 @@ abstract class Uno_WP_Form_Abstract_Validation_Rule {
 	 * @return boolean
 	 */
 	public function is_set_Data() {
-		return ( is_a( $this->Data, 'Uno_WP_Form_Data' ) );
+		return ( is_a( $this->Data, 'Unomoon_Form_Data' ) );
 	}
 
 	/**
@@ -87,7 +87,7 @@ abstract class Uno_WP_Form_Abstract_Validation_Rule {
 	 * @return string
 	 */
 	public function getName() {
-		UWF_Functions::deprecated_message(
+		Unomoon_Form_Functions::deprecated_message(
 			get_class( $this ) . '::getName()',
 			get_class( $this ) . '::get_name()'
 		);

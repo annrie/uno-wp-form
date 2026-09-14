@@ -1,14 +1,14 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
 /**
- * Uno_WP_Form_Form
+ * Unomoon_Form_Form
  */
-class Uno_WP_Form_Form {
+class Unomoon_Form_Form {
 
 	/**
 	 * Return raw value.
@@ -21,9 +21,9 @@ class Uno_WP_Form_Form {
 		$name
 		// phpcs:enable
 	) {
-		UWF_Functions::deprecated_message(
-			'Uno_WP_Form_Form::get_raw()',
-			'Uno_WP_Form_Data::get_raw()'
+		Unomoon_Form_Functions::deprecated_message(
+			'Unomoon_Form_Form::get_raw()',
+			'Unomoon_Form_Data::get_raw()'
 		);
 	}
 
@@ -39,9 +39,9 @@ class Uno_WP_Form_Form {
 		array $children
 		// phpcs:enable
 	) {
-		UWF_Functions::deprecated_message(
-			'Uno_WP_Form_Form::get_raw_in_children()',
-			'Uno_WP_Form_Data::get_raw_in_children()'
+		Unomoon_Form_Functions::deprecated_message(
+			'Unomoon_Form_Form::get_raw_in_children()',
+			'Unomoon_Form_Data::get_raw_in_children()'
 		);
 	}
 
@@ -55,9 +55,9 @@ class Uno_WP_Form_Form {
 		$name
 		// phpcs:enable
 	) {
-		UWF_Functions::deprecated_message(
-			'Uno_WP_Form_Form::get_zip_value()',
-			'Uno_WP_Form_Data::get_separated_value()'
+		Unomoon_Form_Functions::deprecated_message(
+			'Unomoon_Form_Form::get_zip_value()',
+			'Unomoon_Form_Data::get_separated_value()'
 		);
 	}
 
@@ -71,9 +71,9 @@ class Uno_WP_Form_Form {
 		$name
 		// phpcs:enable
 	) {
-		UWF_Functions::deprecated_message(
-			'Uno_WP_Form_Form::get_tel_value()',
-			'Uno_WP_Form_Data::get_separated_value()'
+		Unomoon_Form_Functions::deprecated_message(
+			'Unomoon_Form_Form::get_tel_value()',
+			'Unomoon_Form_Data::get_separated_value()'
 		);
 	}
 
@@ -89,9 +89,9 @@ class Uno_WP_Form_Form {
 		array $data
 		// phpcs:enable
 	) {
-		UWF_Functions::deprecated_message(
-			'Uno_WP_Form_Form::get_checked_value()',
-			'Uno_WP_Form_Data::get_separated_value()'
+		Unomoon_Form_Functions::deprecated_message(
+			'Unomoon_Form_Form::get_checked_value()',
+			'Unomoon_Form_Data::get_separated_value()'
 		);
 	}
 
@@ -107,9 +107,9 @@ class Uno_WP_Form_Form {
 		array $data
 		// phpcs:enable
 	) {
-		UWF_Functions::deprecated_message(
-			'Uno_WP_Form_Form::get_radio_value()',
-			'Uno_WP_Form_Data::get_in_children()'
+		Unomoon_Form_Functions::deprecated_message(
+			'Unomoon_Form_Form::get_radio_value()',
+			'Unomoon_Form_Data::get_in_children()'
 		);
 	}
 
@@ -125,9 +125,9 @@ class Uno_WP_Form_Form {
 		array $data
 		// phpcs:enable
 	) {
-		UWF_Functions::deprecated_message(
-			'Uno_WP_Form_Form::get_selected_value()',
-			'Uno_WP_Form_Data::get_in_children()'
+		Unomoon_Form_Functions::deprecated_message(
+			'Unomoon_Form_Form::get_selected_value()',
+			'Unomoon_Form_Data::get_in_children()'
 		);
 	}
 
@@ -143,9 +143,9 @@ class Uno_WP_Form_Form {
 		array $children = array()
 		// phpcs:enable
 	) {
-		UWF_Functions::deprecated_message(
-			'Uno_WP_Form_Form::get_separated_raw_value()',
-			'Uno_WP_Form_Data::get_separated_raw_value()'
+		Unomoon_Form_Functions::deprecated_message(
+			'Unomoon_Form_Form::get_separated_raw_value()',
+			'Unomoon_Form_Data::get_separated_raw_value()'
 		);
 	}
 
@@ -172,9 +172,9 @@ class Uno_WP_Form_Form {
 		$name
 		// phpcs:enable
 	) {
-		UWF_Functions::deprecated_message(
-			'Uno_WP_Form_Form::get_separator_value()',
-			'Uno_WP_Form_Data::get_separator_value()'
+		Unomoon_Form_Functions::deprecated_message(
+			'Unomoon_Form_Form::get_separator_value()',
+			'Unomoon_Form_Data::get_separator_value()'
 		);
 	}
 
@@ -198,7 +198,7 @@ class Uno_WP_Form_Form {
 	 * @return string
 	 */
 	protected function _render( $template, array $args = array() ) {
-		$template_path = locate_template( 'uno-wp-form/form-fields/' . $template . '.php' );
+		$template_path = locate_template( 'unomoon-form/form-fields/' . $template . '.php' );
 		if ( ! $template_path ) {
 			$template_path = plugin_dir_path( __FILE__ ) . '../../templates/form-fields/' . $template . '.php';
 			if ( ! file_exists( $template_path ) ) {
@@ -228,7 +228,7 @@ class Uno_WP_Form_Form {
 	 */
 	public function start( $options = array() ) {
 		$action  = '';
-		$action  = apply_filters( 'unoform_form_start_attr_action', $action );
+		$action  = apply_filters( 'unomoonform_form_start_attr_action', $action );
 		$options = array_merge(
 			array(
 				'action'  => $action,
@@ -251,7 +251,7 @@ class Uno_WP_Form_Form {
 	 */
 	public function end() {
 		$html  = '';
-		$html  = apply_filters( 'unoform_form_end_html', $html );
+		$html  = apply_filters( 'unomoonform_form_end_html', $html );
 		$html .= '</form>';
 		return $html;
 	}
@@ -698,7 +698,7 @@ class Uno_WP_Form_Form {
 		$options  = shortcode_atts( $defaults, $options );
 
 		if ( ! is_array( $options['value'] ) ) {
-			if ( UWF_Functions::is_empty( $options['value'] ) ) {
+			if ( Unomoon_Form_Functions::is_empty( $options['value'] ) ) {
 				$options['value'] = array();
 			} else {
 				$options['value'] = explode( $separator, $options['value'] );
@@ -952,7 +952,7 @@ class Uno_WP_Form_Form {
 	 * @return string
 	 */
 	protected function _get_attr_id( $id, $suffix = '' ) {
-		if ( UWF_Functions::is_empty( $id ) ) {
+		if ( Unomoon_Form_Functions::is_empty( $id ) ) {
 			return;
 		}
 
@@ -995,11 +995,11 @@ class Uno_WP_Form_Form {
 	 * @return string
 	 */
 	public static function remove_linefeed_space( $string ) {
-		UWF_Functions::deprecated_message(
-			'Uno_WP_Form_Form::remove_linefeed_space()',
-			'Uno_WP_Form_Form::remove_newline_space()'
+		Unomoon_Form_Functions::deprecated_message(
+			'Unomoon_Form_Form::remove_linefeed_space()',
+			'Unomoon_Form_Form::remove_newline_space()'
 		);
-		$Form = new Uno_WP_Form_Form();
+		$Form = new Unomoon_Form_Form();
 		return $Form->remove_newline_space( $string );
 	}
 }

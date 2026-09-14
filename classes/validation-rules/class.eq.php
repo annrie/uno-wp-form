@@ -1,14 +1,14 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
 /**
- * Uno_WP_Form_Validation_Rule_Eq
+ * Unomoon_Form_Validation_Rule_Eq
  */
-class Uno_WP_Form_Validation_Rule_Eq extends Uno_WP_Form_Abstract_Validation_Rule {
+class Unomoon_Form_Validation_Rule_Eq extends Unomoon_Form_Abstract_Validation_Rule {
 
 	/**
 	 * Validation rule name.
@@ -33,7 +33,7 @@ class Uno_WP_Form_Validation_Rule_Eq extends Uno_WP_Form_Abstract_Validation_Rul
 
 		$defaults     = array(
 			'target'  => null,
-			'message' => __( 'This is not in agreement.', 'uno-wp-form' ),
+			'message' => __( 'This is not in agreement.', 'unomoon-form' ),
 		);
 		$options      = array_merge( $defaults, $options );
 		$target_value = $this->Data->get( $options['target'] );
@@ -58,8 +58,8 @@ class Uno_WP_Form_Validation_Rule_Eq extends Uno_WP_Form_Abstract_Validation_Rul
 		?>
 		<table>
 			<tr>
-				<td><?php esc_html_e( 'The key at same value', 'uno-wp-form' ); ?></td>
-				<td><input type="text" value="<?php echo esc_attr( $target ); ?>" name="<?php echo UWF_Config::NAME; ?>[validation][<?php echo $key; ?>][<?php echo esc_attr( $this->get_name() ); ?>][target]" /></td>
+				<td><?php esc_html_e( 'The key at same value', 'unomoon-form' ); ?></td>
+				<td><input type="text" value="<?php echo esc_attr( $target ); ?>" name="<?php echo Unomoon_Form_Config::NAME; ?>[validation][<?php echo $key; ?>][<?php echo esc_attr( $this->get_name() ); ?>][target]" /></td>
 			</tr>
 		</table>
 		<?php

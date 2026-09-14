@@ -1,14 +1,14 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
 /**
- * Uno_WP_Form_Validation_Rule_FileSize
+ * Unomoon_Form_Validation_Rule_FileSize
  */
-class Uno_WP_Form_Validation_Rule_FileSize extends Uno_WP_Form_Abstract_Validation_Rule {
+class Unomoon_Form_Validation_Rule_FileSize extends Unomoon_Form_Abstract_Validation_Rule {
 
 	/**
 	 * Validation rule name.
@@ -25,7 +25,7 @@ class Uno_WP_Form_Validation_Rule_FileSize extends Uno_WP_Form_Abstract_Validati
 	 * @return string
 	 */
 	public function rule( $name, array $options = array() ) {
-		$data = $this->Data->get_post_value_by_key( UWF_Config::UPLOAD_FILES );
+		$data = $this->Data->get_post_value_by_key( Unomoon_Form_Config::UPLOAD_FILES );
 
 		if ( ! is_null( $data ) ) {
 			if ( is_array( $data ) && array_key_exists( $name, $data ) ) {
@@ -33,13 +33,13 @@ class Uno_WP_Form_Validation_Rule_FileSize extends Uno_WP_Form_Abstract_Validati
 				if ( ! empty( $file['size'] ) ) {
 					return $this->_filesize_validate( $file['size'], $options );
 				} elseif ( ! empty( $file['error'] ) && 1 === $file['error'] ) {
-					return __( 'Failed to upload the file.', 'uno-wp-form' );
+					return __( 'Failed to upload the file.', 'unomoon-form' );
 				}
 			}
 		} else {
-			$upload_file_keys = $this->Data->get_post_value_by_key( UWF_Config::UPLOAD_FILE_KEYS );
-			$form_id          = UWF_Functions::get_form_id_from_form_key( $this->Data->get_form_key() );
-			$filepath         = Uno_WP_Form_Directory::generate_user_filepath( $form_id, $name, $this->Data->get( $name ) );
+			$upload_file_keys = $this->Data->get_post_value_by_key( Unomoon_Form_Config::UPLOAD_FILE_KEYS );
+			$form_id          = Unomoon_Form_Functions::get_form_id_from_form_key( $this->Data->get_form_key() );
+			$filepath         = Unomoon_Form_Directory::generate_user_filepath( $form_id, $name, $this->Data->get( $name ) );
 			if (
 				is_array( $upload_file_keys )
 				&& in_array( $name, $upload_file_keys, true )
@@ -69,7 +69,7 @@ class Uno_WP_Form_Validation_Rule_FileSize extends Uno_WP_Form_Abstract_Validati
 	protected function _filesize_validate( $byte, $options ) {
 		$defaults = array(
 			'bytes'   => '0',
-			'message' => __( 'This file size is too big.', 'uno-wp-form' ),
+			'message' => __( 'This file size is too big.', 'unomoon-form' ),
 		);
 		$options  = array_merge( $defaults, $options );
 		if ( ! ( preg_match( '/^[\d]+$/', $options['bytes'] ) && $options['bytes'] >= $byte ) ) {
@@ -92,8 +92,8 @@ class Uno_WP_Form_Validation_Rule_FileSize extends Uno_WP_Form_Abstract_Validati
 		?>
 		<table>
 			<tr>
-				<td><?php esc_html_e( 'Permitted file size', 'uno-wp-form' ); ?></td>
-				<td><input type="text" value="<?php echo esc_attr( $bytes ); ?>" name="<?php echo UWF_Config::NAME; ?>[validation][<?php echo $key; ?>][<?php echo esc_attr( $this->get_name() ); ?>][bytes]" /> <span class="uwf_note"><?php esc_html_e( 'bytes', 'uno-wp-form' ); ?></span></td>
+				<td><?php esc_html_e( 'Permitted file size', 'unomoon-form' ); ?></td>
+				<td><input type="text" value="<?php echo esc_attr( $bytes ); ?>" name="<?php echo Unomoon_Form_Config::NAME; ?>[validation][<?php echo $key; ?>][<?php echo esc_attr( $this->get_name() ); ?>][bytes]" /> <span class="unomoonform_note"><?php esc_html_e( 'bytes', 'unomoon-form' ); ?></span></td>
 			</tr>
 		</table>
 		<?php

@@ -1,32 +1,32 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
 /**
- * Uno_WP_Form_Mail_Service
+ * Unomoon_Form_Mail_Service
  */
-class Uno_WP_Form_Mail_Service {
+class Unomoon_Form_Mail_Service {
 
 	/**
-	 * @var Uno_WP_Form_Mail
+	 * @var Unomoon_Form_Mail
 	 */
 	protected $Mail_raw;
 
 	/**
-	 * @var Uno_WP_Form_Mail
+	 * @var Unomoon_Form_Mail
 	 */
 	protected $Mail_admin_raw;
 
 	/**
-	 * @var Uno_WP_Form_Mail
+	 * @var Unomoon_Form_Mail
 	 */
 	protected $Mail_auto_raw;
 
 	/**
-	 * @var Uno_WP_Form_Data
+	 * @var Unomoon_Form_Data
 	 */
 	protected $Data;
 
@@ -41,19 +41,19 @@ class Uno_WP_Form_Mail_Service {
 	protected $attachments = array();
 
 	/**
-	 * @var Uno_WP_Form_Setting
+	 * @var Unomoon_Form_Setting
 	 */
 	protected $Setting;
 
 	/**
-	 * @param Uno_WP_Form_Mail    $Mail        Uno_WP_Form_Mail object.
+	 * @param Unomoon_Form_Mail    $Mail        Unomoon_Form_Mail object.
 	 * @param strign             $form_key    Form key.
-	 * @param Uno_WP_Form_Setting $Setting     Uno_WP_Form_Setting object.
+	 * @param Unomoon_Form_Setting $Setting     Unomoon_Form_Setting object.
 	 * @param array              $attachments Array of attachment.
 	 */
-	public function __construct( Uno_WP_Form_Mail $Mail, $form_key, Uno_WP_Form_Setting $Setting, array $attachments = array() ) {
+	public function __construct( Unomoon_Form_Mail $Mail, $form_key, Unomoon_Form_Setting $Setting, array $attachments = array() ) {
 		$this->form_key       = $form_key;
-		$this->Data           = Uno_WP_Form_Data::connect( $form_key );
+		$this->Data           = Unomoon_Form_Data::connect( $form_key );
 		$this->Mail_raw       = $Mail;
 		$this->Mail_admin_raw = clone $Mail;
 		$this->Mail_auto_raw  = clone $Mail;
@@ -64,12 +64,12 @@ class Uno_WP_Form_Mail_Service {
 			$this->_set_admin_mail_raw_params();
 			// Attach attachment only to e-mail addressed to administrator
 			$this->_set_attachments_to( $this->Mail_admin_raw );
-			$this->Mail_admin_raw = $this->_apply_filters_unoform_admin_mail_raw( $this->Mail_admin_raw );
+			$this->Mail_admin_raw = $this->_apply_filters_unomoonform_admin_mail_raw( $this->Mail_admin_raw );
 
 			$this->_set_reply_mail_raw_params();
-			$this->Mail_auto_raw = $this->_apply_filters_unoform_auto_mail_raw( $this->Mail_auto_raw );
+			$this->Mail_auto_raw = $this->_apply_filters_unomoonform_auto_mail_raw( $this->Mail_auto_raw );
 		} else {
-			$Mail = $this->_apply_filters_unoform_mail( $Mail );
+			$Mail = $this->_apply_filters_unomoonform_mail( $Mail );
 		}
 	}
 
@@ -80,8 +80,8 @@ class Uno_WP_Form_Mail_Service {
 	 */
 	public function send_admin_mail() {
 		$Mail_admin = $this->_get_parsed_mail_object( $this->Mail_admin_raw );
-		$Mail_admin = $this->_apply_filters_unoform_mail( $Mail_admin );
-		$Mail_admin = $this->_apply_filters_unoform_admin_mail( $Mail_admin );
+		$Mail_admin = $this->_apply_filters_unomoonform_mail( $Mail_admin );
+		$Mail_admin = $this->_apply_filters_unomoonform_admin_mail( $Mail_admin );
 
 		if ( $this->Setting->get( 'usedb' ) ) {
 			$Mail_admin_for_save     = clone $this->Mail_admin_raw;
@@ -89,7 +89,7 @@ class Uno_WP_Form_Mail_Service {
 		}
 
 		do_action(
-			'unoform_before_send_admin_mail_' . $this->form_key,
+			'unomoonform_before_send_admin_mail_' . $this->form_key,
 			clone $Mail_admin,
 			clone $this->Data
 		);
@@ -116,10 +116,10 @@ class Uno_WP_Form_Mail_Service {
 	/**
 	 * Return parsed Mail object and save to database.
 	 *
-	 * @param Uno_WP_Form_Mail $_Mail Uno_WP_Form_Mail object.
-	 * @return Uno_WP_Form_Mail
+	 * @param Unomoon_Form_Mail $_Mail Unomoon_Form_Mail object.
+	 * @return Unomoon_Form_Mail
 	 */
-	protected function _get_parsed_mail_object( Uno_WP_Form_Mail $_Mail ) {
+	protected function _get_parsed_mail_object( Unomoon_Form_Mail $_Mail ) {
 		$Mail = clone $_Mail;
 		$Mail->parse( $this->Setting );
 		return $Mail;
@@ -128,10 +128,10 @@ class Uno_WP_Form_Mail_Service {
 	/**
 	 * Save to database and return saved mail ID.
 	 *
-	 * @param Uno_WP_Form_Mail $Mail Uno_WP_Form_Mail object.
+	 * @param Unomoon_Form_Mail $Mail Unomoon_Form_Mail object.
 	 * @return int
 	 */
-	protected function _save( Uno_WP_Form_Mail $Mail ) {
+	protected function _save( Unomoon_Form_Mail $Mail ) {
 		return $Mail->save( $this->Setting );
 	}
 
@@ -142,9 +142,9 @@ class Uno_WP_Form_Mail_Service {
 	 */
 	public function send_reply_mail() {
 		$Mail_auto = $this->_get_parsed_mail_object( $this->Mail_auto_raw );
-		$Mail_auto = $this->_apply_filters_unoform_auto_mail( $Mail_auto );
+		$Mail_auto = $this->_apply_filters_unomoonform_auto_mail( $Mail_auto );
 		do_action(
-			'unoform_before_send_reply_mail_' . $this->form_key,
+			'unomoonform_before_send_reply_mail_' . $this->form_key,
 			clone $Mail_auto,
 			clone $this->Data
 		);
@@ -155,9 +155,9 @@ class Uno_WP_Form_Mail_Service {
 	/**
 	 * Set attachment files to Mail object.
 	 *
-	 * @param Uno_WP_Form_Mail $Mail Uno_WP_Form_Mail object.
+	 * @param Unomoon_Form_Mail $Mail Unomoon_Form_Mail object.
 	 */
-	protected function _set_attachments_to( Uno_WP_Form_Mail $Mail ) {
+	protected function _set_attachments_to( Unomoon_Form_Mail $Mail ) {
 		$Mail->attachments = $this->attachments;
 	}
 
@@ -176,14 +176,14 @@ class Uno_WP_Form_Mail_Service {
 	}
 
 	/**
-	 * Apply unoform_admin_mail_raw filter hook.
+	 * Apply unomoonform_admin_mail_raw filter hook.
 	 *
-	 * @param Uno_WP_Form_Mail $Mail Uno_WP_Form_Mail object.
-	 * @return Uno_WP_Form_Mail
+	 * @param Unomoon_Form_Mail $Mail Unomoon_Form_Mail object.
+	 * @return Unomoon_Form_Mail
 	 */
-	protected function _apply_filters_unoform_admin_mail_raw( Uno_WP_Form_Mail $Mail ) {
+	protected function _apply_filters_unomoonform_admin_mail_raw( Unomoon_Form_Mail $Mail ) {
 		return apply_filters(
-			'unoform_admin_mail_raw_' . $this->form_key,
+			'unomoonform_admin_mail_raw_' . $this->form_key,
 			$Mail,
 			$this->Data->gets(),
 			clone $this->Data
@@ -191,14 +191,14 @@ class Uno_WP_Form_Mail_Service {
 	}
 
 	/**
-	 * Apply unoform_mail filter hook.
+	 * Apply unomoonform_mail filter hook.
 	 *
-	 * @param Uno_WP_Form_Mail $Mail Uno_WP_Form_Mail object.
-	 * @return Uno_WP_Form_Mail
+	 * @param Unomoon_Form_Mail $Mail Unomoon_Form_Mail object.
+	 * @return Unomoon_Form_Mail
 	 */
-	protected function _apply_filters_unoform_mail( Uno_WP_Form_Mail $Mail ) {
+	protected function _apply_filters_unomoonform_mail( Unomoon_Form_Mail $Mail ) {
 		return apply_filters(
-			'unoform_mail_' . $this->form_key,
+			'unomoonform_mail_' . $this->form_key,
 			$Mail,
 			$this->Data->gets(),
 			clone $this->Data
@@ -206,14 +206,14 @@ class Uno_WP_Form_Mail_Service {
 	}
 
 	/**
-	 * Apply unoform_admin_mail filter hook.
+	 * Apply unomoonform_admin_mail filter hook.
 	 *
-	 * @param Uno_WP_Form_Mail $Mail Uno_WP_Form_Mail object.
-	 * @return Uno_WP_Form_Mail
+	 * @param Unomoon_Form_Mail $Mail Unomoon_Form_Mail object.
+	 * @return Unomoon_Form_Mail
 	 */
-	protected function _apply_filters_unoform_admin_mail( Uno_WP_Form_Mail $Mail ) {
+	protected function _apply_filters_unomoonform_admin_mail( Unomoon_Form_Mail $Mail ) {
 		return apply_filters(
-			'unoform_admin_mail_' . $this->form_key,
+			'unomoonform_admin_mail_' . $this->form_key,
 			$Mail,
 			$this->Data->gets(),
 			clone $this->Data
@@ -221,14 +221,14 @@ class Uno_WP_Form_Mail_Service {
 	}
 
 	/**
-	 * Apply unoform_auto_mail_raw filter hook.
+	 * Apply unomoonform_auto_mail_raw filter hook.
 	 *
-	 * @param Uno_WP_Form_Mail $Mail Uno_WP_Form_Mail object.
-	 * @return Uno_WP_Form_Mail
+	 * @param Unomoon_Form_Mail $Mail Unomoon_Form_Mail object.
+	 * @return Unomoon_Form_Mail
 	 */
-	protected function _apply_filters_unoform_auto_mail_raw( Uno_WP_Form_Mail $Mail ) {
+	protected function _apply_filters_unomoonform_auto_mail_raw( Unomoon_Form_Mail $Mail ) {
 		return apply_filters(
-			'unoform_auto_mail_raw_' . $this->form_key,
+			'unomoonform_auto_mail_raw_' . $this->form_key,
 			$Mail,
 			$this->Data->gets(),
 			clone $this->Data
@@ -236,14 +236,14 @@ class Uno_WP_Form_Mail_Service {
 	}
 
 	/**
-	 * Apply unoform_auto_mail filter hook.
+	 * Apply unomoonform_auto_mail filter hook.
 	 *
-	 * @param Uno_WP_Form_Mail $Mail Uno_WP_Form_Mail object.
-	 * @return Uno_WP_Form_Mail
+	 * @param Unomoon_Form_Mail $Mail Unomoon_Form_Mail object.
+	 * @return Unomoon_Form_Mail
 	 */
-	protected function _apply_filters_unoform_auto_mail( Uno_WP_Form_Mail $Mail ) {
+	protected function _apply_filters_unomoonform_auto_mail( Unomoon_Form_Mail $Mail ) {
 		return apply_filters(
-			'unoform_auto_mail_' . $this->form_key,
+			'unomoonform_auto_mail_' . $this->form_key,
 			$Mail,
 			$this->Data->gets(),
 			clone $this->Data
@@ -256,7 +256,7 @@ class Uno_WP_Form_Mail_Service {
 	protected function _delete_files() {
 		foreach ( $this->attachments as $file ) {
 			$file = realpath( $file );
-			if ( false !== $file && is_file( $file ) && 0 === strpos( $file, Uno_WP_Form_Directory::get() ) ) {
+			if ( false !== $file && is_file( $file ) && 0 === strpos( $file, Unomoon_Form_Directory::get() ) ) {
 				unlink( $file );
 			}
 		}
@@ -266,7 +266,7 @@ class Uno_WP_Form_Mail_Service {
 	 * Update tracking number.
 	 */
 	public function update_tracking_number() {
-		if ( preg_match( '{' . UWF_Config::TRACKINGNUMBER . '}', $this->Mail_admin_raw->body ) ) {
+		if ( preg_match( '{' . Unomoon_Form_Config::TRACKINGNUMBER . '}', $this->Mail_admin_raw->body ) ) {
 			$this->Setting->update_tracking_number();
 		}
 	}

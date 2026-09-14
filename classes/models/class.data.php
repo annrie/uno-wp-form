@@ -1,32 +1,32 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
 /**
- * Uno_WP_Form_Data
+ * Unomoon_Form_Data
  */
-class Uno_WP_Form_Data {
+class Unomoon_Form_Data {
 
 	/**
-	 * @var array Array of Uno_WP_Form_Data
+	 * @var array Array of Unomoon_Form_Data
 	 */
 	protected static $Instances;
 
 	/**
-	 * @var Uno_WP_Form_Sesion
+	 * @var Unomoon_Form_Session
 	 */
 	protected $Session;
 
 	/**
-	 * @var Uno_WP_Form_Sesion
+	 * @var Unomoon_Form_Session
 	 */
 	protected $Session_meta;
 
 	/**
-	 * @var Uno_WP_Form_Sesion
+	 * @var Unomoon_Form_Session
 	 */
 	protected $Session_validation_error;
 
@@ -63,9 +63,9 @@ class Uno_WP_Form_Data {
 	 * @param array  $FILES    $_FILES.
 	 */
 	private function __construct( $form_key, array $POST = array(), array $FILES = array() ) {
-		$this->Session                  = new Uno_WP_Form_Session( $form_key );
-		$this->Session_meta             = new Uno_WP_Form_Session( $form_key . '-meta' );
-		$this->Session_validation_error = new Uno_WP_Form_Session( $form_key . '-validation-error' );
+		$this->Session                  = new Unomoon_Form_Session( $form_key );
+		$this->Session_meta             = new Unomoon_Form_Session( $form_key . '-meta' );
+		$this->Session_validation_error = new Unomoon_Form_Session( $form_key . '-validation-error' );
 
 		$this->variables         = $this->Session->gets();
 		$this->meta              = $this->Session_meta->gets();
@@ -78,9 +78,9 @@ class Uno_WP_Form_Data {
 		$this->_set_request_valiables();
 		$this->_set_files_valiables();
 
-		if ( isset( $POST[ UWF_Config::CUSTOM_MAIL_TAG_KEYS ] ) ) {
-			foreach ( $POST[ UWF_Config::CUSTOM_MAIL_TAG_KEYS ] as $custom_mail_tag_key ) {
-				$value = Uno_WP_Form_Parser::apply_filters_unoform_custom_mail_tag( $form_key, '', $custom_mail_tag_key );
+		if ( isset( $POST[ Unomoon_Form_Config::CUSTOM_MAIL_TAG_KEYS ] ) ) {
+			foreach ( $POST[ Unomoon_Form_Config::CUSTOM_MAIL_TAG_KEYS ] as $custom_mail_tag_key ) {
+				$value = Unomoon_Form_Parser::apply_filters_unomoonform_custom_mail_tag( $form_key, '', $custom_mail_tag_key );
 				if ( '' !== $value ) {
 					$this->set( $custom_mail_tag_key, $value );
 				}
@@ -105,12 +105,12 @@ class Uno_WP_Form_Data {
 	}
 
 	/**
-	 * Instantiation Uno_WP_Form_Data.
+	 * Instantiation Unomoon_Form_Data.
 	 *
 	 * @param string $form_key Form key.
 	 * @param array  $POST     $_POST.
 	 * @param array  $FILES    $_FILES.
-	 * @return Uno_WP_Form_Data
+	 * @return Unomoon_Form_Data
 	 */
 	public static function connect( $form_key, $POST = null, $FILES = null ) {
 		if ( isset( self::$Instances[ $form_key ] ) && is_null( $POST ) && is_null( $FILES ) ) {
@@ -137,9 +137,9 @@ class Uno_WP_Form_Data {
 	 * @param array  $FILES    $_FILES.
 	 */
 	public static function getInstance( $form_key = null, $POST = null, $FILES = null ) {
-		UWF_Functions::deprecated_message(
-			'Uno_WP_Form_Data::getInstance()',
-			'Uno_WP_Form_Data::connect()'
+		Unomoon_Form_Functions::deprecated_message(
+			'Unomoon_Form_Data::getInstance()',
+			'Unomoon_Form_Data::connect()'
 		);
 
 		if ( is_null( $form_key ) ) {
@@ -201,7 +201,7 @@ class Uno_WP_Form_Data {
 
 		// この条件判定がないと fileSize チェックが正しく動作しない
 		if ( $files ) {
-			$this->set( UWF_Config::UPLOAD_FILES, $files );
+			$this->set( Unomoon_Form_Config::UPLOAD_FILES, $files );
 		}
 	}
 
@@ -213,9 +213,9 @@ class Uno_WP_Form_Data {
 	 * @return string back|confirm|complete|input
 	 */
 	public function get_post_condition() {
-		$backButton    = $this->get_post_value_by_key( UWF_Config::BACK_BUTTON );
-		$confirmButton = $this->get_post_value_by_key( UWF_Config::CONFIRM_BUTTON );
-		$request_token = $this->get_post_value_by_key( UWF_Config::TOKEN_NAME );
+		$backButton    = $this->get_post_value_by_key( Unomoon_Form_Config::BACK_BUTTON );
+		$confirmButton = $this->get_post_value_by_key( Unomoon_Form_Config::CONFIRM_BUTTON );
+		$request_token = $this->get_post_value_by_key( Unomoon_Form_Config::TOKEN_NAME );
 
 		if ( $backButton ) {
 			return 'back';
@@ -589,13 +589,13 @@ class Uno_WP_Form_Data {
 	 * Delete name of upload failed file or name of deleted file from UPLOAD_FILE_KEYS.
 	 */
 	public function regenerate_upload_file_keys() {
-		$upload_file_keys = $this->get_post_value_by_key( UWF_Config::UPLOAD_FILE_KEYS );
+		$upload_file_keys = $this->get_post_value_by_key( Unomoon_Form_Config::UPLOAD_FILE_KEYS );
 		if ( ! is_array( $upload_file_keys ) ) {
 			$upload_file_keys = array();
 		}
 
 		$upload_file_keys = apply_filters(
-			'unoform_upload_file_keys_' . $this->get_form_key(),
+			'unomoonform_upload_file_keys_' . $this->get_form_key(),
 			$upload_file_keys,
 			clone $this
 		);
@@ -606,10 +606,10 @@ class Uno_WP_Form_Data {
 
 		foreach ( $upload_file_keys as $key => $upload_file_key ) {
 			$upload_filename = $this->get_post_value_by_key( $upload_file_key );
-			$form_id         = UWF_Functions::get_form_id_from_form_key( $this->get_form_key() );
+			$form_id         = Unomoon_Form_Functions::get_form_id_from_form_key( $this->get_form_key() );
 
 			try {
-				$filepath = Uno_WP_Form_Directory::generate_user_filepath( $form_id, $upload_file_key, $upload_filename );
+				$filepath = Unomoon_Form_Directory::generate_user_filepath( $form_id, $upload_file_key, $upload_filename );
 			} catch ( \Exception $e ) {
 				error_log( $e->getMessage() );
 				unset( $upload_file_keys[ $key ] );
@@ -623,7 +623,7 @@ class Uno_WP_Form_Data {
 			}
 		}
 
-		$this->set( UWF_Config::UPLOAD_FILE_KEYS, $upload_file_keys );
+		$this->set( Unomoon_Form_Config::UPLOAD_FILE_KEYS, $upload_file_keys );
 	}
 
 	/**
@@ -632,17 +632,17 @@ class Uno_WP_Form_Data {
 	 * @param array $uploaded_files Array of uploaded file url.
 	 */
 	public function push_uploaded_file_keys( array $uploaded_files = array() ) {
-		$upload_file_keys = $this->get_post_value_by_key( UWF_Config::UPLOAD_FILE_KEYS );
+		$upload_file_keys = $this->get_post_value_by_key( Unomoon_Form_Config::UPLOAD_FILE_KEYS );
 		if ( ! is_array( $upload_file_keys ) ) {
 			$upload_file_keys = array();
-			$this->set( UWF_Config::UPLOAD_FILE_KEYS, $upload_file_keys );
+			$this->set( Unomoon_Form_Config::UPLOAD_FILE_KEYS, $upload_file_keys );
 		}
 
 		foreach ( $uploaded_files as $key => $upload_file ) {
 			$this->set( $key, basename( $upload_file ) );
 
 			if ( is_array( $upload_file_keys ) && ! in_array( $key, $upload_file_keys, true ) ) {
-				$this->push( UWF_Config::UPLOAD_FILE_KEYS, $key );
+				$this->push( Unomoon_Form_Config::UPLOAD_FILE_KEYS, $key );
 			}
 		}
 	}
@@ -710,7 +710,7 @@ class Uno_WP_Form_Data {
 	 * Set send error flg.
 	 */
 	public function set_send_error() {
-		$this->meta[ UWF_Config::SEND_ERROR ] = true;
+		$this->meta[ Unomoon_Form_Config::SEND_ERROR ] = true;
 	}
 
 	/**
@@ -719,8 +719,8 @@ class Uno_WP_Form_Data {
 	 * @return boolean
 	 */
 	public function get_send_error() {
-		if ( isset( $this->meta[ UWF_Config::SEND_ERROR ] ) ) {
-			return $this->meta[ UWF_Config::SEND_ERROR ];
+		if ( isset( $this->meta[ Unomoon_Form_Config::SEND_ERROR ] ) ) {
+			return $this->meta[ Unomoon_Form_Config::SEND_ERROR ];
 		}
 	}
 

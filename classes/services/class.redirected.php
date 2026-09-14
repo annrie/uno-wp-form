@@ -1,14 +1,14 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
 /**
- * Uno_WP_Form_Redirected
+ * Unomoon_Form_Redirected
  */
-class Uno_WP_Form_Redirected {
+class Unomoon_Form_Redirected {
 
 	/**
 	 * @var string
@@ -16,7 +16,7 @@ class Uno_WP_Form_Redirected {
 	protected $form_key;
 
 	/**
-	 * @var Uno_WP_Form_Setting
+	 * @var Unomoon_Form_Setting
 	 */
 	protected $Setting;
 
@@ -34,7 +34,7 @@ class Uno_WP_Form_Redirected {
 	 * Constructor.
 	 *
 	 * @param string             $form_key Form key.
-	 * @param Uno_WP_Form_Setting $setting  Uno_WP_Form_Setting object.
+	 * @param Unomoon_Form_Setting $setting  Unomoon_Form_Setting object.
 	 * @param boolean            $is_valid Return true when valid.
 	 * @param string             $post_condition back|confirm|complete.
 	 */
@@ -97,8 +97,8 @@ class Uno_WP_Form_Redirected {
 	 * @return string
 	 */
 	public function get_url() {
-		$Data = Uno_WP_Form_Data::connect( $this->form_key );
-		return apply_filters( 'unoform_redirect_url_' . $this->form_key, $this->url, $Data );
+		$Data = Unomoon_Form_Data::connect( $this->form_key );
+		return apply_filters( 'unomoonform_redirect_url_' . $this->form_key, $this->url, $Data );
 	}
 
 	/**
@@ -165,7 +165,7 @@ class Uno_WP_Form_Redirected {
 		// 「URL引数を有効にする」が有効の場合は $_GET を利用する（重複するURL引数はURL設定のものが優先される ※post_id除く）
 		if ( $this->Setting->get( 'querystring' ) ) {
 			$query_string = array_merge( $_GET, $query_string );
-			if ( isset( $_GET['post_id'] ) && UWF_Functions::is_numeric( $_GET['post_id'] ) ) {
+			if ( isset( $_GET['post_id'] ) && Unomoon_Form_Functions::is_numeric( $_GET['post_id'] ) ) {
 				$query_string['post_id'] = $_GET['post_id'];
 			}
 		}
@@ -187,7 +187,7 @@ class Uno_WP_Form_Redirected {
 			return;
 		}
 
-		do_action( 'unoform_before_redirect_' . $this->form_key );
+		do_action( 'unomoonform_before_redirect_' . $this->form_key );
 
 		wp_safe_redirect( $redirect, 302 );
 		exit();
@@ -203,7 +203,7 @@ class Uno_WP_Form_Redirected {
 			return;
 		}
 
-		do_action( 'unoform_before_redirect_' . $this->form_key );
+		do_action( 'unomoonform_before_redirect_' . $this->form_key );
 		?>
 		<script type="text/javascript">
 		window.location = "<?php echo esc_js( $redirect ); ?>";

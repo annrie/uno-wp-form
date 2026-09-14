@@ -1,10 +1,10 @@
 /**
- * uno_wp_form_repeatable
+ * unomoon_form_repeatable
  * Created: August 31, 2014
  */
 jQuery( function( $ ) {
 
-	$.fn.uno_wp_form_repeatable = function( config ) {
+	$.fn.unomoon_form_repeatable = function( config ) {
 		var defaults = {
 			label_field : '.open-btn span',
 			open_btn    : '.open-btn b',

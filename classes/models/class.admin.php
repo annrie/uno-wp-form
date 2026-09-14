@@ -1,14 +1,14 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
 /**
- * Uno_WP_Form_Admin
+ * Unomoon_Form_Admin
  */
-class Uno_WP_Form_Admin {
+class Unomoon_Form_Admin {
 
 	/**
 	 * Return all forms.
@@ -18,7 +18,7 @@ class Uno_WP_Form_Admin {
 	public function get_forms() {
 		return get_posts(
 			array(
-				'post_type'      => UWF_Config::NAME,
+				'post_type'      => Unomoon_Form_Config::NAME,
 				'posts_per_page' => -1,
 			)
 		);
@@ -33,7 +33,7 @@ class Uno_WP_Form_Admin {
 		$forms_using_database = array();
 		$forms                = $this->get_forms();
 		foreach ( $forms as $form ) {
-			$Setting = new Uno_WP_Form_Setting( $form->ID );
+			$Setting = new Unomoon_Form_Setting( $form->ID );
 			if ( ! $Setting->get( 'usedb' ) ) {
 				continue;
 			}

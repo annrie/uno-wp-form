@@ -1,6 +1,6 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
@@ -9,17 +9,17 @@
 <div class="wrap">
 	<?php $post_id = preg_replace( '/^(.+_)(\d+)$/', '$2', $post_type ); ?>
 	<h2>
-		<?php esc_html_e( 'Chart', 'uno-wp-form' ); ?>
+		<?php esc_html_e( 'Chart', 'unomoon-form' ); ?>
 		:
 		<?php echo esc_html( get_the_title( $post_id ) ); ?>
 	</h2>
 	<form method="post" action="">
 		<?php
-		wp_nonce_field( UWF_Config::NAME . '-chart-action', UWF_Config::NAME . '-chart-nonce-field' );
+		wp_nonce_field( Unomoon_Form_Config::NAME . '-chart-action', Unomoon_Form_Config::NAME . '-chart-nonce-field' );
 		?>
-		<div id="<?php echo esc_attr( UWF_Config::NAME . '_chart' ); ?>" class="postbox">
+		<div id="<?php echo esc_attr( Unomoon_Form_Config::NAME . '_chart' ); ?>" class="postbox">
 			<div class="inside">
-				<b class="add-btn"><?php esc_html_e( 'Add Chart', 'uno-wp-form' ); ?></b>
+				<b class="add-btn"><?php esc_html_e( 'Add Chart', 'unomoon-form' ); ?></b>
 				<div class="repeatable-boxes">
 					<?php foreach ( $postdata as $key => $value ) : ?>
 					<div class="repeatable-box"
@@ -31,20 +31,20 @@
 						<div class="remove-btn"><b>×</b></div>
 						<div class="open-btn"><span><?php echo esc_html( $value['target'] ); ?></span><b>▼</b></div>
 						<div class="repeatable-box-content">
-							<?php esc_html_e( 'Item that create chart', 'uno-wp-form' ); ?>
-							<select class="targetKey" name="<?php echo esc_attr( sprintf( '%s-chart-%s[chart][%s][target]', UWF_Config::NAME, $post_type, $key ) ); ?>">
-								<option value=""><?php esc_html_e( 'Select this.', 'uno-wp-form' ); ?></option>
+							<?php esc_html_e( 'Item that create chart', 'unomoon-form' ); ?>
+							<select class="targetKey" name="<?php echo esc_attr( sprintf( '%s-chart-%s[chart][%s][target]', Unomoon_Form_Config::NAME, $post_type, $key ) ); ?>">
+								<option value=""><?php esc_html_e( 'Select this.', 'unomoon-form' ); ?></option>
 								<?php foreach ( $custom_keys as $custom_key_name => $custom_key_value ) : ?>
 								<option value="<?php echo esc_attr( $custom_key_name ); ?>" <?php selected( $value['target'], $custom_key_name ); ?>><?php echo esc_html( $custom_key_name ); ?></option>
 								<?php endforeach; ?>
 							</select>
 							<br />
-							<?php esc_html_e( 'Chart type', 'uno-wp-form' ); ?>
-							<select name="<?php echo esc_attr( sprintf( '%s-chart-%s[chart][%s][chart]', UWF_Config::NAME, $post_type, $key ) ); ?>">
+							<?php esc_html_e( 'Chart type', 'unomoon-form' ); ?>
+							<select name="<?php echo esc_attr( sprintf( '%s-chart-%s[chart][%s][chart]', Unomoon_Form_Config::NAME, $post_type, $key ) ); ?>">
 								<?php
 								$chart_options = array(
-									'pie' => esc_html__( 'Pie chart', 'uno-wp-form' ),
-									'bar' => esc_html__( 'Bar chart', 'uno-wp-form' ),
+									'pie' => esc_html__( 'Pie chart', 'unomoon-form' ),
+									'bar' => esc_html__( 'Bar chart', 'unomoon-form' ),
 								);
 								foreach ( $chart_options as $chart_option_key => $chart_option ) {
 									printf(
@@ -57,16 +57,16 @@
 								?>
 							</select>
 							<br />
-							<?php esc_html_e( 'Separator string (If the check box. If the separator attribute is not set to ",")', 'uno-wp-form' ); ?>
-							<input type="text" name="<?php echo esc_attr( sprintf( '%s-chart-%s[chart][%s][separator]', UWF_Config::NAME, $post_type, $key ) ); ?>" value="<?php echo esc_attr( $value['separator'] ); ?>" size="5" />
+							<?php esc_html_e( 'Separator string (If the check box. If the separator attribute is not set to ",")', 'unomoon-form' ); ?>
+							<input type="text" name="<?php echo esc_attr( sprintf( '%s-chart-%s[chart][%s][separator]', Unomoon_Form_Config::NAME, $post_type, $key ) ); ?>" value="<?php echo esc_attr( $value['separator'] ); ?>" size="5" />
 						<!-- end .repeatable-box-content --></div>
 					<!-- end .repeatable-box --></div>
 					<?php endforeach; ?>
 				<!-- end .repeatable-boxes --></div>
-				<input type="hidden" name="<?php echo esc_attr( sprintf( '%s-formkey', UWF_Config::NAME ) ); ?>" value="<?php echo esc_attr( $post_type ); ?>" />
+				<input type="hidden" name="<?php echo esc_attr( sprintf( '%s-formkey', Unomoon_Form_Config::NAME ) ); ?>" value="<?php echo esc_attr( $post_type ); ?>" />
 				<?php submit_button(); ?>
 			<!-- end .inside --></div>
-		<!-- end #uno-wp-form_chart --></div>
+		<!-- end #unomoon-form_chart --></div>
 	</form>
 
 	<?php
@@ -81,9 +81,9 @@
 			'<h3>%s <span style="font-weight:normal;font-size:14px">( %s: %d )</span></h3>
 			<div class="%s" style="width: 100%%; max-width: 800px"></div>',
 			esc_html( $chart['target'] ),
-			esc_html__( 'The number of inquiries', 'uno-wp-form' ),
+			esc_html__( 'The number of inquiries', 'unomoon-form' ),
 			count( $form_posts ),
-			esc_attr( UWF_Config::NAME . '-chart-div-' . $postdata_key )
+			esc_attr( Unomoon_Form_Config::NAME . '-chart-div-' . $postdata_key )
 		);
 	}
 
@@ -137,12 +137,12 @@
 	?>
 	<script>
 	google.load( 'visualization', 1, { packages:['corechart'] } );
-	google.setOnLoadCallback( unoformDrawCharts );
-	function unoformDrawCharts() {
+	google.setOnLoadCallback( unomoonformDrawCharts );
+	function unomoonformDrawCharts() {
 		jQuery( function( $ ) {
 			<?php foreach ( $chart_data as $postdata_key => $chart ) : ?>
-			$( '.<?php echo esc_js( UWF_Config::NAME . '-chart-div-' . $postdata_key ); ?>' )
-				.uno_wp_form_google_chart( {
+			$( '.<?php echo esc_js( Unomoon_Form_Config::NAME . '-chart-div-' . $postdata_key ); ?>' )
+				.unomoon_form_google_chart( {
 					chart: <?php echo json_encode( $chart['chart'] ); ?>,
 					data : <?php echo json_encode( $chart['data'] ); ?>
 				} );

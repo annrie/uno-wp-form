@@ -1,14 +1,14 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
 /**
- * Uno_WP_Form_Abstract_Form_Field
+ * Unomoon_Form_Abstract_Form_Field
  */
-abstract class Uno_WP_Form_Abstract_Form_Field {
+abstract class Unomoon_Form_Abstract_Form_Field {
 
 	/**
 	 * Shortcode name.
@@ -25,12 +25,12 @@ abstract class Uno_WP_Form_Abstract_Form_Field {
 	protected $display_name;
 
 	/**
-	 * @var Uno_WP_Form_Form
+	 * @var Unomoon_Form_Form
 	 */
 	protected $Form;
 
 	/**
-	 * @var Uno_WP_Form_Data
+	 * @var Unomoon_Form_Data
 	 */
 	protected $Data;
 
@@ -76,26 +76,26 @@ abstract class Uno_WP_Form_Abstract_Form_Field {
 	public function __construct() {
 		$this->_set_names();
 		$this->_set_defaults();
-		add_filter( 'unoform_form_fields', array( $this, '_unoform_form_fields' ) );
-		add_filter( 'unoform_tag_generator_group', array( $this, '_unoform_tag_generator_group' ) );
+		add_filter( 'unomoonform_form_fields', array( $this, '_unomoonform_form_fields' ) );
+		add_filter( 'unomoonform_tag_generator_group', array( $this, '_unomoonform_tag_generator_group' ) );
 	}
 
 	/**
 	 * Add form field shortcodes.
 	 *
-	 * @param Uno_WP_Form_Form $Form     Uno_WP_Form_Form object.
+	 * @param Unomoon_Form_Form $Form     Unomoon_Form_Form object.
 	 * @param string          $form_key Form key.
 	 * @param string          $view_flg View flg.
 	 * @return boolean
 	 */
-	public function initialize( Uno_WP_Form_Form $Form, $form_key, $view_flg ) {
+	public function initialize( Unomoon_Form_Form $Form, $form_key, $view_flg ) {
 		if ( empty( $this->shortcode_name ) ) {
 			return false;
 		}
 
 		$this->Form     = $Form;
 		$this->form_key = $form_key;
-		$this->Data     = Uno_WP_Form_Data::connect( $form_key );
+		$this->Data     = Unomoon_Form_Data::connect( $form_key );
 
 		switch ( $view_flg ) {
 			case 'input':
@@ -167,14 +167,14 @@ abstract class Uno_WP_Form_Abstract_Form_Field {
 		foreach ( $this->Data->get_validation_error( $name ) as $rule => $error ) {
 			$rule  = strtolower( $rule );
 			$error = apply_filters(
-				'unoform_error_message_' . $this->form_key,
+				'unomoonform_error_message_' . $this->form_key,
 				$error,
 				$name,
 				$rule
 			);
 
 			$error_html .= apply_filters(
-				'unoform_error_message_html',
+				'unomoonform_error_message_html',
 				$start_tag . esc_html( $error ) . $end_tag,
 				$error,
 				$start_tag,
@@ -186,7 +186,7 @@ abstract class Uno_WP_Form_Abstract_Form_Field {
 		}
 
 		if ( $error_html ) {
-			return apply_filters( 'unoform_error_message_wrapper', $error_html, $this->form_key );
+			return apply_filters( 'unomoonform_error_message_wrapper', $error_html, $this->form_key );
 		}
 	}
 
@@ -209,7 +209,7 @@ abstract class Uno_WP_Form_Abstract_Form_Field {
 
 		if ( array_key_exists( 'value', $this->defaults ) && isset( $atts['name'] ) && ! isset( $atts['value'] ) ) {
 			$atts['value'] = apply_filters(
-				'unoform_value_' . $this->form_key,
+				'unomoonform_value_' . $this->form_key,
 				$this->defaults['value'],
 				$atts['name']
 			);
@@ -275,7 +275,7 @@ abstract class Uno_WP_Form_Abstract_Form_Field {
 		}
 
 		if ( $this->form_key ) {
-			$children = apply_filters( 'unoform_choices_' . $this->form_key, $children, $this->atts );
+			$children = apply_filters( 'unomoonform_choices_' . $this->form_key, $children, $this->atts );
 		}
 
 		return $children;
@@ -285,25 +285,25 @@ abstract class Uno_WP_Form_Abstract_Form_Field {
 	 * Generate tag generator.
 	 */
 	public function add_tag_generator() {
-		add_action( 'unoform_tag_generator_dialog', array( $this, '_unoform_tag_generator_dialog' ) );
+		add_action( 'unomoonform_tag_generator_dialog', array( $this, '_unomoonform_tag_generator_dialog' ) );
 
 		if ( 'other' !== $this->type ) {
-			$tag = 'unoform_tag_generator_' . $this->type . '_option';
+			$tag = 'unomoonform_tag_generator_' . $this->type . '_option';
 		} else {
-			$tag = 'unoform_tag_generator_option';
+			$tag = 'unomoonform_tag_generator_option';
 		}
 
-		add_action( $tag, array( $this, '_unoform_tag_generator_option' ) );
+		add_action( $tag, array( $this, '_unomoonform_tag_generator_option' ) );
 	}
 
 	/**
 	 * Display tag generator wrapper.
 	 */
-	public function _unoform_tag_generator_dialog() {
+	public function _unomoonform_tag_generator_dialog() {
 		?>
-		<div id="dialog-<?php echo esc_attr( $this->shortcode_name ); ?>" class="unoform-dialog" title="<?php echo esc_attr( $this->shortcode_name ); ?>">
+		<div id="dialog-<?php echo esc_attr( $this->shortcode_name ); ?>" class="unomoonform-dialog" title="<?php echo esc_attr( $this->shortcode_name ); ?>">
 			<div class="form">
-				<?php $this->unoform_tag_generator_dialog( $this->defaults ); ?>
+				<?php $this->unomoonform_tag_generator_dialog( $this->defaults ); ?>
 			</div>
 		</div>
 		<?php
@@ -313,13 +313,13 @@ abstract class Uno_WP_Form_Abstract_Form_Field {
 	 * Display tag generator dialog.
 	 * Overwrite required for each child class.
 	 */
-	public function unoform_tag_generator_dialog() {
+	public function unomoonform_tag_generator_dialog() {
 	}
 
 	/**
 	 * Display tag generator selectbox.
 	 */
-	public function _unoform_tag_generator_option() {
+	public function _unomoonform_tag_generator_option() {
 		?>
 		<option value="<?php echo esc_attr( $this->shortcode_name ); ?>"><?php echo esc_html( $this->display_name ); ?></option>
 		<?php
@@ -328,10 +328,10 @@ abstract class Uno_WP_Form_Abstract_Form_Field {
 	/**
 	 * Generate array of form fields.
 	 *
-	 * @param array $form_fields Array of Uno_WP_Form_Abstract_Form_Field.
+	 * @param array $form_fields Array of Unomoon_Form_Abstract_Form_Field.
 	 * @return array
 	 */
-	public function _unoform_form_fields( array $form_fields ) {
+	public function _unomoonform_form_fields( array $form_fields ) {
 		return array_merge( $form_fields, array( $this->shortcode_name => $this ) );
 	}
 
@@ -341,7 +341,7 @@ abstract class Uno_WP_Form_Abstract_Form_Field {
 	 * @param array $group Tag generator group.
 	 * @return array
 	 */
-	public function _unoform_tag_generator_group( $group ) {
+	public function _unomoonform_tag_generator_group( $group ) {
 		$group[ $this->type ] = $this->type;
 		return $group;
 	}

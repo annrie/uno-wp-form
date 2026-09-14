@@ -1,11 +1,11 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
-class Uno_WP_Form_Directory {
+class Unomoon_Form_Directory {
 
 	/**
 	 * Return the path to the directory where the files are saved.
@@ -15,7 +15,7 @@ class Uno_WP_Form_Directory {
 	 */
 	public static function get( $is_create_htaccess = true ) {
 		$upload_dir = wp_get_upload_dir();
-		$save_dir   = path_join( $upload_dir['basedir'], UWF_Config::NAME . '_uploads' );
+		$save_dir   = path_join( $upload_dir['basedir'], Unomoon_Form_Config::NAME . '_uploads' );
 
 		$is_created = wp_mkdir_p( $save_dir ) ? $save_dir : false;
 		if ( $is_created && $is_create_htaccess ) {
@@ -32,15 +32,15 @@ class Uno_WP_Form_Directory {
 	 * @throws \RuntimeException When directory name is not token value.
 	 */
 	public static function generate_user_dirpath( $form_id ) {
-		$saved_token = Uno_WP_Form_Csrf::saved_token();
-		$saved_token = $saved_token ? $saved_token : Uno_WP_Form_Csrf::token();
+		$saved_token = Unomoon_Form_Csrf::saved_token();
+		$saved_token = $saved_token ? $saved_token : Unomoon_Form_Csrf::token();
 
 		if ( ! preg_match( '|^[a-z0-9]+$|', $saved_token ) ) {
-			throw new \RuntimeException( '[Uno WP Form] Failed to create user directory.' );
+			throw new \RuntimeException( '[Unomoon Form] Failed to create user directory.' );
 		}
 
 		if ( ! preg_match( '/^\d+$/', (string) $form_id ) ) {
-			throw new \RuntimeException( '[Uno WP Form] Invalid form ID.' );
+			throw new \RuntimeException( '[Unomoon Form] Invalid form ID.' );
 		}
 
 		$user_dir = path_join( static::get(), $saved_token );
@@ -59,14 +59,14 @@ class Uno_WP_Form_Directory {
 	 */
 	public static function generate_user_file_dirpath( $form_id, $name ) {
 		if ( ! static::_is_valid_path_segment( $name ) ) {
-			throw new \RuntimeException( '[Uno WP Form] Invalid file reference requested.' );
+			throw new \RuntimeException( '[Unomoon Form] Invalid file reference requested.' );
 		}
 
 		$user_dir      = static::generate_user_dirpath( $form_id );
 		$user_file_dir = path_join( $user_dir, $name );
 
 		if ( ! static::_is_within_expected_dir_candidate( $form_id, $user_file_dir ) ) {
-			throw new \RuntimeException( '[Uno WP Form] Invalid file reference requested.' );
+			throw new \RuntimeException( '[Unomoon Form] Invalid file reference requested.' );
 		}
 
 		return $user_file_dir;
@@ -153,7 +153,7 @@ class Uno_WP_Form_Directory {
 		}
 
 		if ( ! static::_is_valid_path_segment( $filename ) ) {
-			throw new \RuntimeException( '[Uno WP Form] Invalid file reference requested.' );
+			throw new \RuntimeException( '[Unomoon Form] Invalid file reference requested.' );
 		}
 
 		$user_file_dir = static::generate_user_file_dirpath( $form_id, $name );
@@ -163,26 +163,26 @@ class Uno_WP_Form_Directory {
 
 		$filepath = path_join( $user_file_dir, $filename );
 		if ( ! static::_is_within_expected_dir_candidate( $form_id, $filepath ) ) {
-			throw new \RuntimeException( '[Uno WP Form] Invalid file reference requested.' );
+			throw new \RuntimeException( '[Unomoon Form] Invalid file reference requested.' );
 		}
 
 		$filepath      = wp_normalize_path( $filepath );
 		$user_file_dir = trailingslashit( wp_normalize_path( $user_file_dir ) );
 
 		if ( 0 !== strpos( $filepath, $user_file_dir ) ) {
-			throw new \RuntimeException( '[Uno WP Form] Invalid file reference requested.' );
+			throw new \RuntimeException( '[Unomoon Form] Invalid file reference requested.' );
 		}
 
 		if ( str_contains( $filepath, '../' ) || str_contains( $filepath, '..' . DIRECTORY_SEPARATOR ) ) {
-			throw new \RuntimeException( '[Uno WP Form] Invalid file reference requested.' );
+			throw new \RuntimeException( '[Unomoon Form] Invalid file reference requested.' );
 		}
 
 		if ( str_contains( $filepath, './' ) || str_contains( $filepath, '.' . DIRECTORY_SEPARATOR ) ) {
-			throw new \RuntimeException( '[Uno WP Form] Invalid file reference requested.' );
+			throw new \RuntimeException( '[Unomoon Form] Invalid file reference requested.' );
 		}
 
 		if ( strstr( $filepath, "\0" ) ) {
-			throw new \RuntimeException( '[Uno WP Form] Invalid file reference requested.' );
+			throw new \RuntimeException( '[Unomoon Form] Invalid file reference requested.' );
 		}
 
 		return $filepath;
@@ -250,8 +250,8 @@ class Uno_WP_Form_Directory {
 	 * @return string|false
 	 */
 	protected static function _get_expected_user_dir( $form_id, $base_dir ) {
-		$saved_token = Uno_WP_Form_Csrf::saved_token();
-		$saved_token = $saved_token ? $saved_token : Uno_WP_Form_Csrf::token();
+		$saved_token = Unomoon_Form_Csrf::saved_token();
+		$saved_token = $saved_token ? $saved_token : Unomoon_Form_Csrf::token();
 		if ( ! preg_match( '|^[a-z0-9]+$|', $saved_token ) ) {
 			return false;
 		}
@@ -312,11 +312,11 @@ class Uno_WP_Form_Directory {
 
 		if ( $fileinfo->isFile() && is_writable( $file ) ) {
 			if ( ! unlink( $file ) ) {
-				throw new \RuntimeException( sprintf( '[Uno WP Form] Can\'t remove file: %1$s.', $file ) );
+				throw new \RuntimeException( sprintf( '[Unomoon Form] Can\'t remove file: %1$s.', $file ) );
 			}
 		} elseif ( $fileinfo->isDir() && is_writable( $file ) ) {
 			if ( ! rmdir( $file ) ) {
-				throw new \RuntimeException( sprintf( '[Uno WP Form] Can\'t remove directory: %1$s.', $file ) );
+				throw new \RuntimeException( sprintf( '[Unomoon Form] Can\'t remove directory: %1$s.', $file ) );
 			}
 		}
 
@@ -360,15 +360,15 @@ class Uno_WP_Form_Directory {
 
 		$handle = fopen( $htaccess, 'w' );
 		if ( ! $handle ) {
-			throw new \RuntimeException( '[Uno WP Form] .htaccess can\'t create.' );
+			throw new \RuntimeException( '[Unomoon Form] .htaccess can\'t create.' );
 		}
 
 		if ( false === fwrite( $handle, "Deny from all\n" ) ) {
-			throw new \RuntimeException( '[Uno WP Form] .htaccess can\'t write.' );
+			throw new \RuntimeException( '[Unomoon Form] .htaccess can\'t write.' );
 		}
 
 		if ( ! fclose( $handle ) ) {
-			throw new \RuntimeException( '[Uno WP Form] .htaccess can\'t close.' );
+			throw new \RuntimeException( '[Unomoon Form] .htaccess can\'t close.' );
 		}
 
 		return true;

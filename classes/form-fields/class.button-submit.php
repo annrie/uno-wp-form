@@ -1,14 +1,14 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
 /**
- * Uno_WP_Form_Field_Button_Submit
+ * Unomoon_Form_Field_Button_Submit
  */
-class Uno_WP_Form_Field_Button_Submit extends Uno_WP_Form_Abstract_Form_Field {
+class Unomoon_Form_Field_Button_Submit extends Unomoon_Form_Abstract_Form_Field {
 
 	/**
 	 * Types of form type.
@@ -26,8 +26,8 @@ class Uno_WP_Form_Field_Button_Submit extends Uno_WP_Form_Abstract_Form_Field {
 	 */
 	protected function set_names() {
 		return array(
-			'shortcode_name' => 'unoform_bsubmit',
-			'display_name'   => __( 'Submit Button', 'uno-wp-form' ),
+			'shortcode_name' => 'unomoonform_bsubmit',
+			'display_name'   => __( 'Submit Button', 'unomoon-form' ),
 		);
 	}
 
@@ -41,7 +41,7 @@ class Uno_WP_Form_Field_Button_Submit extends Uno_WP_Form_Abstract_Form_Field {
 			'name'            => '',
 			'class'           => null,
 			'value'           => 'send',
-			'element_content' => __( 'Send', 'uno-wp-form' ),
+			'element_content' => __( 'Send', 'unomoon-form' ),
 			'display_input'   => 'false',
 		);
 	}
@@ -88,10 +88,10 @@ class Uno_WP_Form_Field_Button_Submit extends Uno_WP_Form_Abstract_Form_Field {
 	 *
 	 * @param array $options Options.
 	 */
-	public function unoform_tag_generator_dialog( array $options = array() ) {
+	public function unomoonform_tag_generator_dialog( array $options = array() ) {
 		?>
 		<p>
-			<strong>name<span class="uwf_require">*</span></strong>
+			<strong>name<span class="unomoonform_require">*</span></strong>
 			<?php $name = $this->get_value_for_generator( 'name', $options ); ?>
 			<input type="text" name="name" value="<?php echo esc_attr( $name ); ?>" />
 		</p>
@@ -101,20 +101,20 @@ class Uno_WP_Form_Field_Button_Submit extends Uno_WP_Form_Abstract_Form_Field {
 			<input type="text" name="class" value="<?php echo esc_attr( $class ); ?>" />
 		</p>
 		<p>
-			<strong><?php esc_html_e( 'Value', 'uno-wp-form' ); ?></strong>
+			<strong><?php esc_html_e( 'Value', 'unomoon-form' ); ?></strong>
 			<?php $value = $this->get_value_for_generator( 'value', $options ); ?>
 			<input type="text" name="value" value="<?php echo esc_attr( $value ); ?>" />
 		</p>
 		<p>
-			<strong><?php esc_html_e( 'String on the button', 'uno-wp-form' ); ?></strong>
+			<strong><?php esc_html_e( 'String on the button', 'unomoon-form' ); ?></strong>
 			<?php $element_content = $this->get_value_for_generator( 'element_content', $options ); ?>
 			<input type="text" name="element_content" value="<?php echo esc_attr( $element_content ); ?>" />
 		</p>
 		<p>
-			<strong><?php esc_html_e( 'Display on input page', 'uno-wp-form' ); ?></strong>
+			<strong><?php esc_html_e( 'Display on input page', 'unomoon-form' ); ?></strong>
 			<?php $display_input = $this->get_value_for_generator( 'display_input', $options ); ?>
 			<input type="checkbox" name="display_input" value="true" <?php checked( 'true', $display_input ); ?> />
-			<?php esc_html_e( 'Display', 'uno-wp-form' ); ?>
+			<?php esc_html_e( 'Display', 'unomoon-form' ); ?>
 		</p>
 		<?php
 	}

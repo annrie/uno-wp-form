@@ -1,14 +1,14 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
 /**
- * Uno_WP_Form_Validation
+ * Unomoon_Form_Validation
  */
-class Uno_WP_Form_Validation {
+class Unomoon_Form_Validation {
 
 	/**
 	 * @var string
@@ -16,12 +16,12 @@ class Uno_WP_Form_Validation {
 	protected $form_key;
 
 	/**
-	 * @var Uno_WP_Form_Data
+	 * @var Unomoon_Form_Data
 	 */
 	protected $Data;
 
 	/**
-	 * @var Uno_WP_Form_Setting
+	 * @var Unomoon_Form_Setting
 	 */
 	protected $Setting;
 
@@ -39,9 +39,9 @@ class Uno_WP_Form_Validation {
 	 */
 	public function __construct( $form_key ) {
 		$this->form_key = $form_key;
-		$this->Data     = Uno_WP_Form_Data::connect( $form_key );
-		$form_id        = UWF_Functions::get_form_id_from_form_key( $form_key );
-		$this->Setting  = new Uno_WP_Form_Setting( $form_id );
+		$this->Data     = Unomoon_Form_Data::connect( $form_key );
+		$form_id        = Unomoon_Form_Functions::get_form_id_from_form_key( $form_key );
+		$this->Setting  = new Unomoon_Form_Setting( $form_id );
 
 		$this->_set_rules();
 	}
@@ -67,7 +67,7 @@ class Uno_WP_Form_Validation {
 			}
 		}
 
-		$Akismet       = new Uno_WP_Form_Akismet();
+		$Akismet       = new Unomoon_Form_Akismet();
 		$akismet_check = $Akismet->is_valid(
 			$this->Setting->get( 'akismet_author' ),
 			$this->Setting->get( 'akismet_author_email' ),
@@ -75,11 +75,11 @@ class Uno_WP_Form_Validation {
 			$this->Data
 		);
 		if ( $akismet_check ) {
-			$this->set_rule( UWF_Config::AKISMET, 'akismet_check' );
+			$this->set_rule( Unomoon_Form_Config::AKISMET, 'akismet_check' );
 		}
 
 		apply_filters(
-			'unoform_validation_' . $this->form_key,
+			'unomoonform_validation_' . $this->form_key,
 			$this,
 			$this->Data->gets(),
 			clone $this->Data
@@ -92,7 +92,7 @@ class Uno_WP_Form_Validation {
 	 * @param string $key     Target field name.
 	 * @param string $rule    Validation name.
 	 * @param array  $options Options.
-	 * @return Uno_WP_Form_Validation
+	 * @return Unomoon_Form_Validation
 	 */
 	public function set_rule( $key, $rule, array $options = array() ) {
 		$rules = array(
@@ -161,9 +161,9 @@ class Uno_WP_Form_Validation {
 	 * @return boolean
 	 */
 	public function check() {
-		UWF_Functions::deprecated_message(
-			'Uno_WP_Form_Validation::check()',
-			'Uno_WP_Form_Validation::is_valid()'
+		Unomoon_Form_Functions::deprecated_message(
+			'Unomoon_Form_Validation::check()',
+			'Unomoon_Form_Validation::is_valid()'
 		);
 
 		return $this->is_valid();
@@ -194,22 +194,22 @@ class Uno_WP_Form_Validation {
 		$key
 		// phpcs:enable
 	) {
-		UWF_Functions::deprecated_message(
-			'Uno_WP_Form_Validation::single_check()',
-			'Uno_WP_Form_Validation::is_valid_field()'
+		Unomoon_Form_Functions::deprecated_message(
+			'Unomoon_Form_Validation::single_check()',
+			'Unomoon_Form_Validation::is_valid_field()'
 		);
 
 		return $this->is_valid_field();
 	}
 
 	/**
-	 * Set varidation errors into Uno_WP_Form_Data.
+	 * Set varidation errors into Unomoon_Form_Data.
 	 *
 	 * @param string $key   Target field name.
 	 * @param array  $rules Rules.
 	 */
 	protected function _is_valid( $key, array $rules ) {
-		$Validation_Rules = Uno_WP_Form_Validation_Rules::instantiation( $this->form_key );
+		$Validation_Rules = Unomoon_Form_Validation_Rules::instantiation( $this->form_key );
 		$validation_rules = $Validation_Rules->get_validation_rules();
 
 		foreach ( $rules as $rule_set ) {

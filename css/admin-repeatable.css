@@ -4,55 +4,55 @@
  * バリデーションルール
  * チャート設定
  */
-#uno-wp-form_validation .repeatable-box,
-#uno-wp-form_chart .repeatable-box {
+#unomoon-form_validation .repeatable-box,
+#unomoon-form_chart .repeatable-box {
 	background: #fff;
 	border: #ddd solid 1px;
 	border-radius: 5px;
 	margin: 10px 0;
 	padding: 10px;
 }
-#uno-wp-form_validation .repeatable-box .repeatable-box-content,
-#uno-wp-form_chart .repeatable-box .repeatable-box-content {
+#unomoon-form_validation .repeatable-box .repeatable-box-content,
+#unomoon-form_chart .repeatable-box .repeatable-box-content {
 	border-top: #ddd solid 1px;
 	margin: 10px 0 0;
 	padding: 10px 0 0;
 	display: none;
 }
-#uno-wp-form_validation .repeatable-box table,
-#uno-wp-form_chart .repeatable-box table {
+#unomoon-form_validation .repeatable-box table,
+#unomoon-form_chart .repeatable-box table {
 	font-size: 100%;
 	margin: 10px 0 0;
 }
-#uno-wp-form_validation .repeatable-box table td,
-#uno-wp-form_chart .repeatable-box table td {
+#unomoon-form_validation .repeatable-box table td,
+#unomoon-form_chart .repeatable-box table td {
 	padding: 0 10px 5px 0;
 	overflow: hidden;
 	zoom: 1;
 }
-#uno-wp-form_validation .repeatable-box table td label,
-#uno-wp-form_chart .repeatable-box table td label {
+#unomoon-form_validation .repeatable-box table td label,
+#unomoon-form_chart .repeatable-box table td label {
 	margin: 0 10px 5px 0;
 	display: block;
 	float: left;
 }
-#uno-wp-form_validation .repeatable-box table td label input ,
-#uno-wp-form_chart .repeatable-box table td label input{
+#unomoon-form_validation .repeatable-box table td label input ,
+#unomoon-form_chart .repeatable-box table td label input{
 	margin: 0 2px 0 0;
 }
-#uno-wp-form_validation .repeatable-box table td table,
-#uno-wp-form_chart .repeatable-box table td table {
+#unomoon-form_validation .repeatable-box table td table,
+#unomoon-form_chart .repeatable-box table td table {
 	clear: both;
 	margin: 0;
 }
-#uno-wp-form_validation .repeatable-box table td table td,
-#uno-wp-form_chart .repeatable-box table td table td {
+#unomoon-form_validation .repeatable-box table td table td,
+#unomoon-form_chart .repeatable-box table td table td {
 	padding-bottom: 0;
 }
-#uno-wp-form_chart .inside {
+#unomoon-form_chart .inside {
 	margin-bottom: 0;
 }
-#uno-wp-form_chart .inside .submit {
+#unomoon-form_chart .inside .submit {
 	margin-top: 10px;
 	padding: 5px 0;
 }
@@ -60,8 +60,8 @@
 /**
  * バリデーションルールを追加
  */
-#uno-wp-form_validation b.add-btn,
-#uno-wp-form_chart b.add-btn {
+#unomoon-form_validation b.add-btn,
+#unomoon-form_chart b.add-btn {
 	cursor: pointer;
 	margin: 2px 1px 4px;
 	line-height: 18px;
@@ -73,25 +73,25 @@
 	border-radius: 3px;
 	background: #f5f5f5;
 }
-#uno-wp-form_validation b.add-btn:hover,
-#uno-wp-form_chart b.add-btn:hover {
+#unomoon-form_validation b.add-btn:hover,
+#unomoon-form_chart b.add-btn:hover {
 	background: #eee;
 }
 
 /**
  * 開閉ボタン
  */
-#uno-wp-form_validation .repeatable-box .open-btn,
-#uno-wp-form_chart .repeatable-box .open-btn {
+#unomoon-form_validation .repeatable-box .open-btn,
+#unomoon-form_chart .repeatable-box .open-btn {
 	overflow: hidden;
 	zoom: 1;
 }
-#uno-wp-form_validation .repeatable-box .open-btn span,
-#uno-wp-form_chart .repeatable-box .open-btn span {
+#unomoon-form_validation .repeatable-box .open-btn span,
+#unomoon-form_chart .repeatable-box .open-btn span {
 	font-weight: bold;
 }
-#uno-wp-form_validation .repeatable-box .open-btn b,
-#uno-wp-form_chart .repeatable-box .open-btn b {
+#unomoon-form_validation .repeatable-box .open-btn b,
+#unomoon-form_chart .repeatable-box .open-btn b {
 	cursor: pointer;
 	display: block;
 	float: right;
@@ -101,8 +101,8 @@
 /**
  * ソートボタン
  */
-#uno-wp-form_validation .repeatable-box .sortable-icon-handle,
-#uno-wp-form_chart .repeatable-box .sortable-icon-handle {
+#unomoon-form_validation .repeatable-box .sortable-icon-handle,
+#unomoon-form_chart .repeatable-box .sortable-icon-handle {
 	background: url( ../images/handle.png ) no-repeat;
 	cursor: move;
 	float: left;
@@ -113,8 +113,8 @@
 	position: relative;
 	top: 4px;
 }
-#uno-wp-form_validation .repeatable-box .remove-btn b,
-#uno-wp-form_chart .repeatable-box .remove-btn b {
+#unomoon-form_validation .repeatable-box .remove-btn b,
+#unomoon-form_chart .repeatable-box .remove-btn b {
 	cursor: pointer;
 	display: block;
 }
@@ -122,13 +122,13 @@
 /**
  * 削除ボタン
  */
-#uno-wp-form_validation .repeatable-box .remove-btn,
-#uno-wp-form_chart .repeatable-box .remove-btn {
+#unomoon-form_validation .repeatable-box .remove-btn,
+#unomoon-form_chart .repeatable-box .remove-btn {
 	float: left;
 	margin: 0 5px 0 0;
 }
-#uno-wp-form_validation .repeatable-box .remove-btn b,
-#uno-wp-form_chart .repeatable-box .remove-btn b {
+#unomoon-form_validation .repeatable-box .remove-btn b,
+#unomoon-form_chart .repeatable-box .remove-btn b {
 	cursor: pointer;
 	display: block;
 }

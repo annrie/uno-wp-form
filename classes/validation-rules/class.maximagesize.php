@@ -1,14 +1,14 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
 /**
- * Uno_WP_Form_Validation_Rule_MaxImageSize
+ * Unomoon_Form_Validation_Rule_MaxImageSize
  */
-class Uno_WP_Form_Validation_Rule_MaxImageSize extends Uno_WP_Form_Abstract_Validation_Rule {
+class Unomoon_Form_Validation_Rule_MaxImageSize extends Unomoon_Form_Abstract_Validation_Rule {
 
 	/**
 	 * Validation rule name.
@@ -31,12 +31,12 @@ class Uno_WP_Form_Validation_Rule_MaxImageSize extends Uno_WP_Form_Abstract_Vali
 			return;
 		}
 
-		if ( ! UWF_Functions::is_numeric( $options['width'] ) || ! UWF_Functions::is_numeric( $options['width'] ) ) {
+		if ( ! Unomoon_Form_Functions::is_numeric( $options['width'] ) || ! Unomoon_Form_Functions::is_numeric( $options['width'] ) ) {
 			return;
 		}
 
-		$upload_file_keys = $this->Data->get_post_value_by_key( UWF_Config::UPLOAD_FILE_KEYS );
-		$upload_files     = $this->Data->get_post_value_by_key( UWF_Config::UPLOAD_FILES );
+		$upload_file_keys = $this->Data->get_post_value_by_key( Unomoon_Form_Config::UPLOAD_FILE_KEYS );
+		$upload_files     = $this->Data->get_post_value_by_key( Unomoon_Form_Config::UPLOAD_FILES );
 		$is_error         = false;
 
 		if ( ! is_array( $upload_file_keys ) ) {
@@ -52,8 +52,8 @@ class Uno_WP_Form_Validation_Rule_MaxImageSize extends Uno_WP_Form_Abstract_Vali
 			$filepath = $upload_files[ $name ]['tmp_name'];
 		} else {
 			// Check if uploaded
-			$form_id  = UWF_Functions::get_form_id_from_form_key( $this->Data->get_form_key() );
-			$filepath = Uno_WP_Form_Directory::generate_user_filepath( $form_id, $name, $value );
+			$form_id  = Unomoon_Form_Functions::get_form_id_from_form_key( $this->Data->get_form_key() );
+			$filepath = Unomoon_Form_Directory::generate_user_filepath( $form_id, $name, $value );
 		}
 
 		$imagesize = false;
@@ -68,7 +68,7 @@ class Uno_WP_Form_Validation_Rule_MaxImageSize extends Uno_WP_Form_Abstract_Vali
 		$defaults = array(
 			'width'   => 1,
 			'height'  => 1,
-			'message' => __( 'This image size is too big.', 'uno-wp-form' ),
+			'message' => __( 'This image size is too big.', 'unomoon-form' ),
 		);
 		$options  = array_merge( $defaults, $options );
 		if ( $is_error || ( is_array( $imagesize ) && ( $imagesize[0] > $options['width'] || $imagesize[1] > $options['height'] ) ) ) {
@@ -97,11 +97,11 @@ class Uno_WP_Form_Validation_Rule_MaxImageSize extends Uno_WP_Form_Abstract_Vali
 		?>
 		<table>
 			<tr>
-				<td><?php esc_html_e( 'Maximum image size', 'uno-wp-form' ); ?></td>
+				<td><?php esc_html_e( 'Maximum image size', 'unomoon-form' ); ?></td>
 				<td>
-					<input type="text" value="<?php echo esc_attr( $width ); ?>" size="4" name="<?php echo UWF_Config::NAME; ?>[validation][<?php echo $key; ?>][<?php echo esc_attr( $this->get_name() ); ?>][width]" />
+					<input type="text" value="<?php echo esc_attr( $width ); ?>" size="4" name="<?php echo Unomoon_Form_Config::NAME; ?>[validation][<?php echo $key; ?>][<?php echo esc_attr( $this->get_name() ); ?>][width]" />
 					&times;
-					<input type="text" value="<?php echo esc_attr( $height ); ?>" size="4" name="<?php echo UWF_Config::NAME; ?>[validation][<?php echo $key; ?>][<?php echo esc_attr( $this->get_name() ); ?>][height]" />
+					<input type="text" value="<?php echo esc_attr( $height ); ?>" size="4" name="<?php echo Unomoon_Form_Config::NAME; ?>[validation][<?php echo $key; ?>][<?php echo esc_attr( $this->get_name() ); ?>][height]" />
 				</td>
 			</tr>
 		</table>

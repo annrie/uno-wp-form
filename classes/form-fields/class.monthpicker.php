@@ -1,14 +1,14 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
 /**
- * Uno_WP_Form_Field_Monthpicker
+ * Unomoon_Form_Field_Monthpicker
  */
-class Uno_WP_Form_Field_Monthpicker extends Uno_WP_Form_Abstract_Form_Field {
+class Unomoon_Form_Field_Monthpicker extends Unomoon_Form_Abstract_Form_Field {
 
 	/**
 	 * Types of form type.
@@ -26,8 +26,8 @@ class Uno_WP_Form_Field_Monthpicker extends Uno_WP_Form_Abstract_Form_Field {
 	 */
 	protected function set_names() {
 		return array(
-			'shortcode_name' => 'unoform_monthpicker',
-			'display_name'   => __( 'Monthpicker', 'uno-wp-form' ),
+			'shortcode_name' => 'unomoonform_monthpicker',
+			'display_name'   => __( 'Monthpicker', 'unomoon-form' ),
 		);
 	}
 
@@ -66,20 +66,20 @@ class Uno_WP_Form_Field_Monthpicker extends Uno_WP_Form_Abstract_Form_Field {
 
 			wp_enqueue_style(
 				'jquery-ui-monthpicker',
-				UNO_WP_FORM_PLUGIN_URL . '/js/jquery-ui-month-picker/MonthPicker.min.css',
+				UNOMOON_FORM_PLUGIN_URL . '/js/jquery-ui-month-picker/MonthPicker.min.css',
 				array(),
 				$ui->ver
 			);
 
 			wp_enqueue_script(
 				'jquery-ui-monthpicker',
-				UNO_WP_FORM_PLUGIN_URL . '/js/jquery-ui-month-picker/MonthPicker.min.js',
+				UNOMOON_FORM_PLUGIN_URL . '/js/jquery-ui-month-picker/MonthPicker.min.js',
 				array( 'jquery', 'jquery-ui-button', 'jquery-ui-datepicker' ),
 				$ui->ver,
 				true
 		);
 
-		$Json_Parser      = new Uno_WP_Form_Json_Parser( $this->atts['js'] );
+		$Json_Parser      = new Unomoon_Form_Json_Parser( $this->atts['js'] );
 		$this->atts['js'] = $Json_Parser->create_json();
 		$js               = json_decode( $this->atts['js'], true );
 
@@ -90,7 +90,7 @@ class Uno_WP_Form_Field_Monthpicker extends Uno_WP_Form_Abstract_Form_Field {
 			)
 		);
 
-		$translate_monthpicker = apply_filters( 'unoform_translate_monthpicker_' . $this->form_key, true );
+		$translate_monthpicker = apply_filters( 'unomoonform_translate_monthpicker_' . $this->form_key, true );
 		if ( $translate_monthpicker && 'ja' === get_locale() ) {
 			$js = array_merge(
 				array(
@@ -147,10 +147,10 @@ class Uno_WP_Form_Field_Monthpicker extends Uno_WP_Form_Abstract_Form_Field {
 	 *
 	 * @param array $options Options.
 	 */
-	public function unoform_tag_generator_dialog( array $options = array() ) {
+	public function unomoonform_tag_generator_dialog( array $options = array() ) {
 		?>
 		<p>
-			<strong>name<span class="uwf_require">*</span></strong>
+			<strong>name<span class="unomoonform_require">*</span></strong>
 			<?php $name = $this->get_value_for_generator( 'name', $options ); ?>
 			<input type="text" name="name" value="<?php echo esc_attr( $name ); ?>" />
 		</p>
@@ -175,7 +175,7 @@ class Uno_WP_Form_Field_Monthpicker extends Uno_WP_Form_Abstract_Form_Field {
 			<input type="text" name="js" value="<?php echo esc_attr( $js ); ?>" />
 		</p>
 		<p>
-			<strong><?php esc_html_e( 'Default value', 'uno-wp-form' ); ?></strong>
+			<strong><?php esc_html_e( 'Default value', 'unomoon-form' ); ?></strong>
 			<?php $value = $this->get_value_for_generator( 'value', $options ); ?>
 			<input type="text" name="value" value="<?php echo esc_attr( $value ); ?>" />
 		</p>
@@ -185,9 +185,9 @@ class Uno_WP_Form_Field_Monthpicker extends Uno_WP_Form_Abstract_Form_Field {
 			<input type="text" name="placeholder" value="<?php echo esc_attr( $placeholder ); ?>" />
 		</p>
 		<p>
-			<strong><?php esc_html_e( 'Display error', 'uno-wp-form' ); ?></strong>
+			<strong><?php esc_html_e( 'Display error', 'unomoon-form' ); ?></strong>
 			<?php $show_error = $this->get_value_for_generator( 'show_error', $options ); ?>
-			<label><input type="checkbox" name="show_error" value="false" <?php checked( 'false', $show_error ); ?> /> <?php esc_html_e( 'Don\'t display error.', 'uno-wp-form' ); ?></label>
+			<label><input type="checkbox" name="show_error" value="false" <?php checked( 'false', $show_error ); ?> /> <?php esc_html_e( 'Don\'t display error.', 'unomoon-form' ); ?></label>
 		</p>
 		<?php
 	}

@@ -1,14 +1,14 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
 /**
- * Uno_WP_Form_Validation_Rule_Numeric
+ * Unomoon_Form_Validation_Rule_Numeric
  */
-class Uno_WP_Form_Validation_Rule_Numeric extends Uno_WP_Form_Abstract_Validation_Rule {
+class Unomoon_Form_Validation_Rule_Numeric extends Unomoon_Form_Abstract_Validation_Rule {
 
 	/**
 	 * Validation rule name.
@@ -27,7 +27,7 @@ class Uno_WP_Form_Validation_Rule_Numeric extends Uno_WP_Form_Abstract_Validatio
 	public function rule( $name, array $options = array() ) {
 		$value = $this->Data->get( $name );
 
-		if ( UWF_Functions::is_empty( $value ) ) {
+		if ( Unomoon_Form_Functions::is_empty( $value ) ) {
 			return;
 		}
 
@@ -36,7 +36,7 @@ class Uno_WP_Form_Validation_Rule_Numeric extends Uno_WP_Form_Abstract_Validatio
 		}
 
 		$defaults = array(
-			'message' => __( 'Please enter with a half-width number.', 'uno-wp-form' ),
+			'message' => __( 'Please enter with a half-width number.', 'unomoon-form' ),
 		);
 		$options  = array_merge( $defaults, $options );
 		return $options['message'];
@@ -51,7 +51,7 @@ class Uno_WP_Form_Validation_Rule_Numeric extends Uno_WP_Form_Abstract_Validatio
 	 */
 	public function admin( $key, $value ) {
 		?>
-		<label><input type="checkbox" <?php checked( $value[ $this->get_name() ], 1 ); ?> name="<?php echo UWF_Config::NAME; ?>[validation][<?php echo $key; ?>][<?php echo esc_attr( $this->get_name() ); ?>]" value="1" /><?php esc_html_e( 'Numeric', 'uno-wp-form' ); ?></label>
+		<label><input type="checkbox" <?php checked( $value[ $this->get_name() ], 1 ); ?> name="<?php echo Unomoon_Form_Config::NAME; ?>[validation][<?php echo $key; ?>][<?php echo esc_attr( $this->get_name() ); ?>]" value="1" /><?php esc_html_e( 'Numeric', 'unomoon-form' ); ?></label>
 		<?php
 	}
 }

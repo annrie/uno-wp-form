@@ -1,14 +1,14 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
 /**
- * Uno_WP_Form_Exec_Shortcode
+ * Unomoon_Form_Exec_Shortcode
  */
-class Uno_WP_Form_Exec_Shortcode {
+class Unomoon_Form_Exec_Shortcode {
 
 	/**
 	 * @var int
@@ -21,7 +21,7 @@ class Uno_WP_Form_Exec_Shortcode {
 	protected $form_key;
 
 	/**
-	 * @var Uno_WP_Form_Data
+	 * @var Unomoon_Form_Data
 	 */
 	protected $Data;
 
@@ -31,7 +31,7 @@ class Uno_WP_Form_Exec_Shortcode {
 	protected $view_flg;
 
 	/**
-	 * @var Uno_WP_Form_Setting
+	 * @var Unomoon_Form_Setting
 	 */
 	protected $Setting;
 
@@ -39,53 +39,53 @@ class Uno_WP_Form_Exec_Shortcode {
 	 * Constructor.
 	 */
 	public function __construct() {
-		add_shortcode( 'unoform', array( $this, '_unoform' ) );
-		add_shortcode( 'unoform_complete_message', array( $this, '_unoform_complete_message' ) );
+		add_shortcode( 'unomoonform', array( $this, '_unomoonform' ) );
+		add_shortcode( 'unomoonform_complete_message', array( $this, '_unomoonform_complete_message' ) );
 
-		add_filter( 'unoform_form_end_html', array( $this, '_unoform_form_end_html' ) );
+		add_filter( 'unomoonform_form_end_html', array( $this, '_unomoonform_form_end_html' ) );
 
 		add_action( 'wp_footer', array( $this, '_enqueue_scripts' ) );
 	}
 
 	/**
-	 * Add shortcode for [unoform_formkey]
+	 * Add shortcode for [unomoonform_formkey]
 	 *
-	 * @example [unoform_formkey key="post_id"]
+	 * @example [unomoonform_formkey key="post_id"]
 	 *
-	 * @param array $attributes Attributes of [unoform_formkey].
+	 * @param array $attributes Attributes of [unomoonform_formkey].
 	 * @return string
 	 */
 	public function initialize( $attributes ) {
-		$this->form_id = $this->_get_form_id_by_unoform_formkey( $attributes );
+		$this->form_id = $this->_get_form_id_by_unomoonform_formkey( $attributes );
 		if ( ! $this->form_id ) {
 			return;
 		}
 
-		$this->form_key = UWF_Functions::get_form_key_from_form_id( $this->form_id );
+		$this->form_key = Unomoon_Form_Functions::get_form_key_from_form_id( $this->form_id );
 
 		/**
 		 * @deprecated since v4.0.0
 		 * Because refactoring changed the timing to execute the shortcode
 		 */
-		do_action( 'unoform_after_exec_shortcode', $this->form_key );
+		do_action( 'unomoonform_after_exec_shortcode', $this->form_key );
 
-		do_action( 'unoform_start_main_process', $this->form_key );
+		do_action( 'unomoonform_start_main_process', $this->form_key );
 
-		$this->Data     = Uno_WP_Form_Data::connect( $this->form_key );
+		$this->Data     = Unomoon_Form_Data::connect( $this->form_key );
 		$this->view_flg = ( $this->Data->get_view_flg() ) ? $this->Data->get_view_flg() : 'input';
-		$this->Setting  = new Uno_WP_Form_Setting( $this->form_id );
+		$this->Setting  = new Unomoon_Form_Setting( $this->form_id );
 
 		add_action( 'wp_footer', array( $this->Data, 'clear_values' ) );
 
-		$Validation = new Uno_WP_Form_Validation( $this->form_key );
+		$Validation = new Unomoon_Form_Validation( $this->form_key );
 		$is_valid   = $Validation->is_valid();
 
-		$Redirected = new Uno_WP_Form_Redirected( $this->form_key, $this->Setting, $is_valid, $this->Data->get_post_condition() );
+		$Redirected = new Unomoon_Form_Redirected( $this->form_key, $this->Setting, $is_valid, $this->Data->get_post_condition() );
 		if ( $Redirected->get_request_uri() !== $Redirected->get_url() && $Redirected->get_url() ) {
 			$Redirected->redirect_js();
 		}
 
-		do_action( 'unoform_before_load_content_' . $this->form_key );
+		do_action( 'unomoonform_before_load_content_' . $this->form_key );
 
 		if ( $this->_is_direct_access() ) {
 			$content = $this->_get_direct_access_error_page_content();
@@ -101,9 +101,9 @@ class Uno_WP_Form_Exec_Shortcode {
 			$content = '';
 		}
 
-		do_action( 'unoform_after_load_content_' . $this->form_key );
+		do_action( 'unomoonform_after_load_content_' . $this->form_key );
 
-		// Enqueue scroll to Uno WP Form script
+		// Enqueue scroll to Unomoon Form script
 		if ( $this->Setting->get( 'scroll' ) ) {
 			if (
 				'input' !== $this->view_flg
@@ -113,9 +113,9 @@ class Uno_WP_Form_Exec_Shortcode {
 			}
 		}
 
-		$Form_Fields = Uno_WP_Form_Form_Fields::instantiation( $this->form_key );
+		$Form_Fields = Unomoon_Form_Form_Fields::instantiation( $this->form_key );
 		foreach ( $Form_Fields->get_form_fields() as $form_field ) {
-			$form_field->initialize( new Uno_WP_Form_Form(), $this->form_key, $this->view_flg );
+			$form_field->initialize( new Unomoon_Form_Form(), $this->form_key, $this->view_flg );
 		}
 
 		// Sanitizes content for allowed HTML tags for post content.
@@ -125,26 +125,26 @@ class Uno_WP_Form_Exec_Shortcode {
 	}
 
 	/**
-	 * Add shortcode for [unoform].
+	 * Add shortcode for [unomoonform].
 	 *
-	 * @param array  $attributes Attributes of [unoform].
-	 * @param string $content    Content of [unoform].
+	 * @param array  $attributes Attributes of [unomoonform].
+	 * @param string $content    Content of [unomoonform].
 	 * @return string
 	 */
-	public function _unoform( $attributes, $content = '' ) {
-		$Form = new Uno_WP_Form_Form();
+	public function _unomoonform( $attributes, $content = '' ) {
+		$Form = new Unomoon_Form_Form();
 
 		if ( in_array( $this->view_flg, array( 'input', 'confirm' ), true ) ) {
 			$content            = $this->_get_the_content( $content );
-			$upload_file_keys   = $this->Data->get_post_value_by_key( UWF_Config::UPLOAD_FILE_KEYS );
+			$upload_file_keys   = $this->Data->get_post_value_by_key( Unomoon_Form_Config::UPLOAD_FILE_KEYS );
 			$upload_file_hidden = $this->_get_upload_file_hidden( $upload_file_keys );
 			$old_confirm_class  = $this->_get_old_confirm_class();
 			$class_by_style     = $this->_get_class_by_style();
 
 			return sprintf(
-				'<div id="uno_wp_form_%s" class="uno_wp_form uno_wp_form_%s %s">
+				'<div id="unomoon_form_%s" class="unomoon_form unomoon_form_%s %s">
 					%s
-				<!-- end .uno_wp_form --></div>',
+				<!-- end .unomoon_form --></div>',
 				esc_attr( $this->form_key ),
 				esc_attr( $this->view_flg . ' ' . $old_confirm_class ),
 				$class_by_style,
@@ -154,17 +154,17 @@ class Uno_WP_Form_Exec_Shortcode {
 	}
 
 	/**
-	 * Add shortcode for [unoform_complete_message].
+	 * Add shortcode for [unomoonform_complete_message].
 	 *
-	 * @param array  $attributes Attributes of [unoform_complete_message].
-	 * @param string $content    Content of [unoform_complete_message].
+	 * @param array  $attributes Attributes of [unomoonform_complete_message].
+	 * @param string $content    Content of [unomoonform_complete_message].
 	 * @return string
 	 */
-	public function _unoform_complete_message( $attributes, $content = '' ) {
+	public function _unomoonform_complete_message( $attributes, $content = '' ) {
 		return sprintf(
-			'<div id="uno_wp_form_%s" class="uno_wp_form uno_wp_form_%s">
+			'<div id="unomoon_form_%s" class="unomoon_form unomoon_form_%s">
 				%s
-			<!-- end .uno_wp_form --></div>',
+			<!-- end .unomoon_form --></div>',
 			esc_attr( $this->form_key ),
 			esc_attr( $this->view_flg ),
 			$content
@@ -181,10 +181,10 @@ class Uno_WP_Form_Exec_Shortcode {
 		$post = get_post( $this->form_id );
 		setup_postdata( $post );
 		// @todo 共通化 main._file_upload()
-		$content = apply_filters( 'unoform_post_content_raw_' . $this->form_key, get_the_content(), $this->Data );
+		$content = apply_filters( 'unomoonform_post_content_raw_' . $this->form_key, get_the_content(), $this->Data );
 		$content = $this->_wpautop( $content );
-		$content = apply_filters( 'unoform_post_content_' . $this->form_key, $content, $this->Data );
-		$content = sprintf( '[unoform]%s[/unoform]', $content );
+		$content = apply_filters( 'unomoonform_post_content_' . $this->form_key, $content, $this->Data );
+		$content = sprintf( '[unomoonform]%s[/unomoonform]', $content );
 		wp_reset_postdata();
 		return $content;
 	}
@@ -204,21 +204,21 @@ class Uno_WP_Form_Exec_Shortcode {
 	 * @return string
 	 */
 	protected function _get_complete_page_content() {
-		$Parser = new Uno_WP_Form_Parser( $this->Setting );
+		$Parser = new Unomoon_Form_Parser( $this->Setting );
 
 		$content = apply_filters(
-			'unoform_complete_content_raw_' . $this->form_key,
+			'unomoonform_complete_content_raw_' . $this->form_key,
 			$this->Setting->get( 'complete_message' ),
 			$this->Data
 		);
 
-		$content = str_replace( '{' . UWF_Config::TRACKINGNUMBER . '}', '{' . UWF_Config::TRACKINGNUMBER . '_for_complete_page}', $content );
+		$content = str_replace( '{' . Unomoon_Form_Config::TRACKINGNUMBER . '}', '{' . Unomoon_Form_Config::TRACKINGNUMBER . '_for_complete_page}', $content );
 		$content = $this->_wpautop( $content );
 		$content = $Parser->replace_for_complete_page( $content );
-		$content = apply_filters( 'unoform_complete_content_' . $this->form_key, $content, $this->Data );
+		$content = apply_filters( 'unomoonform_complete_content_' . $this->form_key, $content, $this->Data );
 
 		$content = sprintf(
-			'[unoform_complete_message]%s[/unoform_complete_message]',
+			'[unomoonform_complete_message]%s[/unomoonform_complete_message]',
 			$content
 		);
 		return $content;
@@ -231,15 +231,15 @@ class Uno_WP_Form_Exec_Shortcode {
 	 */
 	protected function _get_send_error_page_content() {
 		$content = sprintf(
-			'<div id="uno_wp_form_%s" class="uno_wp_form uno_wp_form_send_error">
+			'<div id="unomoon_form_%s" class="unomoon_form unomoon_form_send_error">
 				%s
-			<!-- end .uno_wp_form --></div>',
+			<!-- end .unomoon_form --></div>',
 			esc_attr( $this->form_key ),
-			__( 'There was an error trying to send your message. Please try again later.', 'uno-wp-form' )
+			__( 'There was an error trying to send your message. Please try again later.', 'unomoon-form' )
 		);
-		$content = apply_filters( 'unoform_send_error_content_raw_' . $this->form_key, $content, $this->Data );
+		$content = apply_filters( 'unomoonform_send_error_content_raw_' . $this->form_key, $content, $this->Data );
 		$content = $this->_wpautop( $content );
-		$content = apply_filters( 'unoform_send_error_content_' . $this->form_key, $content, $this->Data );
+		$content = apply_filters( 'unomoonform_send_error_content_' . $this->form_key, $content, $this->Data );
 		return $content;
 	}
 
@@ -250,15 +250,15 @@ class Uno_WP_Form_Exec_Shortcode {
 	 */
 	protected function _get_direct_access_error_page_content() {
 		$content = sprintf(
-			'<div id="uno_wp_form_%s" class="uno_wp_form uno_wp_form_direct_access_error">
+			'<div id="unomoon_form_%s" class="unomoon_form unomoon_form_direct_access_error">
 				%s
-			<!-- end .uno_wp_form --></div>',
+			<!-- end .unomoon_form --></div>',
 			esc_attr( $this->form_key ),
-			__( 'You can not access this page directly.', 'uno-wp-form' )
+			__( 'You can not access this page directly.', 'unomoon-form' )
 		);
-		$content = apply_filters( 'unoform_direct_access_error_content_raw_' . $this->form_key, $content, $this->Data );
+		$content = apply_filters( 'unomoonform_direct_access_error_content_raw_' . $this->form_key, $content, $this->Data );
 		$content = $this->_wpautop( $content );
-		$content = apply_filters( 'unoform_direct_access_error_content_' . $this->form_key, $content, $this->Data );
+		$content = apply_filters( 'unomoonform_direct_access_error_content_' . $this->form_key, $content, $this->Data );
 		return $content;
 	}
 
@@ -280,10 +280,10 @@ class Uno_WP_Form_Exec_Shortcode {
 			return false;
 		}
 
-		$Validation = new Uno_WP_Form_Validation( $this->form_key );
+		$Validation = new Unomoon_Form_Validation( $this->form_key );
 		$is_valid   = $Validation->is_valid();
 
-		$Redirected = new Uno_WP_Form_Redirected( $this->form_key, $this->Setting, $is_valid, $this->Data->get_post_condition() );
+		$Redirected = new Unomoon_Form_Redirected( $this->form_key, $this->Setting, $is_valid, $this->Data->get_post_condition() );
 		if ( $Redirected->get_request_uri() === $Redirected->get_url() ) {
 			return false;
 		}
@@ -307,7 +307,7 @@ class Uno_WP_Form_Exec_Shortcode {
 		}
 
 		$has_wpautop = apply_filters(
-			'unoform_content_wpautop_' . $this->form_key,
+			'unomoonform_content_wpautop_' . $this->form_key,
 			$has_wpautop,
 			$this->view_flg
 		);
@@ -326,7 +326,7 @@ class Uno_WP_Form_Exec_Shortcode {
 	 * @return string
 	 */
 	public function _get_the_content( $content ) {
-		$Parser  = new Uno_WP_Form_Parser( $this->Setting );
+		$Parser  = new Unomoon_Form_Parser( $this->Setting );
 		$content = $Parser->replace_for_page( $content );
 		return $content;
 	}
@@ -337,7 +337,7 @@ class Uno_WP_Form_Exec_Shortcode {
 	 * @param array|string $upload_file_keys Upload file keys.
 	 */
 	protected function _get_upload_file_hidden( $upload_file_keys ) {
-		$Form = new Uno_WP_Form_Form();
+		$Form = new Unomoon_Form_Form();
 
 		if ( ! is_array( $upload_file_keys ) ) {
 			return;
@@ -345,7 +345,7 @@ class Uno_WP_Form_Exec_Shortcode {
 
 		$upload_file_hidden = '';
 		foreach ( $upload_file_keys as $value ) {
-			$upload_file_hidden .= $Form->hidden( UWF_Config::UPLOAD_FILE_KEYS . '[]', $value );
+			$upload_file_hidden .= $Form->hidden( Unomoon_Form_Config::UPLOAD_FILE_KEYS . '[]', $value );
 		}
 
 		return $upload_file_hidden;
@@ -358,7 +358,7 @@ class Uno_WP_Form_Exec_Shortcode {
 	 */
 	protected function _get_old_confirm_class() {
 		if ( 'confirm' === $this->view_flg ) {
-			return 'uno_wp_form_preview';
+			return 'unomoon_form_preview';
 		}
 	}
 
@@ -370,17 +370,17 @@ class Uno_WP_Form_Exec_Shortcode {
 	protected function _get_class_by_style() {
 		$style = $this->Setting->get( 'style' );
 		if ( $style ) {
-			return 'uno_wp_form_' . $style;
+			return 'unomoon_form_' . $style;
 		}
 	}
 
 	/**
-	 * ショートコード unoform_formkey をもとにフォームの ID を取得.
+	 * ショートコード unomoonform_formkey をもとにフォームの ID を取得.
 	 *
-	 * @param array $attributes Attributes of unoform_formkey.
+	 * @param array $attributes Attributes of unomoonform_formkey.
 	 * @return string
 	 */
-	protected function _get_form_id_by_unoform_formkey( $attributes ) {
+	protected function _get_form_id_by_unomoonform_formkey( $attributes ) {
 		$attributes = shortcode_atts(
 			array(
 				'key'  => '',
@@ -390,7 +390,7 @@ class Uno_WP_Form_Exec_Shortcode {
 		);
 
 		if ( ! empty( $attributes['slug'] ) ) {
-			$post = get_page_by_path( $attributes['slug'], OBJECT, UWF_Config::NAME );
+			$post = get_page_by_path( $attributes['slug'], OBJECT, Unomoon_Form_Config::NAME );
 		} elseif ( ! empty( $attributes['key'] ) ) {
 			$post = get_post( $attributes['key'] );
 		}
@@ -406,36 +406,36 @@ class Uno_WP_Form_Exec_Shortcode {
 	 * @param string $html HTML.
 	 * @return string
 	 */
-	public function _unoform_form_end_html( $html ) {
+	public function _unomoonform_form_end_html( $html ) {
 		if ( ! $this->form_key ) {
 			return $html;
 		}
 
 		$html .= sprintf(
 			'<input type="hidden" name="%1$s" value="%2$s" />',
-			esc_attr( UWF_Config::NAME . '-form-id' ),
+			esc_attr( Unomoon_Form_Config::NAME . '-form-id' ),
 			esc_attr( $this->form_id )
 		);
 
 		$html .= sprintf(
 			'<input type="hidden" name="%1$s" value="%2$s" />',
-			esc_attr( UWF_Config::TOKEN_NAME ),
-			esc_attr( Uno_WP_Form_Csrf::token() )
+			esc_attr( Unomoon_Form_Config::TOKEN_NAME ),
+			esc_attr( Unomoon_Form_Csrf::token() )
 		);
 		return $html;
 	}
 
 	/**
-	 * Enqueue Uno WP Form assets
+	 * Enqueue Unomoon Form assets
 	 *
 	 * @return void
 	 */
 	public function _enqueue_scripts() {
-		if ( wp_style_is( UWF_Config::NAME ) ) {
+		if ( wp_style_is( Unomoon_Form_Config::NAME ) ) {
 			return;
 		}
 
-		UWF_Functions::unoform_enqueue_scripts( $this->form_id );
+		Unomoon_Form_Functions::unomoonform_enqueue_scripts( $this->form_id );
 	}
 
 	/**
@@ -445,19 +445,19 @@ class Uno_WP_Form_Exec_Shortcode {
 	 */
 	public function _enqueue_scroll_script() {
 		wp_register_script(
-			UWF_Config::NAME . '-scroll',
-			UNO_WP_FORM_PLUGIN_URL . '/js/scroll.js',
+			Unomoon_Form_Config::NAME . '-scroll',
+			UNOMOON_FORM_PLUGIN_URL . '/js/scroll.js',
 			array( 'jquery' ),
 			false,
 			true
 		);
 		wp_localize_script(
-			UWF_Config::NAME . '-scroll',
-			'unoform_scroll',
+			Unomoon_Form_Config::NAME . '-scroll',
+			'unomoonform_scroll',
 			array(
-				'offset' => apply_filters( 'unoform_scroll_offset_' . $this->form_key, 0 ),
+				'offset' => apply_filters( 'unomoonform_scroll_offset_' . $this->form_key, 0 ),
 			)
 		);
-		wp_enqueue_script( UWF_Config::NAME . '-scroll' );
+		wp_enqueue_script( Unomoon_Form_Config::NAME . '-scroll' );
 	}
 }

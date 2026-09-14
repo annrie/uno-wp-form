@@ -1,14 +1,14 @@
 <?php
 /**
- * @package uno-wp-form
+ * @package unomoon-form
  * @author websoudan
  * @license GPL-2.0+
  */
 
 /**
- * Uno_WP_Form_Stores_Inquiry_Data_Form_List_Controller
+ * Unomoon_Form_Stores_Inquiry_Data_Form_List_Controller
  */
-class Uno_WP_Form_Stores_Inquiry_Data_Form_List_Controller extends Uno_WP_Form_Controller {
+class Unomoon_Form_Stores_Inquiry_Data_Form_List_Controller extends Unomoon_Form_Controller {
 
 	/**
 	 * Constructor.
@@ -22,7 +22,7 @@ class Uno_WP_Form_Stores_Inquiry_Data_Form_List_Controller extends Uno_WP_Form_C
 	 * Render the page.
 	 */
 	public function _index() {
-		$contact_data_post_types = Uno_WP_Form_Contact_Data_Setting::get_form_post_types();
+		$contact_data_post_types = Unomoon_Form_Contact_Data_Setting::get_form_post_types();
 		$form_list               = array();
 		foreach ( $contact_data_post_types as $post_type ) {
 			$post_type_object        = get_post_type_object( $post_type );
@@ -49,7 +49,7 @@ class Uno_WP_Form_Stores_Inquiry_Data_Form_List_Controller extends Uno_WP_Form_C
 	 * @return int
 	 */
 	protected function _get_count( $post_type ) {
-		$args = apply_filters( 'unoform_get_inquiry_data_args-' . $post_type, array() );
+		$args = apply_filters( 'unomoonform_get_inquiry_data_args-' . $post_type, array() );
 		if ( empty( $args ) || ! is_array( $args ) ) {
 			$args = array();
 		}
@@ -98,7 +98,7 @@ class Uno_WP_Form_Stores_Inquiry_Data_Form_List_Controller extends Uno_WP_Form_C
 	 * @return string
 	 */
 	protected function _get_created_datetime( $post_type ) {
-		$post_id   = preg_replace( '/^uwf_(.+?)$/', '$1', $post_type );
+		$post_id   = preg_replace( '/^unomoonform_(.+?)$/', '$1', $post_type );
 		$post_date = get_the_date( get_option( 'date_format' ), $post_id );
 		return $post_date;
 	}
