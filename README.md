@@ -57,10 +57,10 @@ This plugin was named **Uno WP Form** until 5.1.6.1 and was renamed to comply wi
 
 1. Back up the database.
 2. Deactivate Uno WP Form (and Uno WP Form reCAPTCHA if installed) and install Unomoon Form.
-3. Run the migration script with WP-CLI: `wp eval-file tools/migrate-from-uno-wp-form.php --dry-run`, check the counts, then run it again without `--dry-run`.
+3. Run the migration script with WP-CLI: `wp eval-file tools/migrate-from-uno-wp-form.php dry-run` (positional argument), check the counts, then run it again without `dry-run`.
 4. Activate Unomoon Form.
 
-このプラグインは 5.1.6.1 まで **Uno WP Form** という名前でしたが、WordPress.org の命名規則に合わせて改名しました。すべての識別子が変わっています（`uno-wp-form` → `unomoon-form`、`unoform_*` → `unomoonform_*`、問い合わせデータの post type `uwf_*` → `unomoon_*`、meta キー `uwf_*` → `unomoonform_*`）。既存サイトは、DB をバックアップした上で旧プラグインを無効化し、`wp eval-file tools/migrate-from-uno-wp-form.php --dry-run` で件数を確認してから `--dry-run` なしで実行し、その後 Unomoon Form を有効化してください。
+このプラグインは 5.1.6.1 まで **Uno WP Form** という名前でしたが、WordPress.org の命名規則に合わせて改名しました。すべての識別子が変わっています（`uno-wp-form` → `unomoon-form`、`unoform_*` → `unomoonform_*`、問い合わせデータの post type `uwf_*` → `unomoon_*`、meta キー `uwf_*` → `unomoonform_*`）。既存サイトは、DB をバックアップした上で旧プラグインを無効化し、`wp eval-file tools/migrate-from-uno-wp-form.php dry-run`（位置引数）で件数を確認してから `dry-run` なしで実行し、その後 Unomoon Form を有効化してください。
 
 ## Requirements / 動作要件
 

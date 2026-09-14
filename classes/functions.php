@@ -179,9 +179,14 @@ class Unomoon_Form_Functions {
 	 * @return void
 	 */
 	public static function save_attachments_in_media( $saved_mail_id, $attachments, $form_id ) {
-		// wp_generate_attachment_metadata() lives in wp-admin and is not loaded on the front end.
+		// wp_generate_attachment_metadata() (image.php) and the audio/video readers it calls
+		// (wp_read_audio_metadata() / wp_read_video_metadata() in media.php) live in wp-admin
+		// and are not loaded on the front end.
 		if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/image.php';
+		}
+		if ( ! function_exists( 'wp_read_audio_metadata' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/media.php';
 		}
 		$save_attached_key = array();
 		foreach ( $attachments as $key => $filepath ) {
